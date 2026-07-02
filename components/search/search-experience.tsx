@@ -21,8 +21,13 @@ import type {
   HardwareListing,
   HardwareSortKey
 } from "@/types/hardware";
+import type { SearchPersistenceState } from "@/types/persistence";
 
-export function SearchExperience() {
+type SearchExperienceProps = {
+  persistence: SearchPersistenceState;
+};
+
+export function SearchExperience({ persistence }: SearchExperienceProps) {
   const [filters, setFilters] = useState<HardwareFilters>(defaultHardwareFilters);
   const [sortKey, setSortKey] = useState<HardwareSortKey>("best-value");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -106,6 +111,13 @@ export function SearchExperience() {
               {mockHardwareListings.length} static mock listings
             </div>
           </div>
+          {!persistence.isConfigured || !persistence.isSignedIn ? (
+            <div className="mt-6 rounded-lg border border-border bg-background px-4 py-3 text-sm text-muted">
+              {persistence.isConfigured
+                ? "Sign in to save builds, favorite listings, and write history. Search still works without an account."
+                : persistence.message}
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -157,6 +169,11 @@ export function SearchExperience() {
               {listings.map((listing) => (
                 <RankingCard
                   key={listing.id}
+                  isFavorited={persistence.favoriteListingIds.includes(listing.id)}
+                  isPersistenceReady={
+                    persistence.isConfigured && persistence.isSignedIn
+                  }
+                  isSaved={persistence.savedListingIds.includes(listing.id)}
                   listing={listing}
                   isSelected={selectedIds.includes(listing.id)}
                   isSelectionDisabled={selectedIds.length >= maxCompareListings}

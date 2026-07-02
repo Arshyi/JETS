@@ -16,6 +16,7 @@ export const siteConfig = {
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
   { title: "Search", href: "/search", status: "v0.2" },
+  { title: "Account", href: "/account", status: "v0.3" },
   { title: "Roadmap", href: "/roadmap" },
   { title: "About", href: "/about" }
 ];
@@ -30,19 +31,19 @@ export const workspaceNav: NavItem[] = [
   {
     title: "Saved Builds",
     href: "/saved-builds",
-    description: "Future authenticated collection of hardware plans.",
+    description: "Supabase-backed collection of saved mock hardware plans.",
     status: "v0.3"
   },
   {
     title: "Favorites",
     href: "/favorites",
-    description: "Future shortlist of listings and components.",
+    description: "Supabase-backed shortlist of listings and components.",
     status: "v0.3"
   },
   {
     title: "History",
     href: "/history",
-    description: "Future research trail and recently viewed items.",
+    description: "Supabase-backed research trail for saved and favorited items.",
     status: "v0.3"
   },
   {
@@ -54,7 +55,7 @@ export const workspaceNav: NavItem[] = [
   {
     title: "Settings",
     href: "/settings",
-    description: "Future user, theme, and preference controls.",
+    description: "Supabase-backed user, theme, and preference controls.",
     status: "v0.3"
   }
 ];
@@ -63,6 +64,7 @@ export const footerNav: NavItem[] = [
   { title: "Privacy", href: "/privacy" },
   { title: "Terms", href: "/terms" },
   { title: "Contact", href: "/contact" },
+  { title: "Account", href: "/account" },
   { title: "Roadmap", href: "/roadmap" }
 ];
 
@@ -110,7 +112,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.2",
     title: "Search experience",
-    status: "Now",
+    status: "Done",
     description:
       "Search, filter, rank, and compare local mock hardware listings only.",
     items: [
@@ -124,20 +126,21 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.3",
     title: "Accounts and saved builds",
-    status: "Next",
+    status: "Now",
     description:
-      "Connect Supabase after the local product flow is clear enough to persist user work.",
+      "Connect Supabase-ready auth, saved builds, favorites, history, and settings.",
     items: [
       "Supabase authentication",
-      "Saved builds",
-      "Favorites",
-      "User settings"
+      "Saved builds and favorites persistence",
+      "Build history with clear action",
+      "User settings",
+      "Graceful setup states when Supabase env vars are missing"
     ]
   },
   {
     version: "0.4",
     title: "Marketplace ingestion",
-    status: "Later",
+    status: "Next",
     description:
       "Add scraper and ingestion infrastructure only after the app can explain and display results well.",
     items: [

@@ -23,7 +23,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.2 - Search UI With Dummy Data
 
-- Current.
+- Complete.
 - Built search and filter UI.
 - Added local typed mock listing data.
 - Added ranking cards with value, performance, reliability, aesthetic, upgrade, sleeper, and risk signals.
@@ -33,13 +33,18 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.3 - Supabase Accounts
 
+- Current.
 - Add Supabase authentication.
 - Add saved builds.
 - Add favorites.
-- Add user settings and history.
+- Add build history with a clear action.
+- Add user settings persistence.
+- Add setup states when environment variables are missing.
+- Do not scrape marketplaces.
 
 ### Version 0.4 - Scraper
 
+- Next.
 - Add marketplace ingestion.
 - Normalize source data.
 - Handle rate limits, compliance, and source-specific adapters.

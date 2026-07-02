@@ -9,25 +9,25 @@ export function HeroSection() {
       <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
         <div>
           <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-            Version 0.2: Mock search experience
+            Version 0.3: Supabase-ready persistence
           </p>
           <h1 className="mt-4 max-w-3xl text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
             JETS
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">
             Just Enough Tech Solutions is becoming an AI-assisted decision engine
-            for used hardware. This version adds the first product workflow: local
-            mock listings, filters, rankings, and compare selection without
-            scraping, accounts, databases, or AI.
+            for used hardware. This version keeps the mock search experience and
+            adds Supabase-ready accounts, saved builds, favorites, history, and
+            settings without scraping, checkout, or AI.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/search"
+              href="/account"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
             >
               <Search className="h-4 w-4" aria-hidden="true" />
-              Open Search
+              Open Account
             </Link>
             <Link
               href="/roadmap"

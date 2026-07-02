@@ -1,9 +1,13 @@
-import { Check, Cpu, MapPin, ShieldAlert } from "lucide-react";
+import { Check, Cpu, Heart, MapPin, Save, ShieldAlert } from "lucide-react";
 
 import { ScoreMeter } from "@/components/search/score-meter";
 import { StatusPill } from "@/components/ui/status-pill";
-import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/hardware-search";
+import {
+  favoriteBuildAction,
+  saveBuildAction
+} from "@/lib/supabase/persistence-actions";
+import { cn } from "@/lib/utils";
 import {
   conditionLabels,
   formFactorLabels,
@@ -12,16 +16,22 @@ import {
 import type { HardwareListing } from "@/types/hardware";
 
 type RankingCardProps = {
-  listing: HardwareListing;
+  isFavorited: boolean;
+  isPersistenceReady: boolean;
+  isSaved: boolean;
   isSelected: boolean;
   isSelectionDisabled: boolean;
+  listing: HardwareListing;
   onToggleCompare: (id: string) => void;
 };
 
 export function RankingCard({
-  listing,
+  isFavorited,
+  isPersistenceReady,
+  isSaved,
   isSelected,
   isSelectionDisabled,
+  listing,
   onToggleCompare
 }: RankingCardProps) {
   const checkboxId = `compare-${listing.id}`;
@@ -73,6 +83,48 @@ export function RankingCard({
             className="sr-only"
           />
         </label>
+      </div>
+
+      <div className="mt-5 flex flex-wrap gap-2">
+        <form action={saveBuildAction}>
+          <input type="hidden" name="listingId" value={listing.id} />
+          <input type="hidden" name="returnTo" value="/search" />
+          <button
+            type="submit"
+            disabled={!isPersistenceReady}
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
+            title={
+              isPersistenceReady
+                ? isSaved
+                  ? "Saved in Supabase"
+                  : "Save build"
+                : "Sign in and configure Supabase to save builds"
+            }
+          >
+            <Save className="h-4 w-4" aria-hidden="true" />
+            {isSaved ? "Saved" : "Save build"}
+          </button>
+        </form>
+
+        <form action={favoriteBuildAction}>
+          <input type="hidden" name="listingId" value={listing.id} />
+          <input type="hidden" name="returnTo" value="/search" />
+          <button
+            type="submit"
+            disabled={!isPersistenceReady}
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
+            title={
+              isPersistenceReady
+                ? isFavorited
+                  ? "Favorited in Supabase"
+                  : "Favorite build"
+                : "Sign in and configure Supabase to favorite builds"
+            }
+          >
+            <Heart className="h-4 w-4" aria-hidden="true" />
+            {isFavorited ? "Favorited" : "Favorite"}
+          </button>
+        </form>
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[220px_1fr]">
