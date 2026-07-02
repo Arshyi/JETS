@@ -17,6 +17,7 @@ export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
   { title: "Search", href: "/search", status: "v0.2" },
   { title: "Account", href: "/account", status: "v0.3" },
+  { title: "Sources", href: "/sources", status: "v0.4" },
   { title: "Roadmap", href: "/roadmap" },
   { title: "About", href: "/about" }
 ];
@@ -51,6 +52,18 @@ export const workspaceNav: NavItem[] = [
     href: "/compare",
     description: "Side-by-side comparison for selected mock listings.",
     status: "v0.2"
+  },
+  {
+    title: "Sources",
+    href: "/sources",
+    description: "Dry-run marketplace source health, freshness, and duplicate checks.",
+    status: "v0.4"
+  },
+  {
+    title: "Admin Ingestion",
+    href: "/admin/ingestion",
+    description: "Admin-only dry-run controls for mock source adapters.",
+    status: "v0.4"
   },
   {
     title: "Settings",
@@ -126,7 +139,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.3",
     title: "Accounts and saved builds",
-    status: "Now",
+    status: "Done",
     description:
       "Connect Supabase-ready auth, saved builds, favorites, history, and settings.",
     items: [
@@ -139,21 +152,22 @@ export const roadmap: RoadmapMilestone[] = [
   },
   {
     version: "0.4",
-    title: "Marketplace ingestion",
-    status: "Next",
+    title: "Ingestion foundation",
+    status: "Now",
     description:
-      "Add scraper and ingestion infrastructure only after the app can explain and display results well.",
+      "Create source adapters, normalized listing contracts, dry-run logs, and compliance boundaries without live scraping.",
     items: [
-      "Scraper boundaries",
-      "Source-specific adapters",
-      "Rate limit and compliance strategy",
-      "Data normalization"
+      "Mock adapters for Dubizzle, Amazon.ae, Computer Plaza, and Manual Upload",
+      "Normalized listing schema",
+      "Freshness and duplicate detection utilities",
+      "Admin-only dry-run logs",
+      "Rate limit and compliance documentation"
     ]
   },
   {
     version: "0.5",
     title: "Decision engine",
-    status: "Later",
+    status: "Next",
     description:
       "Layer in scoring, recommendations, and AI assistance once clean data and saved workflows exist.",
     items: [

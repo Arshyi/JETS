@@ -21,8 +21,8 @@ export function FeatureGrid() {
           </p>
           <h2 className="mt-3 text-3xl font-bold">Built to grow without rushing.</h2>
           <p className="mt-4 text-base leading-7 text-muted">
-            Version 0.1 creates visible product shape while leaving the expensive
-            systems out until their milestones are ready.
+            Each milestone adds one durable layer while leaving expensive systems
+            out until their surrounding product workflows are ready.
           </p>
         </div>
 

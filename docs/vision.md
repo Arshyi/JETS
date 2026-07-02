@@ -33,25 +33,31 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.3 - Supabase Accounts
 
-- Current.
-- Add Supabase authentication.
-- Add saved builds.
-- Add favorites.
-- Add build history with a clear action.
-- Add user settings persistence.
-- Add setup states when environment variables are missing.
+- Complete.
+- Added Supabase authentication.
+- Added saved builds.
+- Added favorites.
+- Added build history with a clear action.
+- Added user settings persistence.
+- Added setup states when environment variables are missing.
 - Do not scrape marketplaces.
 
-### Version 0.4 - Scraper
+### Version 0.4 - Ingestion Foundation
 
-- Next.
-- Add marketplace ingestion.
-- Normalize source data.
-- Handle rate limits, compliance, and source-specific adapters.
-- Keep scraping isolated from the UI.
+- Current.
+- Add source adapter architecture.
+- Add dry-run mock adapters for Dubizzle, Amazon.ae, Computer Plaza, and Manual Upload.
+- Add normalized listing schema.
+- Add ingestion run logs.
+- Add source health/status page.
+- Add admin-only ingestion dry-run page.
+- Add duplicate detection and listing freshness flags.
+- Add compliance notes and rate-limit documentation.
+- Do not implement live scraping.
 
 ### Version 0.5 - Decision Engine
 
+- Next.
 - Add scoring and ranking logic.
 - Add AI-assisted explanations.
 - Add compatibility and risk signals.
