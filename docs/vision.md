@@ -44,24 +44,35 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.4 - Ingestion Foundation
 
-- Current.
-- Add source adapter architecture.
-- Add dry-run mock adapters for Dubizzle, Amazon.ae, Computer Plaza, and Manual Upload.
-- Add normalized listing schema.
-- Add ingestion run logs.
-- Add source health/status page.
-- Add admin-only ingestion dry-run page.
-- Add duplicate detection and listing freshness flags.
-- Add compliance notes and rate-limit documentation.
+- Complete.
+- Added source adapter architecture.
+- Added dry-run mock adapters for Dubizzle, Amazon.ae, Computer Plaza, and Manual Upload.
+- Added normalized listing schema.
+- Added ingestion run logs.
+- Added source health/status page.
+- Added admin-only ingestion dry-run page.
+- Added duplicate detection and listing freshness flags.
+- Added compliance notes and rate-limit documentation.
 - Do not implement live scraping.
 
 ### Version 0.5 - Decision Engine
 
+- Current.
+- Add deterministic scoring and ranking logic.
+- Add formula comments and documentation.
+- Add why-this-ranks explanations.
+- Add score breakdown UI.
+- Add use-case presets for gaming, CAD, engineering, AI, general, and homelab.
+- Add validation fixtures.
+- Do not implement AI.
+
+### Version 0.6 - Compatibility Review
+
 - Next.
-- Add scoring and ranking logic.
-- Add AI-assisted explanations.
-- Add compatibility and risk signals.
-- Make recommendations transparent and reviewable.
+- Add compatibility checks for GPU fit, PSU headroom, memory, storage, and platform constraints.
+- Add saved decision snapshots.
+- Add reviewable recommendation notes.
+- Keep AI out until deterministic recommendations can be audited.
 
 ## Idea Parking Lot
 

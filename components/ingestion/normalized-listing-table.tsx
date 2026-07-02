@@ -1,6 +1,8 @@
 import { Rows3 } from "lucide-react";
 
 import { StatusPill } from "@/components/ui/status-pill";
+import { normalizedListingToDecisionCandidate } from "@/lib/decision-engine/adapters";
+import { evaluateDecisionCandidate } from "@/lib/decision-engine/scoring";
 import { formatMarketplacePrice } from "@/lib/ingestion/dry-run";
 import {
   conditionLabels,
@@ -27,45 +29,55 @@ export function NormalizedListingTable({ listings }: NormalizedListingTableProps
       </p>
 
       <div className="mt-5 overflow-hidden rounded-lg border border-border">
-        <div className="hidden grid-cols-[1.2fr_2fr_120px_120px_120px] border-b border-border bg-background px-4 py-3 text-xs font-semibold uppercase text-muted lg:grid">
+        <div className="hidden grid-cols-[1.2fr_2fr_120px_120px_120px_100px] border-b border-border bg-background px-4 py-3 text-xs font-semibold uppercase text-muted lg:grid">
           <span>Source</span>
           <span>Listing</span>
           <span>Price</span>
           <span>Condition</span>
           <span>Freshness</span>
+          <span>Decision</span>
         </div>
         <div className="divide-y divide-border">
-          {listings.slice(0, 8).map((listing) => (
-            <div
-              key={listing.id}
-              className="grid gap-3 bg-background p-4 text-sm lg:grid-cols-[1.2fr_2fr_120px_120px_120px] lg:items-center"
-            >
-              <div>
-                <p className="font-semibold">{listing.sourceName}</p>
-                <p className="mt-1 text-xs text-muted">{listing.externalId}</p>
-              </div>
-              <div>
-                <p className="font-semibold">{listing.title}</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <StatusPill>{formFactorLabels[listing.formFactor]}</StatusPill>
-                  {listing.recommendedUseCases.slice(0, 2).map((useCase) => (
-                    <StatusPill key={useCase}>
-                      {useCaseLabels[useCase]}
-                    </StatusPill>
-                  ))}
+          {listings.slice(0, 8).map((listing) => {
+            const evaluation = evaluateDecisionCandidate(
+              normalizedListingToDecisionCandidate(listing)
+            );
+
+            return (
+              <div
+                key={listing.id}
+                className="grid gap-3 bg-background p-4 text-sm lg:grid-cols-[1.2fr_2fr_120px_120px_120px_100px] lg:items-center"
+              >
+                <div>
+                  <p className="font-semibold">{listing.sourceName}</p>
+                  <p className="mt-1 text-xs text-muted">{listing.externalId}</p>
                 </div>
+                <div>
+                  <p className="font-semibold">{listing.title}</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <StatusPill>{formFactorLabels[listing.formFactor]}</StatusPill>
+                    {listing.recommendedUseCases.slice(0, 2).map((useCase) => (
+                      <StatusPill key={useCase}>
+                        {useCaseLabels[useCase]}
+                      </StatusPill>
+                    ))}
+                  </div>
+                </div>
+                <p className="font-semibold">
+                  {formatMarketplacePrice(listing.price, listing.currency)}
+                </p>
+                <StatusPill tone={listing.condition === "broken" ? "warning" : "neutral"}>
+                  {conditionLabels[listing.condition]}
+                </StatusPill>
+                <StatusPill tone={listing.freshness === "stale" ? "warning" : "accent"}>
+                  {listing.freshness}
+                </StatusPill>
+                <StatusPill tone={evaluation.breakdown.finalScore >= 70 ? "accent" : "warning"}>
+                  {evaluation.breakdown.finalScore}
+                </StatusPill>
               </div>
-              <p className="font-semibold">
-                {formatMarketplacePrice(listing.price, listing.currency)}
-              </p>
-              <StatusPill tone={listing.condition === "broken" ? "warning" : "neutral"}>
-                {conditionLabels[listing.condition]}
-              </StatusPill>
-              <StatusPill tone={listing.freshness === "stale" ? "warning" : "accent"}>
-                {listing.freshness}
-              </StatusPill>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </article>

@@ -15,7 +15,7 @@ export const siteConfig = {
 
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
-  { title: "Search", href: "/search", status: "v0.2" },
+  { title: "Search", href: "/search", status: "v0.5" },
   { title: "Account", href: "/account", status: "v0.3" },
   { title: "Sources", href: "/sources", status: "v0.4" },
   { title: "Roadmap", href: "/roadmap" },
@@ -26,8 +26,8 @@ export const workspaceNav: NavItem[] = [
   {
     title: "Search",
     href: "/search",
-    description: "Mock search and ranking interface for local hardware listings.",
-    status: "v0.2"
+    description: "Mock search with deterministic scoring and ranking explanations.",
+    status: "v0.5"
   },
   {
     title: "Saved Builds",
@@ -91,7 +91,7 @@ export const featureCards: FeatureCard[] = [
   {
     title: "Transparent rankings",
     description:
-      "Future recommendations should explain why an option ranks well instead of hiding the reasoning behind a black box score.",
+      "Rankings expose score breakdowns and why-this-ranks notes instead of hiding the reasoning behind a black box score.",
     icon: "ranking"
   },
   {
@@ -153,7 +153,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.4",
     title: "Ingestion foundation",
-    status: "Now",
+    status: "Done",
     description:
       "Create source adapters, normalized listing contracts, dry-run logs, and compliance boundaries without live scraping.",
     items: [
@@ -167,14 +167,28 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.5",
     title: "Decision engine",
+    status: "Now",
+    description:
+      "Rank hardware with transparent deterministic scoring before adding AI assistance.",
+    items: [
+      "Use-case presets including homelab",
+      "Performance, value, reliability, risk, freshness, upgrade, aesthetic, shipping, and fit scores",
+      "Weight-class assignment",
+      "Why-this-ranks explanations",
+      "Deterministic validation fixtures"
+    ]
+  },
+  {
+    version: "0.6",
+    title: "Compatibility review",
     status: "Next",
     description:
-      "Layer in scoring, recommendations, and AI assistance once clean data and saved workflows exist.",
+      "Add component compatibility checks and human-review workflows on top of deterministic rankings.",
     items: [
-      "Ranking model",
-      "Decision explanations",
-      "Risk and value signals",
-      "Recommendation review loop"
+      "GPU fit and PSU headroom checks",
+      "Memory, storage, and platform compatibility",
+      "Saved decision snapshots",
+      "Reviewable recommendation notes"
     ]
   }
 ];

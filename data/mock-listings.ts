@@ -78,7 +78,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "good",
     location: "Dallas, TX",
     recommendedUseCase: "engineering",
-    recommendedUseCases: ["engineering", "cad", "ai", "general"],
+    recommendedUseCases: ["engineering", "cad", "ai", "general", "homelab"],
     weightClass: "Heavy workstation",
     scores: {
       performance: 70,
@@ -111,7 +111,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "excellent",
     location: "Chicago, IL",
     recommendedUseCase: "cad",
-    recommendedUseCases: ["cad", "engineering", "general"],
+    recommendedUseCases: ["cad", "engineering", "general", "homelab"],
     weightClass: "Tiny workstation",
     scores: {
       performance: 58,
@@ -144,7 +144,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "fair",
     location: "Seattle, WA",
     recommendedUseCase: "engineering",
-    recommendedUseCases: ["engineering", "cad", "general"],
+    recommendedUseCases: ["engineering", "cad", "general", "homelab"],
     weightClass: "Heavy workstation",
     scores: {
       performance: 55,
@@ -177,7 +177,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "good",
     location: "Austin, TX",
     recommendedUseCase: "general",
-    recommendedUseCases: ["general", "engineering"],
+    recommendedUseCases: ["general", "engineering", "homelab"],
     weightClass: "Small form factor",
     scores: {
       performance: 46,
@@ -210,7 +210,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "fair",
     location: "Las Vegas, NV",
     recommendedUseCase: "gaming",
-    recommendedUseCases: ["gaming", "general"],
+    recommendedUseCases: ["gaming", "general", "homelab"],
     weightClass: "Mini tower",
     scores: {
       performance: 49,

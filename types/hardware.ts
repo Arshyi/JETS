@@ -3,7 +3,8 @@ export const hardwareUseCases = [
   "cad",
   "engineering",
   "ai",
-  "general"
+  "general",
+  "homelab"
 ] as const;
 
 export const hardwareFormFactors = [
@@ -75,7 +76,8 @@ export const useCaseLabels: Record<HardwareUseCase, string> = {
   cad: "CAD",
   engineering: "Engineering",
   ai: "AI",
-  general: "General"
+  general: "General",
+  homelab: "Homelab"
 };
 
 export const formFactorLabels: Record<HardwareFormFactor, string> = {

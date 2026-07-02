@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components.
 
-Version 0.4 adds a marketplace ingestion foundation with dry-run mock adapters, normalized listing previews, source health, duplicate detection, freshness flags, and admin-gated run logs. The app still keeps the v0.2 search experience and v0.3 Supabase-ready persistence, and it does not include live scraping, AI, checkout, or live marketplace ingestion.
+Version 0.5 adds a transparent deterministic decision engine for ranking hardware solutions. It keeps the v0.2 search experience, v0.3 Supabase-ready persistence, and v0.4 dry-run ingestion foundation, and it does not include AI, live scraping, checkout, or live marketplace ingestion.
 
 ## Commands
 
@@ -18,8 +18,9 @@ npm run lint
 - **0.1:** Foundation, static pages, theme, docs. Complete.
 - **0.2:** Search UI, mock data, filters, rankings, compare flow. Complete.
 - **0.3:** Supabase authentication, saved builds, favorites, history, settings. Complete.
-- **0.4:** Dry-run ingestion foundation, source health, normalized listing schema. Current.
-- **0.5:** Decision engine and AI-assisted explanations. Next.
+- **0.4:** Dry-run ingestion foundation, source health, normalized listing schema. Complete.
+- **0.5:** Deterministic decision engine and ranking explanations. Current.
+- **0.6:** Compatibility review and recommendation workflow. Next.
 
 ## Version 0.2 Notes
 
@@ -47,6 +48,16 @@ npm run lint
 - SQL migration lives in `supabase/migrations/202607020004_v0_4_ingestion_foundation.sql`.
 - v0.4 does not make live requests to Dubizzle, Amazon.ae, Computer Plaza, or any marketplace.
 
+## Version 0.5 Notes
+
+- Decision engine types live in `types/decision.ts`.
+- Use-case presets and score formulas live in `lib/decision-engine`.
+- Search cards show decision score breakdowns and why-this-ranks explanations.
+- Normalized ingestion samples can be scored without live scraping.
+- Deterministic validation fixtures live in `data/decision-engine/validation-fixtures.ts`.
+- Formula documentation lives in `docs/decision-engine.md`.
+- v0.5 does not implement AI.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -62,4 +73,4 @@ Then run the SQL migrations in Supabase before using persistence features. `SUPA
 
 ## Compliance Boundary
 
-JETS v0.4 uses local mock adapters only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 and v0.5 use local mock adapters only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

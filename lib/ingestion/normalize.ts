@@ -116,6 +116,23 @@ function inferUseCases(seed: MockMarketplaceListingSeed): HardwareUseCase[] {
     useCases.add("engineering");
   }
 
+  if (
+    textIncludes(searchable, [
+      "ecc",
+      "homelab",
+      "lab",
+      "node",
+      "optiplex",
+      "render",
+      "server",
+      "thinkstation",
+      "workstation",
+      "xeon"
+    ])
+  ) {
+    useCases.add("homelab");
+  }
+
   if (textIncludes(searchable, ["ai", "cuda", "rtx", "a2000", "3060", "4060"])) {
     useCases.add("ai");
   }

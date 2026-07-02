@@ -1,8 +1,10 @@
 import { mockHardwareListings } from "@/data/mock-listings";
+import { sortListingsByDecision } from "@/lib/decision-engine/ranking";
 import type {
   HardwareFilters,
   HardwareListing,
-  HardwareSortKey
+  HardwareSortKey,
+  HardwareUseCase
 } from "@/types/hardware";
 
 export const maxCompareListings = 3;
@@ -84,27 +86,10 @@ export function filterHardwareListings(
 
 export function sortHardwareListings(
   listings: HardwareListing[],
-  sortKey: HardwareSortKey
+  sortKey: HardwareSortKey,
+  useCase?: HardwareUseCase
 ) {
-  return [...listings].sort((a, b) => {
-    if (sortKey === "lowest-price") {
-      return a.price - b.price || b.scores.value - a.scores.value;
-    }
-
-    if (sortKey === "highest-performance") {
-      return b.scores.performance - a.scores.performance || a.price - b.price;
-    }
-
-    if (sortKey === "highest-reliability") {
-      return b.scores.reliability - a.scores.reliability || a.price - b.price;
-    }
-
-    if (sortKey === "best-sleeper") {
-      return b.scores.sleeper - a.scores.sleeper || b.scores.value - a.scores.value;
-    }
-
-    return b.scores.value - a.scores.value || a.price - b.price;
-  });
+  return sortListingsByDecision(listings, sortKey, useCase);
 }
 
 export function searchHardwareListings(
@@ -112,7 +97,11 @@ export function searchHardwareListings(
   filters: HardwareFilters,
   sortKey: HardwareSortKey
 ) {
-  return sortHardwareListings(filterHardwareListings(listings, filters), sortKey);
+  return sortHardwareListings(
+    filterHardwareListings(listings, filters),
+    sortKey,
+    filters.useCase === "all" ? undefined : filters.useCase
+  );
 }
 
 export function parseCompareIds(value: string | null) {

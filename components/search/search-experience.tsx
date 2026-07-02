@@ -48,6 +48,8 @@ export function SearchExperience({ persistence }: SearchExperienceProps) {
     () => searchHardwareListings(mockHardwareListings, filters, sortKey),
     [filters, sortKey]
   );
+  const activeRankingUseCase =
+    filters.useCase === "all" ? undefined : filters.useCase;
 
   const selectedListings = useMemo(() => {
     const listingsById = new Map(
@@ -97,14 +99,15 @@ export function SearchExperience({ persistence }: SearchExperienceProps) {
       <section className="border-b border-border bg-panel">
         <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-            Version 0.2
+            Version 0.5
           </p>
           <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <h1 className="max-w-3xl text-4xl font-bold">Search Experience</h1>
               <p className="mt-4 max-w-3xl text-base leading-7 text-muted">
-                Local mock listings ranked by value, performance, reliability,
-                aesthetics, upgrade room, and repair risk.
+                Local mock listings ranked by the transparent deterministic
+                decision engine across value, performance, reliability, risk,
+                freshness, upgrade room, shipping friction, and use-case fit.
               </p>
             </div>
             <div className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-muted">
@@ -175,6 +178,7 @@ export function SearchExperience({ persistence }: SearchExperienceProps) {
                   }
                   isSaved={persistence.savedListingIds.includes(listing.id)}
                   listing={listing}
+                  rankingUseCase={activeRankingUseCase}
                   isSelected={selectedIds.includes(listing.id)}
                   isSelectionDisabled={selectedIds.length >= maxCompareListings}
                   onToggleCompare={toggleCompare}

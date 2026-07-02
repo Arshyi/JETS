@@ -1,7 +1,10 @@
 import { Check, Cpu, Heart, MapPin, Save, ShieldAlert } from "lucide-react";
 
+import { ScoreBreakdown } from "@/components/decision/score-breakdown";
+import { WhyThisRanks } from "@/components/decision/why-this-ranks";
 import { ScoreMeter } from "@/components/search/score-meter";
 import { StatusPill } from "@/components/ui/status-pill";
+import { evaluateHardwareListing } from "@/lib/decision-engine/ranking";
 import { formatCurrency } from "@/lib/hardware-search";
 import {
   favoriteBuildAction,
@@ -13,7 +16,7 @@ import {
   formFactorLabels,
   useCaseLabels
 } from "@/types/hardware";
-import type { HardwareListing } from "@/types/hardware";
+import type { HardwareListing, HardwareUseCase } from "@/types/hardware";
 
 type RankingCardProps = {
   isFavorited: boolean;
@@ -23,6 +26,7 @@ type RankingCardProps = {
   isSelectionDisabled: boolean;
   listing: HardwareListing;
   onToggleCompare: (id: string) => void;
+  rankingUseCase?: HardwareUseCase;
 };
 
 export function RankingCard({
@@ -32,9 +36,14 @@ export function RankingCard({
   isSelected,
   isSelectionDisabled,
   listing,
-  onToggleCompare
+  onToggleCompare,
+  rankingUseCase
 }: RankingCardProps) {
   const checkboxId = `compare-${listing.id}`;
+  const evaluation = evaluateHardwareListing(
+    listing,
+    rankingUseCase ?? listing.recommendedUseCase
+  );
 
   return (
     <article
@@ -53,6 +62,7 @@ export function RankingCard({
             <StatusPill tone="accent">
               {useCaseLabels[listing.recommendedUseCase]}
             </StatusPill>
+            <StatusPill>{evaluation.preset.label} ranking</StatusPill>
           </div>
           <h2 className="mt-4 text-xl font-semibold">{listing.title}</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
@@ -141,16 +151,16 @@ export function RankingCard({
             <MapPin className="h-4 w-4" aria-hidden="true" />
             {listing.location}
           </div>
+          <div className="mt-5">
+            <ScoreMeter label="Sleeper fit" value={listing.scores.sleeper} tone="warning" />
+          </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <ScoreMeter label="Performance" value={listing.scores.performance} />
-          <ScoreMeter label="Value" value={listing.scores.value} />
-          <ScoreMeter label="Reliability" value={listing.scores.reliability} />
-          <ScoreMeter label="Aesthetic" value={listing.scores.aesthetic} />
-          <ScoreMeter label="Upgrade potential" value={listing.scores.upgradePotential} />
-          <ScoreMeter label="Sleeper fit" value={listing.scores.sleeper} tone="warning" />
-        </div>
+        <ScoreBreakdown evaluation={evaluation} />
+      </div>
+
+      <div className="mt-5">
+        <WhyThisRanks explanation={evaluation.explanation} />
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr]">
@@ -181,7 +191,7 @@ export function RankingCard({
           </ul>
           <p className="mt-4 text-sm text-muted">
             Weight class:{" "}
-            <span className="font-semibold text-foreground">{listing.weightClass}</span>
+            <span className="font-semibold text-foreground">{evaluation.weightClass}</span>
           </p>
         </div>
       </div>
