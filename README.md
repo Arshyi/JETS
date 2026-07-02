@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components.
 
-Version 0.5 adds a transparent deterministic decision engine for ranking hardware solutions. It keeps the v0.2 search experience, v0.3 Supabase-ready persistence, and v0.4 dry-run ingestion foundation, and it does not include AI, live scraping, checkout, or live marketplace ingestion.
+Version 0.6 adds a deterministic Compatibility Engine for physical, electrical, thermal, memory, storage, BIOS, platform, and upgrade-path checks. It keeps the v0.2 search experience, v0.3 Supabase-ready persistence, v0.4 dry-run ingestion foundation, and v0.5 decision engine, and it does not include AI, live scraping, checkout, or live marketplace ingestion.
 
 ## Commands
 
@@ -19,8 +19,9 @@ npm run lint
 - **0.2:** Search UI, mock data, filters, rankings, compare flow. Complete.
 - **0.3:** Supabase authentication, saved builds, favorites, history, settings. Complete.
 - **0.4:** Dry-run ingestion foundation, source health, normalized listing schema. Complete.
-- **0.5:** Deterministic decision engine and ranking explanations. Current.
-- **0.6:** Compatibility review and recommendation workflow. Next.
+- **0.5:** Deterministic decision engine and ranking explanations. Complete.
+- **0.6:** Deterministic compatibility engine and upgrade checks. Current.
+- **0.7:** Decision snapshots and recommendation review workflow. Next.
 
 ## Version 0.2 Notes
 
@@ -58,6 +59,18 @@ npm run lint
 - Formula documentation lives in `docs/decision-engine.md`.
 - v0.5 does not implement AI.
 
+## Version 0.6 Notes
+
+- Compatibility domain types live in `types/compatibility.ts`.
+- Rule objects live in `lib/compatibility-engine/rules.ts`.
+- Report generation lives in `lib/compatibility-engine/engine.ts`.
+- Mock compatibility profiles live in `data/compatibility/profiles.ts`.
+- Deterministic fixtures live in `data/compatibility/validation-fixtures.ts`.
+- Compatibility UI lives in `components/compatibility`.
+- The report page is available at `/compatibility`.
+- Documentation lives in `docs/compatibility-engine.md`.
+- v0.6 does not implement AI, live scraping, or checkout.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -73,4 +86,4 @@ Then run the SQL migrations in Supabase before using persistence features. `SUPA
 
 ## Compliance Boundary
 
-JETS v0.4 and v0.5 use local mock adapters only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v0.6 use local mock adapters and deterministic local rules only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

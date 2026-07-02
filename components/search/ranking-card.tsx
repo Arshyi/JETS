@@ -1,9 +1,12 @@
 import { Check, Cpu, Heart, MapPin, Save, ShieldAlert } from "lucide-react";
 
+import { CompatibilityBadges } from "@/components/compatibility/compatibility-badges";
+import { PlatformHealthIndicator } from "@/components/compatibility/platform-health-indicator";
 import { ScoreBreakdown } from "@/components/decision/score-breakdown";
 import { WhyThisRanks } from "@/components/decision/why-this-ranks";
 import { ScoreMeter } from "@/components/search/score-meter";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getCompatibilityReportForListingId } from "@/data/compatibility/profiles";
 import { evaluateHardwareListing } from "@/lib/decision-engine/ranking";
 import { formatCurrency } from "@/lib/hardware-search";
 import {
@@ -44,6 +47,7 @@ export function RankingCard({
     listing,
     rankingUseCase ?? listing.recommendedUseCase
   );
+  const compatibilityReport = getCompatibilityReportForListingId(listing.id);
 
   return (
     <article
@@ -63,6 +67,9 @@ export function RankingCard({
               {useCaseLabels[listing.recommendedUseCase]}
             </StatusPill>
             <StatusPill>{evaluation.preset.label} ranking</StatusPill>
+            {compatibilityReport ? (
+              <CompatibilityBadges report={compatibilityReport} />
+            ) : null}
           </div>
           <h2 className="mt-4 text-xl font-semibold">{listing.title}</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
@@ -162,6 +169,12 @@ export function RankingCard({
       <div className="mt-5">
         <WhyThisRanks explanation={evaluation.explanation} />
       </div>
+
+      {compatibilityReport ? (
+        <div className="mt-5">
+          <PlatformHealthIndicator report={compatibilityReport} />
+        </div>
+      ) : null}
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-lg border border-border bg-background p-4">

@@ -17,6 +17,7 @@ export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
   { title: "Search", href: "/search", status: "v0.5" },
   { title: "Account", href: "/account", status: "v0.3" },
+  { title: "Compatibility", href: "/compatibility", status: "v0.6" },
   { title: "Sources", href: "/sources", status: "v0.4" },
   { title: "Roadmap", href: "/roadmap" },
   { title: "About", href: "/about" }
@@ -52,6 +53,12 @@ export const workspaceNav: NavItem[] = [
     href: "/compare",
     description: "Side-by-side comparison for selected mock listings.",
     status: "v0.2"
+  },
+  {
+    title: "Compatibility",
+    href: "/compatibility",
+    description: "Deterministic hardware fit, power, thermal, memory, storage, and upgrade checks.",
+    status: "v0.6"
   },
   {
     title: "Sources",
@@ -167,7 +174,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.5",
     title: "Decision engine",
-    status: "Now",
+    status: "Done",
     description:
       "Rank hardware with transparent deterministic scoring before adding AI assistance.",
     items: [
@@ -181,14 +188,28 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.6",
     title: "Compatibility review",
+    status: "Now",
+    description:
+      "Evaluate physical, electrical, thermal, memory, storage, BIOS, platform, and upgrade compatibility with deterministic rules.",
+    items: [
+      "CPU and motherboard compatibility",
+      "GPU PCIe, length, height, and thickness checks",
+      "PSU wattage and connector checks",
+      "RAM and storage expansion checks",
+      "Thermal risk, airflow, BIOS risk, and platform age indicators"
+    ]
+  },
+  {
+    version: "0.7",
+    title: "Decision snapshots",
     status: "Next",
     description:
-      "Add component compatibility checks and human-review workflows on top of deterministic rankings.",
+      "Persist ranked decisions and compatibility reports so users can compare recommendations over time.",
     items: [
-      "GPU fit and PSU headroom checks",
-      "Memory, storage, and platform compatibility",
-      "Saved decision snapshots",
-      "Reviewable recommendation notes"
+      "Saved compatibility reports",
+      "Decision snapshot history",
+      "Comparison notes",
+      "Recommendation review workflow"
     ]
   }
 ];

@@ -57,22 +57,35 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.5 - Decision Engine
 
-- Current.
-- Add deterministic scoring and ranking logic.
-- Add formula comments and documentation.
-- Add why-this-ranks explanations.
-- Add score breakdown UI.
-- Add use-case presets for gaming, CAD, engineering, AI, general, and homelab.
-- Add validation fixtures.
+- Complete.
+- Added deterministic scoring and ranking logic.
+- Added formula comments and documentation.
+- Added why-this-ranks explanations.
+- Added score breakdown UI.
+- Added use-case presets for gaming, CAD, engineering, AI, general, and homelab.
+- Added validation fixtures.
 - Do not implement AI.
 
-### Version 0.6 - Compatibility Review
+### Version 0.6 - Compatibility Engine
+
+- Current.
+- Add CPU and motherboard compatibility checks.
+- Add GPU PCIe, length, height, and thickness checks.
+- Add PSU wattage and connector checks.
+- Add RAM type, capacity, and slot checks.
+- Add storage interface, M.2, and SATA checks.
+- Add cooler clearance, airflow, and thermal risk checks.
+- Add BIOS generation risk and platform age scoring.
+- Add compatibility report page, badges, platform health, and upgrade suggestions.
+- Do not implement AI, live scraping, or checkout.
+
+### Version 0.7 - Decision Snapshots
 
 - Next.
-- Add compatibility checks for GPU fit, PSU headroom, memory, storage, and platform constraints.
-- Add saved decision snapshots.
-- Add reviewable recommendation notes.
-- Keep AI out until deterministic recommendations can be audited.
+- Persist decision and compatibility report snapshots.
+- Add notes around why a user accepted or rejected a recommendation.
+- Add comparison history between snapshots.
+- Keep deterministic audit trails before adding AI assistance.
 
 ## Idea Parking Lot
 
