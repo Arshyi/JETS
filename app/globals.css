@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --color-background: 248 250 252;
+  --color-foreground: 15 23 42;
+  --color-panel: 255 255 255;
+  --color-subtle: 241 245 249;
+  --color-muted: 71 85 105;
+  --color-border: 203 213 225;
+  --color-accent: 20 184 166;
+  --color-accent-strong: 13 148 136;
+  --color-warning: 217 119 6;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-background: 10 14 20;
+  --color-foreground: 241 245 249;
+  --color-panel: 17 24 39;
+  --color-subtle: 30 41 59;
+  --color-muted: 148 163 184;
+  --color-border: 51 65 85;
+  --color-accent: 45 212 191;
+  --color-accent-strong: 94 234 212;
+  --color-warning: 251 191 36;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  ::selection {
+    background: rgb(var(--color-accent) / 0.25);
+  }
+}
