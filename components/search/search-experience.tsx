@@ -10,6 +10,7 @@ import { SortControl } from "@/components/search/sort-control";
 import { EmptyState } from "@/components/states/empty-state";
 import { LoadingState } from "@/components/states/loading-state";
 import { mockHardwareListings } from "@/data/mock-listings";
+import { getComponentCategoryLabel } from "@/lib/component-inventory";
 import {
   defaultHardwareFilters,
   getHardwareLocations,
@@ -21,9 +22,11 @@ import type {
   HardwareListing,
   HardwareSortKey
 } from "@/types/hardware";
+import type { ComponentInventoryItem } from "@/types/component-inventory";
 import type { SearchPersistenceState } from "@/types/persistence";
 
 type SearchExperienceProps = {
+  componentInventory?: ComponentInventoryItem[];
   initialFilters?: HardwareFilters;
   inventoryContext?: {
     description: string;
@@ -34,6 +37,7 @@ type SearchExperienceProps = {
 };
 
 export function SearchExperience({
+  componentInventory = [],
   initialFilters = defaultHardwareFilters,
   inventoryContext,
   persistence
@@ -147,6 +151,49 @@ export function SearchExperience({
         </div>
 
         <div>
+          {inventoryContext ? (
+            <section className="mb-5 rounded-lg border border-border bg-panel p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold">Component inventory</h2>
+                  <p className="mt-2 text-sm leading-6 text-muted">
+                    Slot-filtered component candidates for {inventoryContext.title}.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
+                  {componentInventory.length} components
+                </div>
+              </div>
+              {componentInventory.length > 0 ? (
+                <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                  {componentInventory.slice(0, 6).map((component) => (
+                    <article key={component.id} className="rounded-lg border border-border bg-background p-4">
+                      <p className="text-xs font-semibold uppercase text-accent-strong dark:text-accent">
+                        {getComponentCategoryLabel(component.category)}
+                      </p>
+                      <h3 className="mt-2 text-base font-semibold">{component.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-muted">
+                        {component.summary}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
+                        <span className="rounded-lg border border-border bg-panel px-2 py-1">
+                          ${component.price}
+                        </span>
+                        <span className="rounded-lg border border-border bg-panel px-2 py-1">
+                          {component.condition}
+                        </span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-4 rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
+                  No typed components are mapped to this slot yet.
+                </p>
+              )}
+            </section>
+          ) : null}
+
           <div className="mb-5 flex flex-col gap-3 rounded-lg border border-border bg-panel p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="grid h-10 w-10 place-items-center rounded-lg bg-accent/10 text-accent-strong dark:text-accent">

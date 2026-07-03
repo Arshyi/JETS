@@ -4,6 +4,7 @@ import type {
   BuildGeneratorPreferences,
   OwnedItems
 } from "@/types/build-generator";
+import type { ComponentCategory } from "@/types/component-inventory";
 import type {
   HardwareCondition,
   HardwareFormFactor,
@@ -59,11 +60,19 @@ export const solutionStrategyIds = [
   "future-solution-path"
 ] as const;
 
+export const buildProjectBranchSources = [
+  "manual",
+  "optimization",
+  "import"
+] as const;
+
 export type BuildSlotId = (typeof buildSlotIds)[number];
 export type BuildSlotRequirement = "required" | "optional" | "solution";
 export type BuildSlotStatus = "compatible" | "warning" | "missing";
 export type BuildValidationAreaId = (typeof buildValidationAreaIds)[number];
 export type BuildValidationSeverity = "info" | "warning" | "blocking";
+export type BuildProjectStatus = "active" | "archived";
+export type BuildProjectBranchSource = (typeof buildProjectBranchSources)[number];
 export type SolutionStrategyId = (typeof solutionStrategyIds)[number];
 export type SolutionStrategyStage = "active" | "foundation" | "planned";
 
@@ -105,6 +114,8 @@ export type HardwareSelectionFacts = Partial<{
 }>;
 
 export type WorkspaceHardwareSelection = {
+  componentCategory?: ComponentCategory;
+  componentId?: string;
   facts?: HardwareSelectionFacts;
   label: string;
   sourceListingId?: string;
@@ -125,15 +136,24 @@ export type BuildWorkspaceSlot = {
 };
 
 export type BuildWorkspaceProject = {
+  branchDepth?: number;
+  branchName?: string;
+  branchNotes?: string;
+  branchSource?: BuildProjectBranchSource;
   budget: number;
   country: BuildGeneratorCountry;
+  createdAt?: string;
   currency: BuildGeneratorCurrency;
   id: string;
   ownedItems: OwnedItems;
+  parentProjectId?: string | null;
   preferences: BuildGeneratorPreferences;
   purpose: HardwareUseCase;
+  rootProjectId?: string | null;
   slots: BuildWorkspaceSlot[];
+  status?: BuildProjectStatus;
   title: string;
+  updatedAt?: string;
 };
 
 export type BuildValidationIssue = {

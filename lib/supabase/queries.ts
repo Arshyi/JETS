@@ -1,9 +1,17 @@
 import { mockHardwareListings } from "@/data/mock-listings";
 import { readBuildSnapshot } from "@/lib/build-snapshots/snapshot";
+import { buildWorkspaceProjectFromRows } from "@/lib/solution-builder/projects";
+import { createBuildWorkspaceModel } from "@/lib/solution-builder/workspace";
 import { isSupabaseConfigured, supabaseSetupMessage } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   BuildHistoryRow,
+  BuildProjectAuditEventRow,
+  BuildProjectNoteRow,
+  BuildProjectOptimizationRunRow,
+  BuildProjectOptimizationSuggestionRow,
+  BuildProjectRow,
+  BuildProjectSlotRow,
   BuildSnapshotRow,
   DecisionAuditEventRow,
   FavoriteBuildRow,
@@ -325,6 +333,196 @@ export async function getBuildSnapshots() {
     isConfigured: true,
     isSignedIn: true,
     message: error?.message
+  };
+}
+
+export async function getBuildProjects() {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: [] as BuildProjectRow[],
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return {
+      data: [] as BuildProjectRow[],
+      isConfigured: true,
+      isSignedIn: false
+    };
+  }
+
+  const { data, error } = await client
+    .from("build_projects")
+    .select("*")
+    .eq("user_id", userId)
+    .order("updated_at", { ascending: false });
+
+  return {
+    data: data ?? [],
+    isConfigured: true,
+    isSignedIn: true,
+    message: error?.message
+  };
+}
+
+export async function getBuildProjectDetail(projectId: string) {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: null,
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return {
+      data: null,
+      isConfigured: true,
+      isSignedIn: false
+    };
+  }
+
+  const { data: projectRow, error: projectError } = await client
+    .from("build_projects")
+    .select("*")
+    .eq("id", projectId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (!projectRow) {
+    return {
+      data: null,
+      isConfigured: true,
+      isSignedIn: true,
+      message: projectError?.message
+    };
+  }
+
+  const lineageRootId = projectRow.root_project_id ?? projectRow.id;
+  const [slotsResult, notesResult, auditResult, branchesResult] = await Promise.all([
+    client
+      .from("build_project_slots")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId),
+    client
+      .from("build_project_notes")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(20),
+    client
+      .from("build_project_audit_events")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(50),
+    client
+      .from("build_projects")
+      .select("*")
+      .eq("user_id", userId)
+      .or(`id.eq.${lineageRootId},root_project_id.eq.${lineageRootId}`)
+      .order("branch_depth", { ascending: true })
+      .order("updated_at", { ascending: false })
+  ]);
+  const slotRows = (slotsResult.data ?? []) as BuildProjectSlotRow[];
+  const workspaceProject = buildWorkspaceProjectFromRows(projectRow, slotRows);
+
+  return {
+    data: {
+      auditEvents: (auditResult.data ?? []) as BuildProjectAuditEventRow[],
+      branches: (branchesResult.data ?? []) as BuildProjectRow[],
+      model: createBuildWorkspaceModel(workspaceProject),
+      notes: (notesResult.data ?? []) as BuildProjectNoteRow[],
+      projectRow,
+      slotRows
+    },
+    isConfigured: true,
+    isSignedIn: true,
+    message:
+      slotsResult.error?.message ??
+      notesResult.error?.message ??
+      auditResult.error?.message ??
+      branchesResult.error?.message
+  };
+}
+
+export async function getBuildProjectOptimizationState(
+  projectId: string,
+  runId?: string
+) {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: null,
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return {
+      data: null,
+      isConfigured: true,
+      isSignedIn: false
+    };
+  }
+
+  const detail = await getBuildProjectDetail(projectId);
+
+  if (!detail.data) {
+    return {
+      data: null,
+      isConfigured: detail.isConfigured,
+      isSignedIn: detail.isSignedIn,
+      message: detail.message
+    };
+  }
+
+  const { data: runs, error: runsError } = await client
+    .from("build_project_optimization_runs")
+    .select("*")
+    .eq("project_id", projectId)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(12);
+  const typedRuns = (runs ?? []) as BuildProjectOptimizationRunRow[];
+  const selectedRun =
+    typedRuns.find((run) => run.id === runId) ?? typedRuns[0] ?? null;
+  const { data: suggestions, error: suggestionsError } = selectedRun
+    ? await client
+        .from("build_project_optimization_suggestions")
+        .select("*")
+        .eq("run_id", selectedRun.id)
+        .eq("user_id", userId)
+        .order("ranking", { ascending: true })
+    : {
+        data: [] as BuildProjectOptimizationSuggestionRow[],
+        error: null
+      };
+
+  return {
+    data: {
+      detail: detail.data,
+      runs: typedRuns,
+      selectedRun,
+      suggestions: (suggestions ?? []) as BuildProjectOptimizationSuggestionRow[]
+    },
+    isConfigured: true,
+    isSignedIn: true,
+    message: detail.message ?? runsError?.message ?? suggestionsError?.message
   };
 }
 

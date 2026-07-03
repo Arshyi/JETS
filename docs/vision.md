@@ -14,6 +14,8 @@ Let JETS Recommend is a solution synthesis workflow. Users provide budget, count
 
 Search is inventory. Compatibility, decision scoring, snapshots, audit, and sources are reusable services used by both workflows.
 
+Optimization is the differentiator. The long-term workflow should become Build -> Analyze -> Optimize -> Branch -> Compare, where JETS searches solution paths people would not normally consider while still explaining every tradeoff.
+
 ## Current Rule
 
 Do not build ideas the moment they appear.
@@ -131,7 +133,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 2.0 - Solution Builder Redesign
 
-- Current.
+- Complete.
 - Recenter JETS around solving a hardware problem rather than browsing listings.
 - Add Solution Builder overview.
 - Add Build My Own slot workspace foundation.
@@ -142,13 +144,43 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 2.1 - Project Persistence and Slot Inventory
 
-- Recommended next.
+- Complete.
 - Add Supabase-backed build projects and project slots.
 - Add create, rename, archive, restore, and delete project actions.
 - Add component-aware mock inventory for CPUs, motherboards, PSUs, coolers, RAM, storage, adapters, and operating systems.
 - Let users add inventory items into slots.
 - Compare saved user projects against generated JETS solutions.
 - Continue to defer AI and live scraping until the v2 workflow is stable.
+
+### Version 2.2 - Optimization Engine Foundation
+
+- Complete.
+- Treat comparison as a view over optimization, not as the core capability.
+- Add deterministic candidate generation, compatibility filtering, decision scoring, optimization passes, ranking, and explanations.
+- Let users lock components so JETS only changes unlocked slots.
+- Add optimization goals for cost, performance, reliability, power draw, upgradeability, engineering-student use, and balanced builds.
+- Add optimization depth controls: standard, enthusiast, and experimental.
+- Persist optimization runs and suggestions.
+- Continue to defer AI and live scraping until deterministic project workflows are stable.
+
+### Version 2.3 - Project Branching and Optimization Workspace
+
+- Current.
+- Treat branches like Git for hardware ideas.
+- Let users create manual project branches.
+- Let optimizer suggestions create child branches without mutating the original.
+- Preserve parent/root lineage, branch names, branch source, selected optimization run, and selected suggestions.
+- Show branch workspace on project detail.
+- Keep merge/apply behavior deferred until branches are easy to inspect.
+
+### Version 2.4 - Branch Comparison and Merge Preview
+
+- Recommended next.
+- Compare root, manual, and optimized branches side by side.
+- Show slot-level diffs and score deltas.
+- Add merge-style apply into the preferred branch.
+- Add rollback and branch audit events.
+- Preserve project history before destructive changes.
 
 ## Idea Parking Lot
 
@@ -172,6 +204,9 @@ Ideas below are valuable, but they are not current milestone scope.
 - Warranty and return policy comparison
 - Market price trend tracking
 - Listing scam and risk heuristics
+- Optimization branches and project version history
+- Branch diff viewer
+- Merge preview for hardware slot changes
 
 ## Product Principles
 

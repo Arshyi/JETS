@@ -11,7 +11,7 @@ export const solutionBuilderModes: SolutionBuilderMode[] = [
   {
     description:
       "Create a project, fill hardware slots, and let JETS continuously validate the build as a complete solution.",
-    href: "/solution-builder/build-my-own",
+    href: "/solution-builder/projects",
     id: "build-my-own",
     title: "Build My Own"
   },

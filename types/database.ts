@@ -9,6 +9,294 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      build_project_audit_events: {
+        Row: {
+          after_state: Json | null;
+          before_state: Json | null;
+          created_at: string;
+          event_type: string;
+          id: string;
+          metadata: Json;
+          project_id: string;
+          summary: string;
+          user_id: string;
+        };
+        Insert: {
+          after_state?: Json | null;
+          before_state?: Json | null;
+          created_at?: string;
+          event_type: string;
+          id?: string;
+          metadata?: Json;
+          project_id: string;
+          summary: string;
+          user_id: string;
+        };
+        Update: {
+          after_state?: Json | null;
+          before_state?: Json | null;
+          created_at?: string;
+          event_type?: string;
+          id?: string;
+          metadata?: Json;
+          project_id?: string;
+          summary?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      build_project_notes: {
+        Row: {
+          created_at: string;
+          id: string;
+          note: string;
+          project_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          note: string;
+          project_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          note?: string;
+          project_id?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      build_project_optimization_runs: {
+        Row: {
+          app_version: string;
+          baseline_score: number;
+          created_at: string;
+          depth: string;
+          goal: string;
+          id: string;
+          input_project_snapshot: Json;
+          locked_slots: string[];
+          optimized_score: number;
+          project_id: string;
+          summary: string;
+          user_id: string;
+        };
+        Insert: {
+          app_version?: string;
+          baseline_score: number;
+          created_at?: string;
+          depth: string;
+          goal: string;
+          id?: string;
+          input_project_snapshot: Json;
+          locked_slots?: string[];
+          optimized_score: number;
+          project_id: string;
+          summary: string;
+          user_id: string;
+        };
+        Update: {
+          app_version?: string;
+          baseline_score?: number;
+          created_at?: string;
+          depth?: string;
+          goal?: string;
+          id?: string;
+          input_project_snapshot?: Json;
+          locked_slots?: string[];
+          optimized_score?: number;
+          project_id?: string;
+          summary?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      build_project_optimization_suggestions: {
+        Row: {
+          action: string;
+          compatibility_impact: number;
+          confidence: number;
+          created_at: string;
+          current_component_id: string | null;
+          current_component_title: string | null;
+          estimated_cost_delta: number;
+          id: string;
+          power_impact: number;
+          project_id: string;
+          ranking: number;
+          reason: string;
+          reliability_impact: number;
+          run_id: string;
+          score_delta: number;
+          slot_id: string;
+          suggested_component_id: string | null;
+          suggested_component_snapshot: Json | null;
+          suggested_component_title: string | null;
+          upgradeability_impact: number;
+          user_id: string;
+        };
+        Insert: {
+          action: string;
+          compatibility_impact?: number;
+          confidence?: number;
+          created_at?: string;
+          current_component_id?: string | null;
+          current_component_title?: string | null;
+          estimated_cost_delta?: number;
+          id?: string;
+          power_impact?: number;
+          project_id: string;
+          ranking: number;
+          reason: string;
+          reliability_impact?: number;
+          run_id: string;
+          score_delta?: number;
+          slot_id: string;
+          suggested_component_id?: string | null;
+          suggested_component_snapshot?: Json | null;
+          suggested_component_title?: string | null;
+          upgradeability_impact?: number;
+          user_id: string;
+        };
+        Update: {
+          action?: string;
+          compatibility_impact?: number;
+          confidence?: number;
+          created_at?: string;
+          current_component_id?: string | null;
+          current_component_title?: string | null;
+          estimated_cost_delta?: number;
+          id?: string;
+          power_impact?: number;
+          project_id?: string;
+          ranking?: number;
+          reason?: string;
+          reliability_impact?: number;
+          run_id?: string;
+          score_delta?: number;
+          slot_id?: string;
+          suggested_component_id?: string | null;
+          suggested_component_snapshot?: Json | null;
+          suggested_component_title?: string | null;
+          upgradeability_impact?: number;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      build_project_slots: {
+        Row: {
+          component_category: string | null;
+          component_id: string | null;
+          component_snapshot: Json | null;
+          created_at: string;
+          id: string;
+          notes: string;
+          project_id: string;
+          slot_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          component_category?: string | null;
+          component_id?: string | null;
+          component_snapshot?: Json | null;
+          created_at?: string;
+          id?: string;
+          notes?: string;
+          project_id: string;
+          slot_id: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          component_category?: string | null;
+          component_id?: string | null;
+          component_snapshot?: Json | null;
+          created_at?: string;
+          id?: string;
+          notes?: string;
+          project_id?: string;
+          slot_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      build_projects: {
+        Row: {
+          app_version: string;
+          branch_depth: number;
+          branch_name: string;
+          branch_notes: string;
+          branch_source: string;
+          budget: number;
+          country: string;
+          created_at: string;
+          currency: string;
+          id: string;
+          owned_items: Json;
+          parent_project_id: string | null;
+          preferences: Json;
+          purpose: string;
+          root_project_id: string | null;
+          source_optimization_run_id: string | null;
+          source_optimization_suggestion_ids: string[];
+          status: string;
+          title: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          app_version?: string;
+          branch_depth?: number;
+          branch_name?: string;
+          branch_notes?: string;
+          branch_source?: string;
+          budget?: number;
+          country: string;
+          created_at?: string;
+          currency: string;
+          id?: string;
+          owned_items?: Json;
+          parent_project_id?: string | null;
+          preferences?: Json;
+          purpose: string;
+          root_project_id?: string | null;
+          source_optimization_run_id?: string | null;
+          source_optimization_suggestion_ids?: string[];
+          status?: string;
+          title: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          app_version?: string;
+          branch_depth?: number;
+          branch_name?: string;
+          branch_notes?: string;
+          branch_source?: string;
+          budget?: number;
+          country?: string;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          owned_items?: Json;
+          parent_project_id?: string | null;
+          preferences?: Json;
+          purpose?: string;
+          root_project_id?: string | null;
+          source_optimization_run_id?: string | null;
+          source_optimization_suggestion_ids?: string[];
+          status?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       build_snapshots: {
         Row: {
           app_version: string;
@@ -456,6 +744,18 @@ export type Database = {
 };
 
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+export type BuildProjectRow =
+  Database["public"]["Tables"]["build_projects"]["Row"];
+export type BuildProjectSlotRow =
+  Database["public"]["Tables"]["build_project_slots"]["Row"];
+export type BuildProjectNoteRow =
+  Database["public"]["Tables"]["build_project_notes"]["Row"];
+export type BuildProjectOptimizationRunRow =
+  Database["public"]["Tables"]["build_project_optimization_runs"]["Row"];
+export type BuildProjectOptimizationSuggestionRow =
+  Database["public"]["Tables"]["build_project_optimization_suggestions"]["Row"];
+export type BuildProjectAuditEventRow =
+  Database["public"]["Tables"]["build_project_audit_events"]["Row"];
 export type BuildSnapshotRow =
   Database["public"]["Tables"]["build_snapshots"]["Row"];
 export type DecisionAuditEventRow =

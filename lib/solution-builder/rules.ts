@@ -1,4 +1,8 @@
 import { buildWorkspaceSlotDefinitions } from "@/data/solution-builder";
+import {
+  getAllowedComponentCategoriesForSlot,
+  getComponentCategoryLabel
+} from "@/lib/component-inventory";
 import type {
   BuildSlotId,
   BuildSlotStatus,
@@ -7,11 +11,13 @@ import type {
   BuildValidationIssue,
   BuildWorkspaceEvaluation,
   BuildWorkspaceProject,
-  HardwareSelectionFacts
+  HardwareSelectionFacts,
+  WorkspaceHardwareSelection
 } from "@/types/solution-builder";
 
 type RuleContext = {
   getFacts: (slotId: BuildSlotId) => HardwareSelectionFacts;
+  getSelection: (slotId: BuildSlotId) => WorkspaceHardwareSelection | undefined;
   hasSelection: (slotId: BuildSlotId) => boolean;
   project: BuildWorkspaceProject;
 };
@@ -43,6 +49,15 @@ const definitionsById = new Map(
 const requiredSlotIds = buildWorkspaceSlotDefinitions
   .filter((definition) => definition.requirement === "required")
   .map((definition) => definition.id);
+
+const missingRequiredSlotTitles: Partial<Record<BuildSlotId, string>> = {
+  "cpu": "Missing CPU",
+  "cpu-cooler": "Missing cooling solution",
+  "motherboard": "Missing motherboard or base system",
+  "psu": "Missing PSU or power solution",
+  "ram": "Missing RAM",
+  "storage": "Missing storage"
+};
 
 function clampScore(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
@@ -93,11 +108,50 @@ const buildWorkspaceRules: RuleDefinition[] = [
             reason: "Required solution slots must be filled before the build can be treated as complete.",
             severity: "blocking",
             slotId,
-            title: `Missing ${definition?.label ?? slotId}`
+            title:
+              missingRequiredSlotTitles[slotId] ??
+              `Missing ${definition?.label ?? slotId}`
           });
         }),
     id: "required-slots-present",
     label: "Required slots present"
+  },
+  {
+    area: "essential-parts",
+    evaluate: ({ getSelection, project }) =>
+      project.slots.flatMap((slot) => {
+        const selection = getSelection(slot.definitionId);
+
+        if (!selection?.componentCategory) {
+          return [];
+        }
+
+        const allowedCategories = getAllowedComponentCategoriesForSlot(
+          slot.definitionId
+        );
+
+        if (
+          allowedCategories.length === 0 ||
+          allowedCategories.includes(selection.componentCategory)
+        ) {
+          return [];
+        }
+
+        const definition = definitionsById.get(slot.definitionId);
+
+        return [
+          createIssue({
+            area: "essential-parts",
+            id: `incompatible-category-${slot.definitionId}`,
+            reason: `${getComponentCategoryLabel(selection.componentCategory)} inventory cannot satisfy the ${definition?.label ?? slot.definitionId} slot.`,
+            severity: "blocking",
+            slotId: slot.definitionId,
+            title: "Incompatible component category in slot"
+          })
+        ];
+      }),
+    id: "component-category-fits-slot",
+    label: "Component category fits slot"
   },
   {
     area: "physical-fit",
@@ -499,6 +553,10 @@ function getFactsForSlot(project: BuildWorkspaceProject, slotId: BuildSlotId) {
   );
 }
 
+function getSelectionForSlot(project: BuildWorkspaceProject, slotId: BuildSlotId) {
+  return project.slots.find((slot) => slot.definitionId === slotId)?.selectedHardware;
+}
+
 function getSlotStatus(
   slotId: BuildSlotId,
   hasSelection: boolean,
@@ -543,6 +601,7 @@ export function evaluateBuildWorkspace(
 ): BuildWorkspaceEvaluation {
   const context: RuleContext = {
     getFacts: (slotId) => getFactsForSlot(project, slotId),
+    getSelection: (slotId) => getSelectionForSlot(project, slotId),
     hasSelection: (slotId) =>
       project.slots.some(
         (slot) => slot.definitionId === slotId && Boolean(slot.selectedHardware)

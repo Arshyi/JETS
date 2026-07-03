@@ -4,18 +4,12 @@ import {
   solutionStrategyDefinitions,
   starterEngineeringWorkspaceProject
 } from "@/data/solution-builder";
-import { mockHardwareListings } from "@/data/mock-listings";
 import { generateBuildRecommendations } from "@/lib/build-generator/engine";
-import {
-  defaultHardwareFilters,
-  searchHardwareListings
-} from "@/lib/hardware-search";
+import { getComponentsForSlot } from "@/lib/component-inventory";
 import { evaluateBuildWorkspace } from "@/lib/solution-builder/rules";
 import type { BuildGeneratorInput } from "@/types/build-generator";
-import type { HardwareFilters } from "@/types/hardware";
 import type {
   BuildSlotId,
-  BuildSlotSearchIntent,
   BuildWorkspaceModel,
   BuildWorkspaceProject,
   BuildWorkspaceSlotDefinition,
@@ -34,16 +28,6 @@ function toBuildGeneratorInput(project: BuildWorkspaceProject): BuildGeneratorIn
     ownedItems: project.ownedItems,
     preferences: project.preferences,
     primaryUseCase: project.purpose
-  };
-}
-
-function filtersFromSearchIntent(intent: BuildSlotSearchIntent): HardwareFilters {
-  return {
-    ...defaultHardwareFilters,
-    condition: intent.condition ?? "all",
-    formFactor: intent.formFactor ?? "all",
-    query: intent.query,
-    useCase: intent.useCase ?? "all"
   };
 }
 
@@ -87,18 +71,14 @@ export function getSlotInventoryContext(slotId: string | undefined) {
   }
 
   return {
-    description: `${definition.label} candidates from the shared inventory service. These results remain mock data until live ingestion is intentionally added.`,
+    description: `${definition.label} candidates from the shared component inventory service. These results remain mock data until live ingestion is intentionally added.`,
     slotId: definition.id,
     title: `${definition.label} Inventory`
   };
 }
 
 function getInventoryMatchCount(definition: BuildWorkspaceSlotDefinition) {
-  return searchHardwareListings(
-    mockHardwareListings,
-    filtersFromSearchIntent(definition.searchIntent),
-    "best-value"
-  ).length;
+  return getComponentsForSlot(definition.id).length;
 }
 
 function getInventoryCounts() {
@@ -168,8 +148,9 @@ function getComparePreview(
   };
 }
 
-export function getBuildWorkspaceModel(): BuildWorkspaceModel {
-  const project = starterEngineeringWorkspaceProject;
+export function createBuildWorkspaceModel(
+  project: BuildWorkspaceProject
+): BuildWorkspaceModel {
   const inventoryCounts = getInventoryCounts();
   const evaluation = evaluateBuildWorkspace(project, inventoryCounts);
   const slots = evaluation.slots.map((slot) => ({
@@ -189,3 +170,9 @@ export function getBuildWorkspaceModel(): BuildWorkspaceModel {
     strategies: solutionStrategyDefinitions
   };
 }
+
+export function getBuildWorkspaceModel(): BuildWorkspaceModel {
+  return createBuildWorkspaceModel(starterEngineeringWorkspaceProject);
+}
+
+export { starterEngineeringWorkspaceProject };

@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths.
 
-Version 2.0 is the first architectural redesign. JETS now has two primary workflows: Build My Own for slot-based projects, and Let JETS Recommend for complete deterministic solution recommendations. Search, compatibility, decision scoring, snapshots, audit, and sources remain functional as shared infrastructure.
+Version 2.3 adds Project Branching & Optimization Workspace. JETS now treats hardware ideas like engineering branches: preserve the original project, explore optimized variants, then compare.
 
 ## Commands
 
@@ -25,8 +25,11 @@ npm run lint
 - **0.8:** Decision snapshots and recommendation review workflow. Complete.
 - **0.9:** Decision audit foundation. Complete.
 - **1.0:** Private beta hardening. Complete.
-- **2.0:** Solution Builder workflow redesign. Current.
-- **2.1:** Project persistence and component-aware slot inventory. Recommended next.
+- **2.0:** Solution Builder workflow redesign. Complete.
+- **2.1:** Project persistence and component-aware slot inventory. Complete.
+- **2.2:** Optimization Engine Foundation. Complete.
+- **2.3:** Project Branching & Optimization Workspace. Current.
+- **2.4:** Branch comparison, merge-style apply, and project history diffs. Recommended next.
 
 ## Version 0.2 Notes
 
@@ -137,6 +140,40 @@ npm run lint
 - Documentation lives in `docs/solution-builder.md`.
 - v2.0 does not implement AI, live scraping, checkout, or project persistence.
 
+## Version 2.1 Notes
+
+- Build project dashboard is available at `/solution-builder/projects`.
+- Build project detail pages are available at `/solution-builder/projects/[projectId]`.
+- Component inventory types live in `types/component-inventory.ts`.
+- Mock component inventory lives in `data/mock-components.ts`.
+- Slot filtering and component selection helpers live in `lib/component-inventory.ts`.
+- Project persistence actions live in `lib/supabase/project-actions.ts`.
+- Project queries extend `lib/supabase/queries.ts`.
+- SQL migration lives in `supabase/migrations/202607030011_v2_1_build_projects.sql`.
+- Documentation lives in `docs/component-inventory.md`.
+- v2.1 does not implement AI, live scraping, checkout, or live marketplace inventory.
+
+## Version 2.2 Notes
+
+- Optimization domain types live in `types/optimization.ts`.
+- The deterministic optimization pipeline lives in `lib/optimization-engine/pipeline.ts`.
+- Optimization persistence actions live in `lib/supabase/optimization-actions.ts`.
+- The project optimizer is available at `/solution-builder/projects/[projectId]/optimize`.
+- SQL migration lives in `supabase/migrations/202607030012_v2_2_optimization_engine.sql`.
+- Documentation lives in `docs/optimization-engine.md`.
+- Optimizations honor locked slots and selected depth: standard, enthusiast, or experimental.
+- v2.2 does not implement AI, live scraping, checkout, or automatic project mutation.
+
+## Version 2.3 Notes
+
+- Project branch metadata lives on `build_projects`.
+- Branch actions live in `lib/supabase/branch-actions.ts`.
+- Branch workspace UI lives in `components/solution-builder/project-branch-workspace.tsx`.
+- Optimizer suggestions can create child project branches without mutating the source project.
+- SQL migration lives in `supabase/migrations/202607030013_v2_3_project_branching.sql`.
+- Documentation lives in `docs/project-branching.md`.
+- v2.3 does not implement AI, live scraping, checkout, or automatic merge behavior.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -180,4 +217,4 @@ Use exact production redirect paths where possible, and keep wildcard preview re
 
 ## Compliance Boundary
 
-JETS v0.4 through v2.0 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v2.3 use local mock adapters, deterministic local rules, component-aware mock inventory, deterministic optimization, branch-safe project variants, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

@@ -35,7 +35,7 @@ export const siteConfig = {
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
   { title: "Solution Builder", href: "/solution-builder", status: "v2.0" },
-  { title: "Build My Own", href: "/solution-builder/build-my-own", status: "v2.0" },
+  { title: "Projects", href: "/solution-builder/projects", status: "v2.1" },
   { title: "Recommend", href: "/solution-builder/recommend", status: "v2.0" },
   { title: "Snapshots", href: "/build-snapshots", status: "v0.9" },
   { title: "Activity", href: "/activity", status: "v0.9" },
@@ -55,9 +55,15 @@ export const workspaceNav: NavItem[] = [
     status: "v2.0"
   },
   {
-    title: "Build My Own",
+    title: "Build Projects",
+    href: "/solution-builder/projects",
+    description: "Persisted slot projects with component-aware inventory, validation, notes, and audit history.",
+    status: "v2.1"
+  },
+  {
+    title: "Build My Own Preview",
     href: "/solution-builder/build-my-own",
-    description: "Slot-based project workspace for composing and validating a hardware solution.",
+    description: "Static slot-based architecture preview retained from v2.0.",
     status: "v2.0"
   },
   {
@@ -329,7 +335,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "2.0",
     title: "Solution Builder redesign",
-    status: "Now",
+    status: "Done",
     description:
       "Redesign JETS around solving hardware problems with two distinct workflows and shared service infrastructure.",
     items: [
@@ -342,14 +348,53 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "2.1",
     title: "Project persistence and slot inventory",
-    status: "Next",
+    status: "Done",
     description:
       "Persist user-created build projects and mature inventory from listing-level mock data toward component-aware slot candidates.",
     items: [
-      "Supabase build_projects and build_project_slots tables",
-      "Slot add/remove workflow",
+      "Supabase build project, slot, note, and audit tables",
+      "Slot save and clear workflow",
       "Component-aware mock inventory",
       "Compare saved project against generated JETS solutions"
+    ]
+  },
+  {
+    version: "2.2",
+    title: "Optimization Engine Foundation",
+    status: "Done",
+    description:
+      "Analyze user-built projects, respect locked slots, and propose deterministic improvements before comparison.",
+    items: [
+      "Optimization goals and depth controls",
+      "Locked-slot optimization runs",
+      "Persisted suggestions and score deltas",
+      "Explainable Build -> Analyze -> Optimize -> Compare flow"
+    ]
+  },
+  {
+    version: "2.3",
+    title: "Project Branching & Optimization Workspace",
+    status: "Now",
+    description:
+      "Treat hardware ideas like branches so optimization can create safe project variants without mutating the original.",
+    items: [
+      "Manual project branches",
+      "Optimized branches from selected suggestions",
+      "Parent/root branch lineage",
+      "Branch workspace on project detail"
+    ]
+  },
+  {
+    version: "2.4",
+    title: "Branch comparison and merge preview",
+    status: "Next",
+    description:
+      "Compare project branches, inspect slot-level diffs, and preview merge-style changes before applying them.",
+    items: [
+      "Branch diff viewer",
+      "Original vs optimized score comparison",
+      "Merge preview for slot changes",
+      "Rollback and branch audit events"
     ]
   }
 ];
