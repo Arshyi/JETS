@@ -2,7 +2,17 @@
 
 JETS means Just Enough Tech Solutions.
 
-The product is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components. It is not an e-commerce store. It should help people find the best-value option for their real use case by weighing price, performance, reliability, compatibility, upgrade path, seller risk, and practical constraints.
+The product is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths. It is not an e-commerce store. It should help people solve a hardware problem by weighing price, performance, reliability, compatibility, upgrade path, seller risk, repairability, difficulty, owned hardware, and practical constraints.
+
+## Product Shape
+
+JETS has two primary workflows.
+
+Build My Own is a slot-based workspace. Users create a project, fill hardware slots, and continuously validate completion, compatibility, power, physical fit, thermals, platform health, display needs, and upgrade path.
+
+Let JETS Recommend is a solution synthesis workflow. Users provide budget, country, purpose, preferences, and already-owned hardware. JETS searches possible solution strategies and explains complete recommendations, not just listings.
+
+Search is inventory. Compatibility, decision scoring, snapshots, audit, and sources are reusable services used by both workflows.
 
 ## Current Rule
 
@@ -112,21 +122,33 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 1.0 - Private Beta Hardening
 
-- Current.
+- Complete.
 - Rehearse Supabase migrations and seed data.
 - Harden auth, persistence, and error handling.
 - Review responsive behavior and accessibility.
 - Add product onboarding for the existing deterministic workflow.
 - Do not add AI or live scraping until the beta workflow is stable.
 
-### Version 1.1 - Beta QA Instrumentation
+### Version 2.0 - Solution Builder Redesign
+
+- Current.
+- Recenter JETS around solving a hardware problem rather than browsing listings.
+- Add Solution Builder overview.
+- Add Build My Own slot workspace foundation.
+- Add Let JETS Recommend as the primary recommendation mode.
+- Reposition search as shared inventory.
+- Keep decision, compatibility, snapshots, audit, and sources reusable.
+- Do not add AI, live scraping, checkout, or project persistence yet.
+
+### Version 2.1 - Project Persistence and Slot Inventory
 
 - Recommended next.
-- Add lightweight beta issue templates and manual QA run records.
-- Add migration rehearsal notes and release checklist.
-- Add accessibility review tasks.
-- Add privacy-conscious analytics only if the beta needs evidence beyond manual feedback.
-- Continue to defer AI and live scraping until beta reliability is proven.
+- Add Supabase-backed build projects and project slots.
+- Add create, rename, archive, restore, and delete project actions.
+- Add component-aware mock inventory for CPUs, motherboards, PSUs, coolers, RAM, storage, adapters, and operating systems.
+- Let users add inventory items into slots.
+- Compare saved user projects against generated JETS solutions.
+- Continue to defer AI and live scraping until the v2 workflow is stable.
 
 ## Idea Parking Lot
 

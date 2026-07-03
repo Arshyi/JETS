@@ -1,5 +1,10 @@
 import { mockHardwareListings } from "@/data/mock-listings";
 import { sortListingsByDecision } from "@/lib/decision-engine/ranking";
+import {
+  hardwareConditions,
+  hardwareFormFactors,
+  hardwareUseCases
+} from "@/types/hardware";
 import type {
   HardwareFilters,
   HardwareListing,
@@ -18,6 +23,52 @@ export const defaultHardwareFilters: HardwareFilters = {
   condition: "all",
   location: "all"
 };
+
+export type HardwareSearchParamInput = {
+  condition?: string;
+  formFactor?: string;
+  location?: string;
+  maxBudget?: string;
+  minBudget?: string;
+  query?: string;
+  useCase?: string;
+};
+
+function parseBudgetParam(value: string | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number(value);
+
+  return Number.isFinite(parsed) ? Math.max(0, parsed) : null;
+}
+
+function getAllowedParam<T extends string>(
+  value: string | undefined,
+  allowed: readonly T[],
+  fallback: T | "all"
+) {
+  if (!value || value === "all") {
+    return fallback;
+  }
+
+  return allowed.includes(value as T) ? (value as T) : fallback;
+}
+
+export function getHardwareFiltersFromSearchParams(
+  params: HardwareSearchParamInput
+): HardwareFilters {
+  return {
+    condition: getAllowedParam(params.condition, hardwareConditions, "all"),
+    formFactor: getAllowedParam(params.formFactor, hardwareFormFactors, "all"),
+    location: params.location?.trim() || "all",
+    maxBudget: parseBudgetParam(params.maxBudget),
+    minBudget: parseBudgetParam(params.minBudget),
+    query: params.query?.trim() ?? "",
+    useCase: getAllowedParam(params.useCase, hardwareUseCases, "all")
+  };
+}
 
 export function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {

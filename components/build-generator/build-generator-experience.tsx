@@ -36,6 +36,11 @@ import type { AuthGateState } from "@/types/persistence";
 import type { HardwareUseCase } from "@/types/hardware";
 
 type BuildGeneratorExperienceProps = {
+  headerContent?: {
+    description: string;
+    eyebrow: string;
+    title: string;
+  };
   initialInput?: BuildGeneratorInput;
   persistence: AuthGateState;
   restoredSnapshotTitle?: string;
@@ -48,6 +53,12 @@ function parseBudget(value: string) {
 }
 
 export function BuildGeneratorExperience({
+  headerContent = {
+    description:
+      "Generate complete hardware recommendations from the current mock dataset using the deterministic decision and compatibility engines.",
+    eyebrow: "Supporting service",
+    title: "Build Generator"
+  },
   initialInput = defaultBuildGeneratorInput,
   persistence,
   restoredSnapshotTitle
@@ -99,14 +110,15 @@ export function BuildGeneratorExperience({
       <section className="border-b border-border bg-panel">
         <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-            Version 0.9
+            {headerContent.eyebrow}
           </p>
           <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="max-w-3xl text-4xl font-bold">Build Generator</h1>
+              <h1 className="max-w-3xl text-4xl font-bold">
+                {headerContent.title}
+              </h1>
               <p className="mt-4 max-w-3xl text-base leading-7 text-muted">
-                Generate complete hardware recommendations from the current mock
-                dataset using the deterministic decision and compatibility engines.
+                {headerContent.description}
               </p>
             </div>
             <div className="grid gap-3">

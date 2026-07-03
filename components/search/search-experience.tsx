@@ -24,11 +24,21 @@ import type {
 import type { SearchPersistenceState } from "@/types/persistence";
 
 type SearchExperienceProps = {
+  initialFilters?: HardwareFilters;
+  inventoryContext?: {
+    description: string;
+    slotId: string;
+    title: string;
+  } | null;
   persistence: SearchPersistenceState;
 };
 
-export function SearchExperience({ persistence }: SearchExperienceProps) {
-  const [filters, setFilters] = useState<HardwareFilters>(defaultHardwareFilters);
+export function SearchExperience({
+  initialFilters = defaultHardwareFilters,
+  inventoryContext,
+  persistence
+}: SearchExperienceProps) {
+  const [filters, setFilters] = useState<HardwareFilters>(initialFilters);
   const [sortKey, setSortKey] = useState<HardwareSortKey>("best-value");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,7 +82,7 @@ export function SearchExperience({ persistence }: SearchExperienceProps) {
   }
 
   function resetFilters() {
-    setFilters(defaultHardwareFilters);
+    setFilters(initialFilters);
     setSortKey("best-value");
   }
 
@@ -99,15 +109,16 @@ export function SearchExperience({ persistence }: SearchExperienceProps) {
       <section className="border-b border-border bg-panel">
         <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-            Version 0.5
+            {inventoryContext ? "Inventory service" : "Supporting service"}
           </p>
           <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="max-w-3xl text-4xl font-bold">Search Experience</h1>
+              <h1 className="max-w-3xl text-4xl font-bold">
+                {inventoryContext?.title ?? "Search Experience"}
+              </h1>
               <p className="mt-4 max-w-3xl text-base leading-7 text-muted">
-                Local mock listings ranked by the transparent deterministic
-                decision engine across value, performance, reliability, risk,
-                freshness, upgrade room, shipping friction, and use-case fit.
+                {inventoryContext?.description ??
+                  "Local mock listings ranked by the transparent deterministic decision engine across value, performance, reliability, risk, freshness, upgrade room, shipping friction, and use-case fit."}
               </p>
             </div>
             <div className="rounded-lg border border-border bg-background px-4 py-3 text-sm text-muted">

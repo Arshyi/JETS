@@ -28,16 +28,17 @@ export const siteConfig = {
   name: "JETS",
   fullName: "Just Enough Tech Solutions",
   description:
-    "An AI-assisted hardware decision engine for finding better value in used PCs, laptops, workstations, servers, and components.",
+    "A hardware solution builder for planning, validating, and comparing complete used-hardware paths.",
   url: deployedSiteUrl
 };
 
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
-  { title: "Generator", href: "/build-generator", status: "v0.9" },
+  { title: "Solution Builder", href: "/solution-builder", status: "v2.0" },
+  { title: "Build My Own", href: "/solution-builder/build-my-own", status: "v2.0" },
+  { title: "Recommend", href: "/solution-builder/recommend", status: "v2.0" },
   { title: "Snapshots", href: "/build-snapshots", status: "v0.9" },
   { title: "Activity", href: "/activity", status: "v0.9" },
-  { title: "Beta", href: "/beta", status: "v1.0" },
   { title: "Search", href: "/search", status: "v0.5" },
   { title: "Account", href: "/account", status: "v0.9" },
   { title: "Compatibility", href: "/compatibility", status: "v0.6" },
@@ -48,10 +49,28 @@ export const mainNav: NavItem[] = [
 
 export const workspaceNav: NavItem[] = [
   {
+    title: "Solution Builder",
+    href: "/solution-builder",
+    description: "Problem-first v2 workspace with Build My Own and Let JETS Recommend modes.",
+    status: "v2.0"
+  },
+  {
+    title: "Build My Own",
+    href: "/solution-builder/build-my-own",
+    description: "Slot-based project workspace for composing and validating a hardware solution.",
+    status: "v2.0"
+  },
+  {
+    title: "Let JETS Recommend",
+    href: "/solution-builder/recommend",
+    description: "Recommendation workflow that synthesizes complete solution paths from shared services.",
+    status: "v2.0"
+  },
+  {
     title: "Build Generator",
     href: "/build-generator",
-    description: "Complete recommendation workflow with deterministic decision and compatibility engines.",
-    status: "v0.9"
+    description: "Supporting deterministic recommendation service used by Solution Builder.",
+    status: "service"
   },
   {
     title: "Build Snapshots",
@@ -80,8 +99,8 @@ export const workspaceNav: NavItem[] = [
   {
     title: "Search",
     href: "/search",
-    description: "Mock search with deterministic scoring and ranking explanations.",
-    status: "v0.5"
+    description: "Shared inventory service for slot searches, comparison, saves, and favorites.",
+    status: "service"
   },
   {
     title: "Saved Builds",
@@ -297,7 +316,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "1.0",
     title: "Private beta hardening",
-    status: "Now",
+    status: "Done",
     description:
       "Prepare the current deterministic product for a small real-user beta before adding AI or live scraping.",
     items: [
@@ -305,6 +324,32 @@ export const roadmap: RoadmapMilestone[] = [
       "Error handling and analytics baseline",
       "Accessibility and responsive QA",
       "Seeded beta data and user onboarding"
+    ]
+  },
+  {
+    version: "2.0",
+    title: "Solution Builder redesign",
+    status: "Now",
+    description:
+      "Redesign JETS around solving hardware problems with two distinct workflows and shared service infrastructure.",
+    items: [
+      "Build My Own slot-based project workspace",
+      "Let JETS Recommend recommendation workflow",
+      "Search repositioned as inventory",
+      "Decision, compatibility, snapshots, audit, and sources reused across workflows"
+    ]
+  },
+  {
+    version: "2.1",
+    title: "Project persistence and slot inventory",
+    status: "Next",
+    description:
+      "Persist user-created build projects and mature inventory from listing-level mock data toward component-aware slot candidates.",
+    items: [
+      "Supabase build_projects and build_project_slots tables",
+      "Slot add/remove workflow",
+      "Component-aware mock inventory",
+      "Compare saved project against generated JETS solutions"
     ]
   }
 ];

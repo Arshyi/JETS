@@ -1,8 +1,8 @@
 # JETS
 
-JETS (Just Enough Tech Solutions) is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components.
+JETS (Just Enough Tech Solutions) is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths.
 
-Version 1.0 prepares JETS for a small private beta. It hardens setup guidance, onboarding, demo workflows, empty states, route metadata, feedback capture, and smoke-test documentation without adding AI, live scraping, checkout, or live marketplace ingestion.
+Version 2.0 is the first architectural redesign. JETS now has two primary workflows: Build My Own for slot-based projects, and Let JETS Recommend for complete deterministic solution recommendations. Search, compatibility, decision scoring, snapshots, audit, and sources remain functional as shared infrastructure.
 
 ## Commands
 
@@ -24,8 +24,9 @@ npm run lint
 - **0.7:** Build Generator recommendation workflow. Complete.
 - **0.8:** Decision snapshots and recommendation review workflow. Complete.
 - **0.9:** Decision audit foundation. Complete.
-- **1.0:** Private beta hardening. Current.
-- **1.1:** Beta QA instrumentation and release discipline. Recommended next.
+- **1.0:** Private beta hardening. Complete.
+- **2.0:** Solution Builder workflow redesign. Current.
+- **2.1:** Project persistence and component-aware slot inventory. Recommended next.
 
 ## Version 0.2 Notes
 
@@ -123,6 +124,19 @@ npm run lint
 - Empty/setup states now point testers toward the relevant next action.
 - v1.0 does not implement AI, live scraping, checkout, or production feedback submission.
 
+## Version 2.0 Notes
+
+- Solution Builder overview is available at `/solution-builder`.
+- Build My Own is available at `/solution-builder/build-my-own`.
+- Let JETS Recommend is available at `/solution-builder/recommend`.
+- Solution Builder domain types live in `types/solution-builder.ts`.
+- Slot definitions, solution strategies, and starter workspace data live in `data/solution-builder.ts`.
+- Rule-based project validation and orchestration live in `lib/solution-builder`.
+- Search now accepts slot-driven inventory query params and remains available at `/search`.
+- Build Generator remains available at `/build-generator` as a supporting deterministic recommendation service.
+- Documentation lives in `docs/solution-builder.md`.
+- v2.0 does not implement AI, live scraping, checkout, or project persistence.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -166,4 +180,4 @@ Use exact production redirect paths where possible, and keep wildcard preview re
 
 ## Compliance Boundary
 
-JETS v0.4 through v1.0 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v2.0 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

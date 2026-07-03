@@ -1,6 +1,6 @@
 {
   "name": "jets",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "node --require ./scripts/node-readlink-compat.cjs ./node_modules/next/dist/bin/next dev",
