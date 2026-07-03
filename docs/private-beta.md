@@ -31,17 +31,23 @@ Beta testers should not expect:
 Before a beta session:
 
 1. Run `npm install`.
-2. Add `NEXT_PUBLIC_SUPABASE_URL` to `.env.local`.
-3. Add `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local`.
-4. Add `SUPABASE_SERVICE_ROLE_KEY` only if testing admin ingestion persistence.
-5. Add `JETS_ADMIN_EMAILS` only if testing `/admin/ingestion`.
-6. Apply migrations in order:
+2. Add `NEXT_PUBLIC_SITE_URL` to `.env.local` for local deploy rehearsal, or to Vercel Project Settings for deployed beta builds.
+3. Add `NEXT_PUBLIC_SUPABASE_URL` to `.env.local` or Vercel Project Settings.
+4. Add `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local` or Vercel Project Settings.
+5. Add `SUPABASE_SERVICE_ROLE_KEY` only if testing admin ingestion persistence.
+6. Add `JETS_ADMIN_EMAILS` only if testing `/admin/ingestion`.
+7. Configure Supabase Auth URL settings:
+   - Site URL: production Vercel or custom-domain URL.
+   - Local redirect allow-list: `http://localhost:3000/**`.
+   - Production redirect allow-list: `https://your-domain.com/**`.
+   - Vercel preview redirect allow-list: `https://*-your-vercel-team.vercel.app/**`.
+8. Apply migrations in order:
    - `202607020003_v0_3_auth_persistence.sql`
    - `202607020004_v0_4_ingestion_foundation.sql`
    - `202607030008_v0_8_build_snapshots.sql`
    - `202607030009_v0_9_decision_audit.sql`
-7. Run `npm run build`.
-8. Run `npm run lint -- --max-warnings=0`.
+9. Run `npm run build`.
+10. Run `npm run lint -- --max-warnings=0`.
 
 The app also exposes this checklist at `/beta/setup`.
 
@@ -82,6 +88,8 @@ Run this checklist before sharing a beta build:
 - Activity shows an empty state before data exists.
 - Sources page shows local dry-run data without live requests.
 - Admin ingestion handles signed-out, unauthorized, missing service role, and empty run-log states.
+- Vercel production and preview deployments show the expected metadata origin.
+- Supabase Site URL and redirect URL allow-list entries match the beta deployment URLs.
 - Build Generator saves a snapshot when signed in.
 - Snapshot restore returns inputs to the Build Generator.
 - Snapshot rename, notes, favorite, status, restore, compare, and delete actions record audit events.

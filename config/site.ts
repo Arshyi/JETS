@@ -5,12 +5,31 @@ import type {
   RoadmapMilestone
 } from "@/types/navigation";
 
+function toAbsoluteSiteUrl(value: string | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const candidate = value.startsWith("http") ? value : `https://${value}`;
+
+  try {
+    return new URL(candidate).origin;
+  } catch {
+    return null;
+  }
+}
+
+const deployedSiteUrl =
+  toAbsoluteSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
+  toAbsoluteSiteUrl(process.env.NEXT_PUBLIC_VERCEL_URL) ??
+  "https://jets.local";
+
 export const siteConfig = {
   name: "JETS",
   fullName: "Just Enough Tech Solutions",
   description:
     "An AI-assisted hardware decision engine for finding better value in used PCs, laptops, workstations, servers, and components.",
-  url: "https://jets.local"
+  url: deployedSiteUrl
 };
 
 export const mainNav: NavItem[] = [

@@ -10,7 +10,12 @@ export const betaSetupChecklist = [
   {
     title: "Add environment variables",
     description:
-      "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local. Add SUPABASE_SERVICE_ROLE_KEY only for admin dry-run persistence."
+      "Set NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_URL, and NEXT_PUBLIC_SUPABASE_ANON_KEY. Add SUPABASE_SERVICE_ROLE_KEY only for admin dry-run persistence."
+  },
+  {
+    title: "Configure Supabase redirects",
+    description:
+      "Set the Supabase Site URL to the deployed app URL and allow the local, production, and Vercel preview redirect URLs before testing email confirmation."
   },
   {
     title: "Apply migrations in order",
@@ -67,6 +72,8 @@ export const betaSmokeTests = [
   "Saved builds, favorites, history, snapshots, and activity show friendly empty states.",
   "Snapshot rename, notes, favorite, status, restore, compare, and delete actions record audit events.",
   "Missing Supabase env vars show setup guidance rather than a broken page.",
+  "Vercel production and preview deployments use the expected NEXT_PUBLIC_SITE_URL or NEXT_PUBLIC_VERCEL_URL metadata base.",
+  "Supabase Site URL and redirect URLs are configured for local, production, and Vercel preview beta testing.",
   "Sources and admin ingestion remain dry-run only.",
   "npm run build and npm run lint -- --max-warnings=0 pass."
 ] as const;

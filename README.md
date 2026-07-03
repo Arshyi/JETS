@@ -128,13 +128,41 @@ npm run lint
 Copy `.env.example` to `.env.local` and set:
 
 ```bash
+NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 JETS_ADMIN_EMAILS=
 ```
 
-Then run the SQL migrations in Supabase before using persistence features. `SUPABASE_SERVICE_ROLE_KEY` is server-only and is used by the admin-gated dry-run action to persist ingestion logs. `JETS_ADMIN_EMAILS` is a comma-separated allowlist for `/admin/ingestion`.
+Then run the SQL migrations in Supabase before using persistence features. `NEXT_PUBLIC_SITE_URL` should be the deployed app origin, such as `https://your-domain.com`; Vercel preview builds can fall back to `NEXT_PUBLIC_VERCEL_URL`. `SUPABASE_SERVICE_ROLE_KEY` is server-only and is used by the admin-gated dry-run action to persist ingestion logs. `JETS_ADMIN_EMAILS` is a comma-separated allowlist for `/admin/ingestion`.
+
+## Vercel Deployment
+
+Use the default Vercel Next.js project settings:
+
+```bash
+npm install
+npm run build
+```
+
+Configure these environment variables in Vercel Project Settings before promoting a beta deployment:
+
+- `NEXT_PUBLIC_SITE_URL`: production origin for metadata and Supabase redirect planning.
+- `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anon key.
+- `SUPABASE_SERVICE_ROLE_KEY`: optional server-only key for admin ingestion dry-run persistence.
+- `JETS_ADMIN_EMAILS`: optional comma-separated allowlist for `/admin/ingestion`.
+
+In Supabase Auth URL Configuration, set the Site URL to the production Vercel or custom-domain URL. Add redirect URL allow-list entries for local development, the production domain, and Vercel preview deployments, for example:
+
+```text
+http://localhost:3000/**
+https://your-domain.com/**
+https://*-your-vercel-team.vercel.app/**
+```
+
+Use exact production redirect paths where possible, and keep wildcard preview redirects limited to the Vercel team or project pattern. Redeploy after changing Vercel environment variables.
 
 ## Compliance Boundary
 
