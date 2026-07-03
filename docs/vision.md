@@ -68,21 +68,33 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.6 - Compatibility Engine
 
-- Current.
-- Add CPU and motherboard compatibility checks.
-- Add GPU PCIe, length, height, and thickness checks.
-- Add PSU wattage and connector checks.
-- Add RAM type, capacity, and slot checks.
-- Add storage interface, M.2, and SATA checks.
-- Add cooler clearance, airflow, and thermal risk checks.
-- Add BIOS generation risk and platform age scoring.
-- Add compatibility report page, badges, platform health, and upgrade suggestions.
+- Complete.
+- Added CPU and motherboard compatibility checks.
+- Added GPU PCIe, length, height, and thickness checks.
+- Added PSU wattage and connector checks.
+- Added RAM type, capacity, and slot checks.
+- Added storage interface, M.2, and SATA checks.
+- Added cooler clearance, airflow, and thermal risk checks.
+- Added BIOS generation risk and platform age scoring.
+- Added compatibility report page, badges, platform health, and upgrade suggestions.
 - Do not implement AI, live scraping, or checkout.
 
-### Version 0.7 - Decision Snapshots
+### Version 0.7 - Build Generator
+
+- Current.
+- Create the first complete end-user workflow.
+- Let users choose budget, country, currency, primary use case, preferences, and already-owned hardware.
+- Generate Best Overall, Best Value, Highest Performance, Best Engineering, Best AI, Best Gaming, Best Workstation, and Sleeper Build recommendations.
+- Explain why each build ranks.
+- Show closest alternatives.
+- Reuse the decision engine and compatibility engine.
+- Do not implement AI, live scraping, or checkout.
+
+### Version 0.8 - Decision Snapshots
 
 - Next.
 - Persist decision and compatibility report snapshots.
+- Persist generator inputs and generated recommendations.
 - Add notes around why a user accepted or rejected a recommendation.
 - Add comparison history between snapshots.
 - Keep deterministic audit trails before adding AI assistance.

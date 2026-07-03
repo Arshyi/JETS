@@ -86,6 +86,26 @@ export const useCasePresets: Record<HardwareUseCase, DecisionUseCasePreset> = {
       value: 0.22
     }
   },
+  programming: {
+    budgetCeiling: 700,
+    idealFormFactors: ["laptop", "desktop", "workstation"],
+    keywords: ["programming", "developer", "thinkpad", "ssd", "nvme", "32 gb", "64 gb"],
+    label: "Programming",
+    maxShippingPenalty: 14,
+    minimumReliability: 78,
+    repairRiskTolerance: 10,
+    targetPerformance: 64,
+    useCase: "programming",
+    weights: {
+      ...baseWeights,
+      aesthetics: 0.04,
+      performance: 0.15,
+      reliability: 0.20,
+      risk: 0.16,
+      upgradePotential: 0.12,
+      value: 0.21
+    }
+  },
   general: {
     budgetCeiling: 500,
     idealFormFactors: ["desktop", "laptop", "workstation"],

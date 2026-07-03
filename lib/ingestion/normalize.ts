@@ -140,6 +140,20 @@ function inferUseCases(seed: MockMarketplaceListingSeed): HardwareUseCase[] {
   if (
     textIncludes(searchable, [
       "business",
+      "developer",
+      "laptop",
+      "nvme",
+      "programming",
+      "ssd",
+      "thinkpad"
+    ])
+  ) {
+    useCases.add("programming");
+  }
+
+  if (
+    textIncludes(searchable, [
+      "business",
       "desktop",
       "laptop",
       "office",

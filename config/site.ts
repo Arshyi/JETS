@@ -15,6 +15,7 @@ export const siteConfig = {
 
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
+  { title: "Generator", href: "/build-generator", status: "v0.7" },
   { title: "Search", href: "/search", status: "v0.5" },
   { title: "Account", href: "/account", status: "v0.3" },
   { title: "Compatibility", href: "/compatibility", status: "v0.6" },
@@ -24,6 +25,12 @@ export const mainNav: NavItem[] = [
 ];
 
 export const workspaceNav: NavItem[] = [
+  {
+    title: "Build Generator",
+    href: "/build-generator",
+    description: "Complete recommendation workflow powered by deterministic decision and compatibility engines.",
+    status: "v0.7"
+  },
   {
     title: "Search",
     href: "/search",
@@ -188,7 +195,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.6",
     title: "Compatibility review",
-    status: "Now",
+    status: "Done",
     description:
       "Evaluate physical, electrical, thermal, memory, storage, BIOS, platform, and upgrade compatibility with deterministic rules.",
     items: [
@@ -201,15 +208,29 @@ export const roadmap: RoadmapMilestone[] = [
   },
   {
     version: "0.7",
+    title: "Build generator",
+    status: "Now",
+    description:
+      "Generate complete hardware recommendations from mock listings using deterministic decision and compatibility engines.",
+    items: [
+      "Budget, country, currency, use-case, preference, and owned-gear inputs",
+      "Best overall, value, performance, engineering, AI, gaming, workstation, and sleeper recommendations",
+      "Why-this-build explanations",
+      "Closest alternatives",
+      "Setup cost, shipping weight, lifetime, risk, platform health, and compatibility metrics"
+    ]
+  },
+  {
+    version: "0.8",
     title: "Decision snapshots",
     status: "Next",
     description:
-      "Persist ranked decisions and compatibility reports so users can compare recommendations over time.",
+      "Persist generated build recommendations so users can compare and annotate decisions over time.",
     items: [
-      "Saved compatibility reports",
-      "Decision snapshot history",
-      "Comparison notes",
-      "Recommendation review workflow"
+      "Saved generator runs",
+      "Recommendation snapshots",
+      "User notes and decision outcomes",
+      "Snapshot comparison"
     ]
   }
 ];

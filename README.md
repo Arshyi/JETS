@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components.
 
-Version 0.6 adds a deterministic Compatibility Engine for physical, electrical, thermal, memory, storage, BIOS, platform, and upgrade-path checks. It keeps the v0.2 search experience, v0.3 Supabase-ready persistence, v0.4 dry-run ingestion foundation, and v0.5 decision engine, and it does not include AI, live scraping, checkout, or live marketplace ingestion.
+Version 0.7 adds the Build Generator, the first complete end-user workflow. It uses the deterministic decision engine and compatibility engine to recommend complete hardware solutions from the current mock dataset, and it does not include AI, live scraping, checkout, or live marketplace ingestion.
 
 ## Commands
 
@@ -20,8 +20,9 @@ npm run lint
 - **0.3:** Supabase authentication, saved builds, favorites, history, settings. Complete.
 - **0.4:** Dry-run ingestion foundation, source health, normalized listing schema. Complete.
 - **0.5:** Deterministic decision engine and ranking explanations. Complete.
-- **0.6:** Deterministic compatibility engine and upgrade checks. Current.
-- **0.7:** Decision snapshots and recommendation review workflow. Next.
+- **0.6:** Deterministic compatibility engine and upgrade checks. Complete.
+- **0.7:** Build Generator recommendation workflow. Current.
+- **0.8:** Decision snapshots and recommendation review workflow. Next.
 
 ## Version 0.2 Notes
 
@@ -71,6 +72,17 @@ npm run lint
 - Documentation lives in `docs/compatibility-engine.md`.
 - v0.6 does not implement AI, live scraping, or checkout.
 
+## Version 0.7 Notes
+
+- Build generator types live in `types/build-generator.ts`.
+- Generator config and recommendation logic live in `lib/build-generator`.
+- The workflow page is available at `/build-generator`.
+- Recommendation UI lives in `components/build-generator`.
+- Generator validation fixtures live in `data/build-generator/validation-fixtures.ts`.
+- Documentation lives in `docs/build-generator.md`.
+- v0.7 reuses the existing decision engine, compatibility engine, search models, and mock listings.
+- v0.7 does not implement AI, live scraping, or checkout.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -86,4 +98,4 @@ Then run the SQL migrations in Supabase before using persistence features. `SUPA
 
 ## Compliance Boundary
 
-JETS v0.4 through v0.6 use local mock adapters and deterministic local rules only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v0.7 use local mock adapters and deterministic local rules only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

@@ -243,7 +243,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "good",
     location: "Online shipping",
     recommendedUseCase: "cad",
-    recommendedUseCases: ["cad", "engineering", "general"],
+    recommendedUseCases: ["cad", "engineering", "programming", "general"],
     weightClass: "Thin workstation laptop",
     scores: {
       performance: 76,
@@ -276,7 +276,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "excellent",
     location: "Los Angeles, CA",
     recommendedUseCase: "gaming",
-    recommendedUseCases: ["gaming", "ai", "general"],
+    recommendedUseCases: ["gaming", "ai", "programming", "general"],
     weightClass: "Portable gaming laptop",
     scores: {
       performance: 81,
@@ -408,7 +408,7 @@ export const mockHardwareListings: HardwareListing[] = [
     condition: "broken",
     location: "Online shipping",
     recommendedUseCase: "general",
-    recommendedUseCases: ["general"],
+    recommendedUseCases: ["programming", "general"],
     weightClass: "Parts laptop",
     scores: {
       performance: 41,

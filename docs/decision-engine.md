@@ -57,7 +57,7 @@ The current deterministic fixtures assert that:
 - A ThinkStation P520 sleeper outranks an OptiPlex SFF for homelab.
 - A reliable tiny workstation outranks an older fair-condition render node for CAD.
 
-These fixtures are deliberately small. They are not a replacement for full tests, but they give v0.6 a clear starting point for regression checks before adding compatibility logic.
+These fixtures are deliberately small. They are not a replacement for full tests, but they give later workflow layers a clear starting point for regression checks.
 
 ## Boundaries
 
@@ -68,6 +68,6 @@ These fixtures are deliberately small. They are not a replacement for full tests
 - No automatic duplicate merge.
 - No claim that mock or dry-run listings are available in the real world.
 
-## v0.6 Direction
+## v0.7 and v0.8 Direction
 
-The next durable layer should be compatibility review: GPU fit, PSU headroom, RAM/storage platform checks, thermal constraints, and saved decision snapshots. The deterministic engine should remain auditable before AI explanations are considered.
+The decision engine now feeds the Build Generator. The next durable layer should persist generator outputs as auditable decision snapshots before AI explanations are considered.

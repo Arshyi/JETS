@@ -3,6 +3,7 @@ export const hardwareUseCases = [
   "cad",
   "engineering",
   "ai",
+  "programming",
   "general",
   "homelab"
 ] as const;
@@ -76,6 +77,7 @@ export const useCaseLabels: Record<HardwareUseCase, string> = {
   cad: "CAD",
   engineering: "Engineering",
   ai: "AI",
+  programming: "Programming",
   general: "General",
   homelab: "Homelab"
 };
