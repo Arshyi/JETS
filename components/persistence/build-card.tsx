@@ -5,7 +5,8 @@ import { StatusPill } from "@/components/ui/status-pill";
 import { formatCurrency } from "@/lib/hardware-search";
 import {
   removeFavoriteBuildAction,
-  removeSavedBuildAction
+  removeSavedBuildAction,
+  updateSavedBuildNotesAction
 } from "@/lib/supabase/persistence-actions";
 import type { FavoriteBuildRow, Json, SavedBuildRow } from "@/types/database";
 
@@ -37,6 +38,7 @@ function getSummary(snapshot: Json) {
 export function BuildCard({ row, type }: BuildCardProps) {
   const removeAction =
     type === "saved" ? removeSavedBuildAction : removeFavoriteBuildAction;
+  const savedNotes = type === "saved" && "notes" in row ? row.notes ?? "" : "";
 
   return (
     <article className="rounded-lg border border-border bg-panel p-5">
@@ -69,6 +71,35 @@ export function BuildCard({ row, type }: BuildCardProps) {
           </button>
         </form>
       </div>
+
+      {type === "saved" ? (
+        <form
+          action={updateSavedBuildNotesAction}
+          className="mt-5 rounded-lg border border-border bg-background p-4"
+        >
+          <input type="hidden" name="savedBuildId" value={row.id} />
+          <input type="hidden" name="returnTo" value="/saved-builds" />
+          <label className="text-sm font-semibold" htmlFor={`notes-${row.id}`}>
+            Decision notes
+          </label>
+          <textarea
+            id={`notes-${row.id}`}
+            name="notes"
+            defaultValue={savedNotes}
+            rows={3}
+            className="mt-3 w-full rounded-lg border border-border bg-panel px-3 py-2 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
+            placeholder="Why this build is worth saving, what changed, or what would make it a purchase."
+          />
+          <div className="mt-3 flex justify-end">
+            <button
+              type="submit"
+              className="rounded-lg border border-border bg-panel px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+            >
+              Save notes
+            </button>
+          </div>
+        </form>
+      ) : null}
 
       <div className="mt-5 flex flex-wrap gap-2">
         <Link

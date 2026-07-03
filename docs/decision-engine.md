@@ -69,6 +69,6 @@ These fixtures are deliberately small. They are not a replacement for full tests
 - No automatic duplicate merge.
 - No claim that mock or dry-run listings are available in the real world.
 
-## v0.9 Direction
+## v1.0 Direction
 
-The decision engine now feeds the Build Generator and v0.8 decision snapshots. The next durable layer should create a shared decision audit model for status changes, notes, comparisons, and future explanations.
+The decision engine now feeds the Build Generator, v0.8 snapshots, and v0.9 audit events. The next durable layer should harden regression checks and beta QA before adding AI explanations.

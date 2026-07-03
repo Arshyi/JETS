@@ -18,6 +18,7 @@ export type Database = {
           currency: string;
           id: string;
           is_favorite: boolean;
+          notes: string;
           platform_health: number;
           primary_use_case: string;
           snapshot: Json;
@@ -39,6 +40,7 @@ export type Database = {
           currency: string;
           id?: string;
           is_favorite?: boolean;
+          notes?: string;
           platform_health: number;
           primary_use_case: string;
           snapshot: Json;
@@ -60,6 +62,7 @@ export type Database = {
           currency?: string;
           id?: string;
           is_favorite?: boolean;
+          notes?: string;
           platform_health?: number;
           primary_use_case?: string;
           snapshot?: Json;
@@ -71,6 +74,54 @@ export type Database = {
           top_listing_title?: string;
           top_overall_score?: number;
           updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      decision_audit_events: {
+        Row: {
+          after_state: Json | null;
+          app_version: string;
+          before_state: Json | null;
+          created_at: string;
+          event_type: string;
+          id: string;
+          metadata: Json;
+          note: string | null;
+          subject_id: string | null;
+          subject_title: string;
+          subject_type: string;
+          summary: string;
+          user_id: string;
+        };
+        Insert: {
+          after_state?: Json | null;
+          app_version?: string;
+          before_state?: Json | null;
+          created_at?: string;
+          event_type: string;
+          id?: string;
+          metadata?: Json;
+          note?: string | null;
+          subject_id?: string | null;
+          subject_title: string;
+          subject_type: string;
+          summary: string;
+          user_id: string;
+        };
+        Update: {
+          after_state?: Json | null;
+          app_version?: string;
+          before_state?: Json | null;
+          created_at?: string;
+          event_type?: string;
+          id?: string;
+          metadata?: Json;
+          note?: string | null;
+          subject_id?: string | null;
+          subject_title?: string;
+          subject_type?: string;
+          summary?: string;
           user_id?: string;
         };
         Relationships: [];
@@ -407,6 +458,8 @@ export type Database = {
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 export type BuildSnapshotRow =
   Database["public"]["Tables"]["build_snapshots"]["Row"];
+export type DecisionAuditEventRow =
+  Database["public"]["Tables"]["decision_audit_events"]["Row"];
 export type SavedBuildRow = Database["public"]["Tables"]["saved_builds"]["Row"];
 export type FavoriteBuildRow =
   Database["public"]["Tables"]["favorite_builds"]["Row"];

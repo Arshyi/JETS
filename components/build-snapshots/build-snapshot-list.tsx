@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import { AuditTimeline } from "@/components/decision-audit/audit-timeline";
 import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { convertUsdToCurrency } from "@/lib/build-generator/config";
@@ -19,14 +20,17 @@ import { readBuildSnapshot } from "@/lib/build-snapshots/snapshot";
 import {
   deleteBuildSnapshotAction,
   renameBuildSnapshotAction,
+  restoreBuildSnapshotAction,
+  updateBuildSnapshotNotesAction,
   updateBuildSnapshotFavoriteAction,
   updateBuildSnapshotStatusAction
 } from "@/lib/supabase/persistence-actions";
 import { buildSnapshotStatusLabels, buildSnapshotStatuses } from "@/types/build-snapshots";
 import type { BuildGeneratorCurrency } from "@/types/build-generator";
-import type { BuildSnapshotRow } from "@/types/database";
+import type { BuildSnapshotRow, DecisionAuditEventRow } from "@/types/database";
 
 type BuildSnapshotListProps = {
+  auditEvents?: DecisionAuditEventRow[];
   rows: BuildSnapshotRow[];
 };
 
@@ -55,7 +59,10 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
-export function BuildSnapshotList({ rows }: BuildSnapshotListProps) {
+export function BuildSnapshotList({
+  auditEvents = [],
+  rows
+}: BuildSnapshotListProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const compareHref = useMemo(
     () => `/build-snapshots/compare?ids=${selectedIds.map(encodeURIComponent).join(",")}`,
@@ -110,6 +117,9 @@ export function BuildSnapshotList({ rows }: BuildSnapshotListProps) {
           const isSelected = selectedIds.includes(row.id);
           const isSelectionDisabled =
             selectedIds.length >= maxCompareSnapshots && !isSelected;
+          const snapshotEvents = auditEvents
+            .filter((event) => event.subject_id === row.id)
+            .slice(0, 3);
 
           return (
             <article key={row.id} className="rounded-lg border border-border bg-panel p-5">
@@ -253,14 +263,48 @@ export function BuildSnapshotList({ rows }: BuildSnapshotListProps) {
                 </form>
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Link
-                  href={`/build-generator?snapshot=${encodeURIComponent(row.id)}`}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              <form
+                action={updateBuildSnapshotNotesAction}
+                className="mt-5 rounded-lg border border-border bg-background p-4"
+              >
+                <input type="hidden" name="snapshotId" value={row.id} />
+                <input type="hidden" name="returnTo" value="/build-snapshots" />
+                <label
+                  className="text-sm font-semibold"
+                  htmlFor={`notes-${row.id}`}
                 >
-                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                  Restore
-                </Link>
+                  Decision notes
+                </label>
+                <textarea
+                  id={`notes-${row.id}`}
+                  name="notes"
+                  defaultValue={row.notes}
+                  rows={3}
+                  className="mt-3 w-full rounded-lg border border-border bg-panel px-3 py-2 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
+                  placeholder="Why this snapshot matters, what changed, or why it was accepted or rejected."
+                />
+                <div className="mt-3 flex justify-end">
+                  <button
+                    type="submit"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                  >
+                    <Pencil className="h-4 w-4" aria-hidden="true" />
+                    Save notes
+                  </button>
+                </div>
+              </form>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <form action={restoreBuildSnapshotAction}>
+                  <input type="hidden" name="snapshotId" value={row.id} />
+                  <button
+                    type="submit"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                  >
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    Restore
+                  </button>
+                </form>
 
                 <form action={updateBuildSnapshotFavoriteAction}>
                   <input type="hidden" name="snapshotId" value={row.id} />
@@ -291,6 +335,13 @@ export function BuildSnapshotList({ rows }: BuildSnapshotListProps) {
                   </button>
                 </form>
               </div>
+
+              {snapshotEvents.length > 0 ? (
+                <section className="mt-5">
+                  <h3 className="mb-3 text-sm font-semibold">Recent activity</h3>
+                  <AuditTimeline compact events={snapshotEvents} />
+                </section>
+              ) : null}
             </article>
           );
         })}

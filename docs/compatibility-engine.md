@@ -81,6 +81,6 @@ These fixtures are meant to catch obvious regressions before the engine is conne
 - No claim that a listing is actually available.
 - No compatibility checks inside UI components.
 
-## v0.9 Direction
+## v1.0 Direction
 
-The compatibility engine now feeds restorable v0.8 Build Generator snapshots. The next durable layer should add a shared decision audit model so compatibility changes, status updates, and notes can be traced over time.
+The compatibility engine now feeds restorable v0.8 Build Generator snapshots and v0.9 audit trails. The next durable layer should harden validation coverage and beta QA before adding live marketplace data.

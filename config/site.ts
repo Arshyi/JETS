@@ -15,10 +15,11 @@ export const siteConfig = {
 
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
-  { title: "Generator", href: "/build-generator", status: "v0.8" },
-  { title: "Snapshots", href: "/build-snapshots", status: "v0.8" },
+  { title: "Generator", href: "/build-generator", status: "v0.9" },
+  { title: "Snapshots", href: "/build-snapshots", status: "v0.9" },
+  { title: "Activity", href: "/activity", status: "v0.9" },
   { title: "Search", href: "/search", status: "v0.5" },
-  { title: "Account", href: "/account", status: "v0.3" },
+  { title: "Account", href: "/account", status: "v0.9" },
   { title: "Compatibility", href: "/compatibility", status: "v0.6" },
   { title: "Sources", href: "/sources", status: "v0.4" },
   { title: "Roadmap", href: "/roadmap" },
@@ -30,13 +31,19 @@ export const workspaceNav: NavItem[] = [
     title: "Build Generator",
     href: "/build-generator",
     description: "Complete recommendation workflow with deterministic decision and compatibility engines.",
-    status: "v0.8"
+    status: "v0.9"
   },
   {
     title: "Build Snapshots",
     href: "/build-snapshots",
-    description: "Persisted generator decisions with restore, compare, favorite, and outcome states.",
-    status: "v0.8"
+    description: "Persisted generator decisions with restore, compare, notes, activity, and outcome states.",
+    status: "v0.9"
+  },
+  {
+    title: "Decision Activity",
+    href: "/activity",
+    description: "Unified audit timeline for saved builds, favorites, snapshots, notes, and decision outcomes.",
+    status: "v0.9"
   },
   {
     title: "Search",
@@ -230,7 +237,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.8",
     title: "Decision snapshots",
-    status: "Now",
+    status: "Done",
     description:
       "Persist generated build recommendations so users can compare and annotate decisions over time.",
     items: [
@@ -243,14 +250,27 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.9",
     title: "Decision audit foundation",
-    status: "Next",
+    status: "Now",
     description:
       "Create durable audit trails and shared event models before expanding more user workflows.",
     items: [
       "Shared activity/event schema",
-      "Snapshot diff metadata",
-      "Decision notes and attachments",
-      "Export-ready audit records"
+      "Snapshot and saved-build notes",
+      "Per-snapshot activity",
+      "Account and activity timelines"
+    ]
+  },
+  {
+    version: "1.0",
+    title: "Private beta hardening",
+    status: "Next",
+    description:
+      "Prepare the current deterministic product for a small real-user beta before adding AI or live scraping.",
+    items: [
+      "End-to-end Supabase migration rehearsal",
+      "Error handling and analytics baseline",
+      "Accessibility and responsive QA",
+      "Seeded beta data and user onboarding"
     ]
   }
 ];

@@ -99,7 +99,7 @@ export function BuildGeneratorExperience({
       <section className="border-b border-border bg-panel">
         <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-            Version 0.8
+            Version 0.9
           </p>
           <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>

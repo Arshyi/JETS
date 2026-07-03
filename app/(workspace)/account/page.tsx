@@ -3,18 +3,23 @@ import Link from "next/link";
 import { SignedOutState } from "@/components/auth/signed-out-state";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
+import { AuditTimeline } from "@/components/decision-audit/audit-timeline";
 import { ContentPage } from "@/components/pages/content-page";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getDecisionAuditEvents } from "@/lib/supabase/queries";
 import { getAuthContext } from "@/lib/supabase/session";
 
 export default async function AccountPage() {
-  const auth = await getAuthContext();
+  const [auth, activity] = await Promise.all([
+    getAuthContext(),
+    getDecisionAuditEvents(5)
+  ]);
 
   return (
     <ContentPage
-      eyebrow="Version 0.3"
+      eyebrow="Version 0.9"
       title="Account"
-      description="Supabase-ready account status for saved builds, favorites, history, and settings."
+      description="Supabase-backed account status, persistence, and recent decision activity."
     >
       {!auth.isConfigured ? (
         <div className="grid gap-6">
@@ -54,6 +59,12 @@ export default async function AccountPage() {
                 Saved builds
               </Link>
               <Link
+                href="/activity"
+                className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Activity
+              </Link>
+              <Link
                 href="/settings"
                 className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
               >
@@ -72,6 +83,19 @@ export default async function AccountPage() {
               <SignOutButton />
             </div>
           </article>
+
+          <section className="lg:col-span-2">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold">Recent activity</h2>
+              <Link
+                href="/activity"
+                className="text-sm font-semibold text-accent-strong transition hover:text-foreground dark:text-accent"
+              >
+                View all
+              </Link>
+            </div>
+            <AuditTimeline compact events={activity.data} />
+          </section>
         </div>
       ) : (
         <SignedOutState

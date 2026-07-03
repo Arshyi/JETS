@@ -48,6 +48,8 @@ Users can:
 - view created and updated timestamps
 - view score changes against a comparison baseline
 - mark a snapshot as Reviewing, Accepted, Rejected, Purchased, or Archived
+- add decision notes
+- view per-snapshot activity from the v0.9 audit trail
 
 ## Architecture
 
@@ -78,6 +80,12 @@ Database migration:
 
 - `supabase/migrations/202607030008_v0_8_build_snapshots.sql`
 
+Version 0.9 extends snapshots with:
+
+- `build_snapshots.notes`
+- `decision_audit_events`
+- per-snapshot activity on list and compare views
+
 ## Storage Design
 
 The snapshot stores immutable JSON for historical fidelity. This is important because future scoring formulas may change. A saved v0.8 result should still explain what the app recommended at the time it was generated.
@@ -94,16 +102,6 @@ Version 0.8 does not:
 - create localStorage-only persistence
 - replace saved builds, favorites, or history
 
-## v0.9 Recommendation
+## v1.0 Direction
 
-The next layer should be a decision audit foundation before expanding more product features.
-
-JETS now has multiple persistence concepts:
-
-- saved builds
-- favorites
-- build history
-- build snapshots
-- snapshot statuses
-
-Before adding more user workflows, v0.9 should introduce a shared decision activity model so status changes, notes, comparisons, and future AI explanations have one durable audit trail.
+The next layer should harden the current deterministic snapshot workflow for private beta users before adding AI or live marketplace ingestion.

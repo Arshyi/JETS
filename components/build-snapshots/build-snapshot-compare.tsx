@@ -1,16 +1,16 @@
-import Link from "next/link";
-
+import { AuditTimeline } from "@/components/decision-audit/audit-timeline";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
   getSnapshotScoreDelta,
   readBuildSnapshot
 } from "@/lib/build-snapshots/snapshot";
 import { buildSnapshotStatusLabels } from "@/types/build-snapshots";
+import { restoreBuildSnapshotAction } from "@/lib/supabase/persistence-actions";
 import type {
   BuildDecisionSnapshot,
   BuildSnapshotRecommendation
 } from "@/types/build-snapshots";
-import type { BuildSnapshotRow } from "@/types/database";
+import type { BuildSnapshotRow, DecisionAuditEventRow } from "@/types/database";
 
 type SnapshotWithRow = {
   row: BuildSnapshotRow;
@@ -18,6 +18,7 @@ type SnapshotWithRow = {
 };
 
 type BuildSnapshotCompareProps = {
+  auditEvents?: DecisionAuditEventRow[];
   rows: BuildSnapshotRow[];
 };
 
@@ -47,7 +48,10 @@ function getRecommendation(
   );
 }
 
-export function BuildSnapshotCompare({ rows }: BuildSnapshotCompareProps) {
+export function BuildSnapshotCompare({
+  auditEvents = [],
+  rows
+}: BuildSnapshotCompareProps) {
   const snapshots = rows
     .map((row) => {
       const snapshot = readBuildSnapshot(row.snapshot);
@@ -103,12 +107,15 @@ export function BuildSnapshotCompare({ rows }: BuildSnapshotCompareProps) {
                 ))}
               </dl>
 
-              <Link
-                href={`/build-generator?snapshot=${encodeURIComponent(row.id)}`}
-                className="mt-5 inline-flex items-center justify-center rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-              >
-                Restore
-              </Link>
+              <form action={restoreBuildSnapshotAction} className="mt-5">
+                <input type="hidden" name="snapshotId" value={row.id} />
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                >
+                  Restore
+                </button>
+              </form>
             </article>
           );
         })}
@@ -173,6 +180,15 @@ export function BuildSnapshotCompare({ rows }: BuildSnapshotCompareProps) {
                 })}
               </tbody>
             </table>
+          </div>
+        </section>
+      ) : null}
+
+      {auditEvents.length > 0 ? (
+        <section className="rounded-lg border border-border bg-panel p-5">
+          <h2 className="text-lg font-semibold">Compared snapshot activity</h2>
+          <div className="mt-4">
+            <AuditTimeline compact events={auditEvents} />
           </div>
         </section>
       ) : null}

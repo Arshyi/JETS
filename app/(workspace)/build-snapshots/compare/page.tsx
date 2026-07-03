@@ -4,7 +4,10 @@ import { BuildSnapshotCompare } from "@/components/build-snapshots/build-snapsho
 import { ContentPage } from "@/components/pages/content-page";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
-import { getBuildSnapshotsByIds } from "@/lib/supabase/queries";
+import {
+  getBuildSnapshotsByIds,
+  getDecisionAuditEventsForSubjects
+} from "@/lib/supabase/queries";
 
 type BuildSnapshotComparePageProps = {
   searchParams?: Promise<{
@@ -30,10 +33,18 @@ export default async function BuildSnapshotComparePage({
   const params = searchParams ? await searchParams : {};
   const snapshotIds = parseSnapshotIds(params.ids);
   const state = await getBuildSnapshotsByIds(snapshotIds);
+  const activityState =
+    state.isSignedIn && state.data.length > 0
+      ? await getDecisionAuditEventsForSubjects(
+          "build_snapshot",
+          state.data.map((row) => row.id),
+          80
+        )
+      : null;
 
   return (
     <ContentPage
-      eyebrow="Version 0.8"
+      eyebrow="Version 0.9"
       title="Compare Build Snapshots"
       description="Score deltas across saved Build Generator decisions."
     >
@@ -49,7 +60,10 @@ export default async function BuildSnapshotComparePage({
           description="Build snapshot comparisons need two or three saved generator runs."
         />
       ) : (
-        <BuildSnapshotCompare rows={state.data} />
+        <BuildSnapshotCompare
+          auditEvents={activityState?.data ?? []}
+          rows={state.data}
+        />
       )}
     </ContentPage>
   );

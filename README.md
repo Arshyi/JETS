@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components.
 
-Version 0.8 persists Build Generator decision snapshots. Users can save, restore, compare, rename, favorite, delete, and mark generated recommendations without adding AI, live scraping, checkout, or live marketplace ingestion.
+Version 0.9 adds the Decision Audit Foundation. JETS now records a unified activity trail for saved builds, favorites, build snapshots, notes, restores, status changes, and history actions without adding AI, live scraping, checkout, or live marketplace ingestion.
 
 ## Commands
 
@@ -22,8 +22,9 @@ npm run lint
 - **0.5:** Deterministic decision engine and ranking explanations. Complete.
 - **0.6:** Deterministic compatibility engine and upgrade checks. Complete.
 - **0.7:** Build Generator recommendation workflow. Complete.
-- **0.8:** Decision snapshots and recommendation review workflow. Current.
-- **0.9:** Decision audit foundation. Recommended next.
+- **0.8:** Decision snapshots and recommendation review workflow. Complete.
+- **0.9:** Decision audit foundation. Current.
+- **1.0:** Private beta hardening. Recommended next.
 
 ## Version 0.2 Notes
 
@@ -96,6 +97,19 @@ npm run lint
 - Documentation lives in `docs/build-snapshots.md`.
 - v0.8 does not implement AI, live scraping, checkout, or local-only persistence.
 
+## Version 0.9 Notes
+
+- Decision audit domain constants live in `types/decision-audit.ts`.
+- Audit formatting helpers live in `lib/decision-audit`.
+- Audit events are persisted in `decision_audit_events`.
+- Snapshot notes live on `build_snapshots.notes`; saved build notes use the existing `saved_builds.notes`.
+- The activity page is available at `/activity`.
+- Recent activity appears on `/account`.
+- Per-snapshot activity appears on `/build-snapshots` and `/build-snapshots/compare`.
+- SQL migration lives in `supabase/migrations/202607030009_v0_9_decision_audit.sql`.
+- Documentation lives in `docs/decision-audit.md`.
+- v0.9 does not implement AI, live scraping, checkout, or local-only persistence.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -111,4 +125,4 @@ Then run the SQL migrations in Supabase before using persistence features. `SUPA
 
 ## Compliance Boundary
 
-JETS v0.4 through v0.8 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v0.9 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

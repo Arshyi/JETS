@@ -92,7 +92,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.8 - Decision Snapshots
 
-- Current.
+- Complete.
 - Persist Build Generator decision snapshots.
 - Preserve budget, country, currency, preferences, owned hardware, generator outputs, decision scores, compatibility scores, platform health, explanations, alternatives, timestamps, and app version.
 - Let users view, compare, rename, favorite, delete, restore, and mark snapshots.
@@ -102,11 +102,22 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.9 - Decision Audit Foundation
 
-- Recommended next.
+- Current.
 - Introduce a shared activity model for saved builds, favorites, history, snapshots, status changes, notes, and future explanations.
-- Add snapshot notes and structured decision rationale.
-- Add export-ready audit records.
+- Add snapshot and saved-build notes.
+- Add activity timeline page.
+- Show recent activity on account.
+- Show per-snapshot activity on snapshot and compare views.
 - Keep this foundation deterministic before adding AI assistance.
+
+### Version 1.0 - Private Beta Hardening
+
+- Recommended next.
+- Rehearse Supabase migrations and seed data.
+- Harden auth, persistence, and error handling.
+- Review responsive behavior and accessibility.
+- Add product onboarding for the existing deterministic workflow.
+- Do not add AI or live scraping until the beta workflow is stable.
 
 ## Idea Parking Lot
 

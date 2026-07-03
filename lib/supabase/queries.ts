@@ -5,11 +5,13 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   BuildHistoryRow,
   BuildSnapshotRow,
+  DecisionAuditEventRow,
   FavoriteBuildRow,
   SavedBuildRow,
   UserSettingsRow
 } from "@/types/database";
 import type { BuildGeneratorInput } from "@/types/build-generator";
+import type { DecisionAuditSubjectType } from "@/types/decision-audit";
 import type { AuthGateState, SearchPersistenceState } from "@/types/persistence";
 
 async function getUserAndClient() {
@@ -173,6 +175,90 @@ export async function getBuildHistory() {
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(50);
+
+  return {
+    data: data ?? [],
+    isConfigured: true,
+    isSignedIn: true,
+    message: error?.message
+  };
+}
+
+export async function getDecisionAuditEvents(limit = 80) {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: [] as DecisionAuditEventRow[],
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return {
+      data: [] as DecisionAuditEventRow[],
+      isConfigured: true,
+      isSignedIn: false
+    };
+  }
+
+  const { data, error } = await client
+    .from("decision_audit_events")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  return {
+    data: data ?? [],
+    isConfigured: true,
+    isSignedIn: true,
+    message: error?.message
+  };
+}
+
+export async function getDecisionAuditEventsForSubjects(
+  subjectType: DecisionAuditSubjectType,
+  subjectIds: string[],
+  limit = 40
+) {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: [] as DecisionAuditEventRow[],
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return {
+      data: [] as DecisionAuditEventRow[],
+      isConfigured: true,
+      isSignedIn: false
+    };
+  }
+
+  if (subjectIds.length === 0) {
+    return {
+      data: [] as DecisionAuditEventRow[],
+      isConfigured: true,
+      isSignedIn: true
+    };
+  }
+
+  const { data, error } = await client
+    .from("decision_audit_events")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("subject_type", subjectType)
+    .in("subject_id", subjectIds)
+    .order("created_at", { ascending: false })
+    .limit(limit);
 
   return {
     data: data ?? [],
