@@ -32,16 +32,17 @@ Before a beta session:
 
 1. Run `npm install`.
 2. Add `NEXT_PUBLIC_SITE_URL` to `.env.local` for local deploy rehearsal, or to Vercel Project Settings for deployed beta builds.
-3. Add `NEXT_PUBLIC_SUPABASE_URL` to `.env.local` or Vercel Project Settings.
-4. Add `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local` or Vercel Project Settings.
-5. Add `SUPABASE_SERVICE_ROLE_KEY` only if testing admin ingestion persistence.
-6. Add `JETS_ADMIN_EMAILS` only if testing `/admin/ingestion`.
-7. Configure Supabase Auth URL settings:
+3. Add `NEXT_PUBLIC_VERCEL_URL` only if using it as an explicit preview URL fallback.
+4. Add `NEXT_PUBLIC_SUPABASE_URL` to `.env.local` or Vercel Project Settings.
+5. Add `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local` or Vercel Project Settings.
+6. Add `SUPABASE_SERVICE_ROLE_KEY` only if testing admin ingestion persistence.
+7. Add `JETS_ADMIN_EMAILS` only if testing `/admin/ingestion`.
+8. Configure Supabase Auth URL settings:
    - Site URL: production Vercel or custom-domain URL.
    - Local redirect allow-list: `http://localhost:3000/**`.
    - Production redirect allow-list: `https://your-domain.com/**`.
    - Vercel preview redirect allow-list: `https://*-your-vercel-team.vercel.app/**`.
-8. Apply migrations in order:
+9. Apply migrations in order:
    - `202607020003_v0_3_auth_persistence.sql`
    - `202607020004_v0_4_ingestion_foundation.sql`
    - `202607030008_v0_8_build_snapshots.sql`
@@ -49,8 +50,9 @@ Before a beta session:
    - `202607030011_v2_1_build_projects.sql`
    - `202607030012_v2_2_optimization_engine.sql`
    - `202607030013_v2_3_project_branching.sql`
-9. Run `npm run build`.
-10. Run `npm run lint -- --max-warnings=0`.
+   - `202607030014_production_schema_hardening.sql`
+10. Run `npm run build`.
+11. Run `npm run lint -- --max-warnings=0`.
 
 The app also exposes this checklist at `/beta/setup`.
 

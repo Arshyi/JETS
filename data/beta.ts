@@ -10,7 +10,7 @@ export const betaSetupChecklist = [
   {
     title: "Add environment variables",
     description:
-      "Set NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, and JETS_ADMIN_EMAILS according to the beta workflow being tested."
+      "Set NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, and JETS_ADMIN_EMAILS according to the beta workflow being tested. NEXT_PUBLIC_VERCEL_URL is an optional preview fallback."
   },
   {
     title: "Configure Supabase redirects",
@@ -20,7 +20,7 @@ export const betaSetupChecklist = [
   {
     title: "Apply migrations in order",
     description:
-      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, and v2.3 SQL migrations in Supabase before testing persistence."
+      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, and production hardening SQL migrations in Supabase before testing persistence."
   },
   {
     title: "Create a beta account",

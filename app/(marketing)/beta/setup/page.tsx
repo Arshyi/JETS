@@ -26,7 +26,8 @@ const migrations = [
   "202607030009_v0_9_decision_audit.sql",
   "202607030011_v2_1_build_projects.sql",
   "202607030012_v2_2_optimization_engine.sql",
-  "202607030013_v2_3_project_branching.sql"
+  "202607030013_v2_3_project_branching.sql",
+  "202607030014_production_schema_hardening.sql"
 ];
 
 const envRows = [
@@ -34,6 +35,11 @@ const envRows = [
     name: "NEXT_PUBLIC_SITE_URL",
     status: process.env.NEXT_PUBLIC_SITE_URL ? "Set" : "Missing",
     description: siteConfig.url
+  },
+  {
+    name: "NEXT_PUBLIC_VERCEL_URL",
+    status: process.env.NEXT_PUBLIC_VERCEL_URL ? "Set" : "Optional",
+    description: "Optional preview URL fallback when the production site URL is not set."
   },
   {
     name: "NEXT_PUBLIC_SUPABASE_URL",
@@ -47,12 +53,12 @@ const envRows = [
   },
   {
     name: "SUPABASE_SERVICE_ROLE_KEY",
-    status: isSupabaseServiceRoleConfigured ? "Set" : "Missing",
+    status: isSupabaseServiceRoleConfigured ? "Set" : "Optional",
     description: "Required only for admin ingestion persistence."
   },
   {
     name: "JETS_ADMIN_EMAILS",
-    status: process.env.JETS_ADMIN_EMAILS ? "Set" : "Missing",
+    status: process.env.JETS_ADMIN_EMAILS ? "Set" : "Optional",
     description: "Comma-separated admin allowlist for /admin/ingestion."
   }
 ];

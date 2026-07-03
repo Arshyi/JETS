@@ -174,19 +174,20 @@ npm run lint
 - Documentation lives in `docs/project-branching.md`.
 - v2.3 does not implement AI, live scraping, checkout, or automatic merge behavior.
 
-## Supabase Environment
+## Environment Variables
 
-Copy `.env.example` to `.env.local` and set:
+Copy `.env.example` to `.env.local` and configure these values for local or Vercel deployment:
 
-```bash
-NEXT_PUBLIC_SITE_URL=
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-JETS_ADMIN_EMAILS=
-```
+| Variable | Purpose | Required? | Public or secret | Example value | Used by |
+| --- | --- | --- | --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical app origin for metadata and Supabase redirect planning. | Yes for production | Public | `https://jets.example.com` | `config/site.ts`, `/beta/setup` |
+| `NEXT_PUBLIC_VERCEL_URL` | Optional preview host fallback when `NEXT_PUBLIC_SITE_URL` is not set. | No | Public | `jets-git-main-your-team.vercel.app` | `config/site.ts` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL for auth and persistence clients. | Yes for Supabase features | Public | `https://your-project-ref.supabase.co` | `lib/supabase/config.ts`, Supabase clients, `/beta/setup` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key for user-scoped auth and RLS-protected database access. | Yes for Supabase features | Public | `eyJ...` | `lib/supabase/config.ts`, Supabase clients, `/beta/setup` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only key for admin ingestion dry-run persistence. | Only for admin ingestion persistence | Secret | `eyJ...` | `lib/supabase/service-role.ts`, `/admin/ingestion`, `/beta/setup` |
+| `JETS_ADMIN_EMAILS` | Comma-separated allowlist for admin ingestion access. | Only for admin ingestion access | Secret/server-only | `admin@example.com` | `lib/supabase/admin.ts`, `/admin/ingestion`, `/beta/setup` |
 
-Then run the SQL migrations in Supabase before using persistence features. `NEXT_PUBLIC_SITE_URL` should be the deployed app origin, such as `https://your-domain.com`; Vercel preview builds can fall back to `NEXT_PUBLIC_VERCEL_URL`. `SUPABASE_SERVICE_ROLE_KEY` is server-only and is used by the admin-gated dry-run action to persist ingestion logs. `JETS_ADMIN_EMAILS` is a comma-separated allowlist for `/admin/ingestion`.
+Then run the SQL migrations in Supabase before using persistence features. If Supabase variables are missing, static mock workflows still build and show setup guidance instead of failing.
 
 Apply these Supabase migrations in order:
 
@@ -197,6 +198,7 @@ Apply these Supabase migrations in order:
 5. `202607030011_v2_1_build_projects.sql`
 6. `202607030012_v2_2_optimization_engine.sql`
 7. `202607030013_v2_3_project_branching.sql`
+8. `202607030014_production_schema_hardening.sql`
 
 ## Vercel Deployment
 
@@ -210,6 +212,7 @@ npm run build
 Configure these environment variables in Vercel Project Settings before promoting a beta deployment:
 
 - `NEXT_PUBLIC_SITE_URL`: production origin for metadata and Supabase redirect planning.
+- `NEXT_PUBLIC_VERCEL_URL`: optional preview origin fallback if explicitly configured.
 - `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL.
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anon key.
 - `SUPABASE_SERVICE_ROLE_KEY`: optional server-only key for admin ingestion dry-run persistence.
