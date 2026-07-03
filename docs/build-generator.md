@@ -1,6 +1,6 @@
 # JETS Build Generator
 
-Version 0.7 adds the Build Generator, the first complete end-user workflow in JETS.
+Version 0.7 added the Build Generator, the first complete end-user workflow in JETS.
 
 The generator does not use AI, live scraping, checkout, or databases. It uses local mock listings plus the existing deterministic decision and compatibility engines.
 
@@ -107,14 +107,17 @@ The Build Generator does not duplicate decision or compatibility scoring. It onl
 - already-owned component boost
 - complete-system preference over individual components
 
-## v0.8 Direction
+## v0.8 Snapshot Layer
 
-The next layer should persist generator runs as decision snapshots:
+Version 0.8 persists generator runs as decision snapshots:
 
 - user inputs
-- selected recommendation
+- generated recommendations
 - closest alternatives
 - decision score
 - compatibility report summary
-- notes
-- accepted or rejected outcome
+- timestamps
+- app version
+- accepted, rejected, purchased, or archived outcome
+
+See `docs/build-snapshots.md`.

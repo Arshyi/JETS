@@ -22,6 +22,7 @@ The current presets are:
 - CAD
 - Engineering
 - AI
+- Programming
 - General
 - Homelab
 
@@ -68,6 +69,6 @@ These fixtures are deliberately small. They are not a replacement for full tests
 - No automatic duplicate merge.
 - No claim that mock or dry-run listings are available in the real world.
 
-## v0.7 and v0.8 Direction
+## v0.9 Direction
 
-The decision engine now feeds the Build Generator. The next durable layer should persist generator outputs as auditable decision snapshots before AI explanations are considered.
+The decision engine now feeds the Build Generator and v0.8 decision snapshots. The next durable layer should create a shared decision audit model for status changes, notes, comparisons, and future explanations.

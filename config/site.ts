@@ -15,7 +15,8 @@ export const siteConfig = {
 
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
-  { title: "Generator", href: "/build-generator", status: "v0.7" },
+  { title: "Generator", href: "/build-generator", status: "v0.8" },
+  { title: "Snapshots", href: "/build-snapshots", status: "v0.8" },
   { title: "Search", href: "/search", status: "v0.5" },
   { title: "Account", href: "/account", status: "v0.3" },
   { title: "Compatibility", href: "/compatibility", status: "v0.6" },
@@ -28,8 +29,14 @@ export const workspaceNav: NavItem[] = [
   {
     title: "Build Generator",
     href: "/build-generator",
-    description: "Complete recommendation workflow powered by deterministic decision and compatibility engines.",
-    status: "v0.7"
+    description: "Complete recommendation workflow with deterministic decision and compatibility engines.",
+    status: "v0.8"
+  },
+  {
+    title: "Build Snapshots",
+    href: "/build-snapshots",
+    description: "Persisted generator decisions with restore, compare, favorite, and outcome states.",
+    status: "v0.8"
   },
   {
     title: "Search",
@@ -209,7 +216,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.7",
     title: "Build generator",
-    status: "Now",
+    status: "Done",
     description:
       "Generate complete hardware recommendations from mock listings using deterministic decision and compatibility engines.",
     items: [
@@ -223,14 +230,27 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.8",
     title: "Decision snapshots",
-    status: "Next",
+    status: "Now",
     description:
       "Persist generated build recommendations so users can compare and annotate decisions over time.",
     items: [
       "Saved generator runs",
-      "Recommendation snapshots",
-      "User notes and decision outcomes",
-      "Snapshot comparison"
+      "Recommendation snapshots with preserved inputs, scores, and explanations",
+      "Accepted, rejected, purchased, and archived outcome states",
+      "Snapshot restore and comparison"
+    ]
+  },
+  {
+    version: "0.9",
+    title: "Decision audit foundation",
+    status: "Next",
+    description:
+      "Create durable audit trails and shared event models before expanding more user workflows.",
+    items: [
+      "Shared activity/event schema",
+      "Snapshot diff metadata",
+      "Decision notes and attachments",
+      "Export-ready audit records"
     ]
   }
 ];

@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components.
 
-Version 0.7 adds the Build Generator, the first complete end-user workflow. It uses the deterministic decision engine and compatibility engine to recommend complete hardware solutions from the current mock dataset, and it does not include AI, live scraping, checkout, or live marketplace ingestion.
+Version 0.8 persists Build Generator decision snapshots. Users can save, restore, compare, rename, favorite, delete, and mark generated recommendations without adding AI, live scraping, checkout, or live marketplace ingestion.
 
 ## Commands
 
@@ -21,8 +21,9 @@ npm run lint
 - **0.4:** Dry-run ingestion foundation, source health, normalized listing schema. Complete.
 - **0.5:** Deterministic decision engine and ranking explanations. Complete.
 - **0.6:** Deterministic compatibility engine and upgrade checks. Complete.
-- **0.7:** Build Generator recommendation workflow. Current.
-- **0.8:** Decision snapshots and recommendation review workflow. Next.
+- **0.7:** Build Generator recommendation workflow. Complete.
+- **0.8:** Decision snapshots and recommendation review workflow. Current.
+- **0.9:** Decision audit foundation. Recommended next.
 
 ## Version 0.2 Notes
 
@@ -83,6 +84,18 @@ npm run lint
 - v0.7 reuses the existing decision engine, compatibility engine, search models, and mock listings.
 - v0.7 does not implement AI, live scraping, or checkout.
 
+## Version 0.8 Notes
+
+- Build snapshot types live in `types/build-snapshots.ts`.
+- Snapshot serialization and score-delta helpers live in `lib/build-snapshots`.
+- Generator input validation lives in `lib/build-generator/validation.ts`.
+- Snapshot persistence extends `lib/supabase/queries.ts` and `lib/supabase/persistence-actions.ts`.
+- Snapshot pages are available at `/build-snapshots` and `/build-snapshots/compare`.
+- The Build Generator can save the current run and restore a saved snapshot from `/build-generator?snapshot=<id>`.
+- SQL migration lives in `supabase/migrations/202607030008_v0_8_build_snapshots.sql`.
+- Documentation lives in `docs/build-snapshots.md`.
+- v0.8 does not implement AI, live scraping, checkout, or local-only persistence.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -98,4 +111,4 @@ Then run the SQL migrations in Supabase before using persistence features. `SUPA
 
 ## Compliance Boundary
 
-JETS v0.4 through v0.7 use local mock adapters and deterministic local rules only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v0.8 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

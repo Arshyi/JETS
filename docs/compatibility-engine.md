@@ -81,6 +81,6 @@ These fixtures are meant to catch obvious regressions before the engine is conne
 - No claim that a listing is actually available.
 - No compatibility checks inside UI components.
 
-## v0.8 Direction
+## v0.9 Direction
 
-The next durable layer should persist generator, decision, and compatibility snapshots. A user should be able to save a report, compare it against a later report, and record why they accepted or rejected a recommendation.
+The compatibility engine now feeds restorable v0.8 Build Generator snapshots. The next durable layer should add a shared decision audit model so compatibility changes, status updates, and notes can be traced over time.

@@ -70,14 +70,22 @@ export const preferenceLabels: Record<keyof BuildGeneratorPreferences, string> =
 };
 
 export const buildRecommendationCategories: BuildRecommendationCategory[] = [
-  { id: "best-overall", label: "🏆 Best Overall" },
-  { id: "best-value", label: "💰 Best Value" },
-  { id: "highest-performance", label: "⚡ Highest Performance" },
-  { id: "best-engineering", label: "🛠 Best Engineering", targetUseCase: "engineering" },
-  { id: "best-ai", label: "🧠 Best AI", targetUseCase: "ai" },
-  { id: "best-gaming", label: "🎮 Best Gaming", targetUseCase: "gaming" },
-  { id: "best-workstation", label: "🏢 Best Workstation", targetUseCase: "engineering" },
-  { id: "sleeper-build", label: "🧪 Sleeper Build", targetUseCase: "homelab" }
+  { id: "best-overall", label: "\u{1F3C6} Best Overall" },
+  { id: "best-value", label: "\u{1F4B0} Best Value" },
+  { id: "highest-performance", label: "\u{26A1} Highest Performance" },
+  {
+    id: "best-engineering",
+    label: "\u{1F6E0} Best Engineering",
+    targetUseCase: "engineering"
+  },
+  { id: "best-ai", label: "\u{1F9E0} Best AI", targetUseCase: "ai" },
+  { id: "best-gaming", label: "\u{1F3AE} Best Gaming", targetUseCase: "gaming" },
+  {
+    id: "best-workstation",
+    label: "\u{1F3E2} Best Workstation",
+    targetUseCase: "engineering"
+  },
+  { id: "sleeper-build", label: "\u{1F9EA} Sleeper Build", targetUseCase: "homelab" }
 ];
 
 export const defaultBuildGeneratorPreferences: BuildGeneratorPreferences = {

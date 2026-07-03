@@ -1,10 +1,12 @@
 "use client";
 
-import { RotateCcw, SlidersHorizontal } from "lucide-react";
+import { Archive, RotateCcw, Save, SlidersHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { BuildRecommendationCard } from "@/components/build-generator/build-recommendation-card";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getDefaultBuildSnapshotTitle } from "@/lib/build-snapshots/snapshot";
 import {
   countryCurrencyDefaults,
   defaultBuildGeneratorInput,
@@ -12,6 +14,7 @@ import {
   preferenceLabels
 } from "@/lib/build-generator/config";
 import { generateBuildRecommendations } from "@/lib/build-generator/engine";
+import { saveBuildSnapshotAction } from "@/lib/supabase/persistence-actions";
 import {
   buildGeneratorCountries,
   buildGeneratorCurrencies,
@@ -29,7 +32,14 @@ import type {
   BuildGeneratorPreferenceKey,
   OwnedItemKey
 } from "@/types/build-generator";
+import type { AuthGateState } from "@/types/persistence";
 import type { HardwareUseCase } from "@/types/hardware";
+
+type BuildGeneratorExperienceProps = {
+  initialInput?: BuildGeneratorInput;
+  persistence: AuthGateState;
+  restoredSnapshotTitle?: string;
+};
 
 function parseBudget(value: string) {
   const parsed = Number(value);
@@ -37,9 +47,19 @@ function parseBudget(value: string) {
   return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
 }
 
-export function BuildGeneratorExperience() {
-  const [input, setInput] = useState<BuildGeneratorInput>(defaultBuildGeneratorInput);
+export function BuildGeneratorExperience({
+  initialInput = defaultBuildGeneratorInput,
+  persistence,
+  restoredSnapshotTitle
+}: BuildGeneratorExperienceProps) {
+  const [input, setInput] = useState<BuildGeneratorInput>(initialInput);
+  const [snapshotTitle, setSnapshotTitle] = useState(restoredSnapshotTitle ?? "");
   const result = useMemo(() => generateBuildRecommendations(input), [input]);
+  const defaultSnapshotTitle = useMemo(
+    () => getDefaultBuildSnapshotTitle(input),
+    [input]
+  );
+  const isPersistenceReady = persistence.isConfigured && persistence.isSignedIn;
 
   function updateCountry(country: BuildGeneratorCountry) {
     setInput((current) => ({
@@ -69,12 +89,17 @@ export function BuildGeneratorExperience() {
     }));
   }
 
+  function resetGenerator() {
+    setInput(defaultBuildGeneratorInput);
+    setSnapshotTitle("");
+  }
+
   return (
     <main className="bg-background pb-16">
       <section className="border-b border-border bg-panel">
         <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-            Version 0.7
+            Version 0.8
           </p>
           <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -84,11 +109,62 @@ export function BuildGeneratorExperience() {
                 dataset using the deterministic decision and compatibility engines.
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              <StatusPill tone="accent">{result.recommendations.length} recommendations</StatusPill>
-              <StatusPill>{result.candidates.length} complete candidates</StatusPill>
+            <div className="grid gap-3">
+              <div className="flex flex-wrap justify-start gap-2 lg:justify-end">
+                <StatusPill tone="accent">{result.recommendations.length} recommendations</StatusPill>
+                <StatusPill>{result.candidates.length} complete candidates</StatusPill>
+                {restoredSnapshotTitle ? (
+                  <StatusPill tone="warning">Restored snapshot</StatusPill>
+                ) : null}
+              </div>
+
+              <form
+                action={saveBuildSnapshotAction}
+                className="grid gap-2 rounded-lg border border-border bg-background p-3 sm:grid-cols-[minmax(0,1fr)_auto_auto]"
+              >
+                <input type="hidden" name="inputJson" value={JSON.stringify(input)} />
+                <input type="hidden" name="returnTo" value="/build-snapshots" />
+                <label className="sr-only" htmlFor="snapshot-title">
+                  Snapshot title
+                </label>
+                <input
+                  id="snapshot-title"
+                  name="title"
+                  value={snapshotTitle}
+                  onChange={(event) => setSnapshotTitle(event.target.value)}
+                  placeholder={defaultSnapshotTitle}
+                  className="h-10 rounded-lg border border-border bg-panel px-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
+                />
+                <button
+                  type="submit"
+                  disabled={!isPersistenceReady}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
+                  title={
+                    isPersistenceReady
+                      ? "Save build snapshot"
+                      : "Sign in and configure Supabase to save snapshots"
+                  }
+                >
+                  <Save className="h-4 w-4" aria-hidden="true" />
+                  Save
+                </button>
+                <Link
+                  href="/build-snapshots"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                >
+                  <Archive className="h-4 w-4" aria-hidden="true" />
+                  Snapshots
+                </Link>
+              </form>
             </div>
           </div>
+          {!persistence.isConfigured || !persistence.isSignedIn ? (
+            <div className="mt-6 rounded-lg border border-border bg-background px-4 py-3 text-sm text-muted">
+              {persistence.isConfigured
+                ? "Sign in to save and restore Build Generator snapshots. Generation still works without an account."
+                : persistence.message}
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -104,7 +180,7 @@ export function BuildGeneratorExperience() {
               </div>
               <button
                 type="button"
-                onClick={() => setInput(defaultBuildGeneratorInput)}
+                onClick={resetGenerator}
                 className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-background text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
                 title="Reset generator"
                 aria-label="Reset generator"

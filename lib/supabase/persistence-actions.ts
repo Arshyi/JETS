@@ -3,6 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import {
+  createBuildDecisionSnapshot,
+  getDefaultBuildSnapshotTitle,
+  isBuildSnapshotStatus
+} from "@/lib/build-snapshots/snapshot";
+import { parseBuildGeneratorInput } from "@/lib/build-generator/validation";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getMockListingById } from "@/lib/supabase/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -26,7 +32,7 @@ function getNumber(formData: FormData, key: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-async function requirePersistence() {
+async function requirePersistence(next = "/search") {
   if (!isSupabaseConfigured) {
     redirect("/account");
   }
@@ -42,10 +48,17 @@ async function requirePersistence() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login?next=/search");
+    redirect(`/login?next=${encodeURIComponent(next)}`);
   }
 
   return { supabase, user };
+}
+
+function revalidateBuildSnapshotPaths() {
+  revalidatePath("/build-generator");
+  revalidatePath("/build-snapshots");
+  revalidatePath("/build-snapshots/compare");
+  revalidatePath("/history");
 }
 
 async function recordHistory(
@@ -79,7 +92,7 @@ export async function saveBuildAction(formData: FormData) {
     redirect(returnTo);
   }
 
-  const { supabase, user } = await requirePersistence();
+  const { supabase, user } = await requirePersistence(returnTo);
 
   await supabase.from("saved_builds").upsert(
     {
@@ -110,7 +123,7 @@ export async function favoriteBuildAction(formData: FormData) {
     redirect(returnTo);
   }
 
-  const { supabase, user } = await requirePersistence();
+  const { supabase, user } = await requirePersistence(returnTo);
 
   await supabase.from("favorite_builds").upsert(
     {
@@ -187,4 +200,136 @@ export async function updateSettingsAction(formData: FormData) {
   );
 
   revalidatePath("/settings");
+}
+
+export async function saveBuildSnapshotAction(formData: FormData) {
+  const input = parseBuildGeneratorInput(getText(formData, "inputJson"));
+  const returnTo = getText(formData, "returnTo") || "/build-snapshots";
+
+  if (!input) {
+    redirect(returnTo);
+  }
+
+  const { supabase, user } = await requirePersistence("/build-generator");
+  const snapshot = createBuildDecisionSnapshot(input);
+  const topRecommendation = snapshot.summary.topRecommendation;
+  const fallbackTitle = getDefaultBuildSnapshotTitle(input);
+  const title = (getText(formData, "title") || fallbackTitle).slice(0, 120);
+
+  if (!topRecommendation) {
+    redirect(returnTo);
+  }
+
+  const { error } = await supabase.from("build_snapshots").insert({
+    app_version: snapshot.appVersion,
+    budget: input.budget,
+    country: input.country,
+    currency: input.currency,
+    platform_health: topRecommendation.platformHealth,
+    primary_use_case: input.primaryUseCase,
+    snapshot: snapshot as unknown as Json,
+    title,
+    top_compatibility_score: topRecommendation.compatibilityScore,
+    top_decision_score: topRecommendation.decisionScore,
+    top_listing_id: topRecommendation.listingId,
+    top_listing_title: topRecommendation.title,
+    top_overall_score: topRecommendation.overallScore,
+    user_id: user.id
+  });
+
+  if (!error) {
+    await recordHistory(
+      user.id,
+      topRecommendation.listingId,
+      "saved_build_snapshot",
+      snapshot as unknown as Json,
+      title
+    );
+  }
+
+  revalidateBuildSnapshotPaths();
+  redirect(returnTo);
+}
+
+export async function renameBuildSnapshotAction(formData: FormData) {
+  const snapshotId = getText(formData, "snapshotId");
+  const title = getText(formData, "title").slice(0, 120);
+  const returnTo = getText(formData, "returnTo") || "/build-snapshots";
+
+  if (!snapshotId || !title) {
+    redirect(returnTo);
+  }
+
+  const { supabase, user } = await requirePersistence(returnTo);
+
+  await supabase
+    .from("build_snapshots")
+    .update({ title })
+    .eq("id", snapshotId)
+    .eq("user_id", user.id);
+
+  revalidateBuildSnapshotPaths();
+  redirect(returnTo);
+}
+
+export async function updateBuildSnapshotFavoriteAction(formData: FormData) {
+  const snapshotId = getText(formData, "snapshotId");
+  const isFavorite = getText(formData, "isFavorite") === "true";
+  const returnTo = getText(formData, "returnTo") || "/build-snapshots";
+
+  if (!snapshotId) {
+    redirect(returnTo);
+  }
+
+  const { supabase, user } = await requirePersistence(returnTo);
+
+  await supabase
+    .from("build_snapshots")
+    .update({ is_favorite: isFavorite })
+    .eq("id", snapshotId)
+    .eq("user_id", user.id);
+
+  revalidateBuildSnapshotPaths();
+  redirect(returnTo);
+}
+
+export async function updateBuildSnapshotStatusAction(formData: FormData) {
+  const snapshotId = getText(formData, "snapshotId");
+  const status = getText(formData, "status");
+  const returnTo = getText(formData, "returnTo") || "/build-snapshots";
+
+  if (!snapshotId || !isBuildSnapshotStatus(status)) {
+    redirect(returnTo);
+  }
+
+  const { supabase, user } = await requirePersistence(returnTo);
+
+  await supabase
+    .from("build_snapshots")
+    .update({ status })
+    .eq("id", snapshotId)
+    .eq("user_id", user.id);
+
+  revalidateBuildSnapshotPaths();
+  redirect(returnTo);
+}
+
+export async function deleteBuildSnapshotAction(formData: FormData) {
+  const snapshotId = getText(formData, "snapshotId");
+  const returnTo = getText(formData, "returnTo") || "/build-snapshots";
+
+  if (!snapshotId) {
+    redirect(returnTo);
+  }
+
+  const { supabase, user } = await requirePersistence(returnTo);
+
+  await supabase
+    .from("build_snapshots")
+    .delete()
+    .eq("id", snapshotId)
+    .eq("user_id", user.id);
+
+  revalidateBuildSnapshotPaths();
+  redirect(returnTo);
 }

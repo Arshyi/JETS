@@ -9,6 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      build_snapshots: {
+        Row: {
+          app_version: string;
+          budget: number;
+          country: string;
+          created_at: string;
+          currency: string;
+          id: string;
+          is_favorite: boolean;
+          platform_health: number;
+          primary_use_case: string;
+          snapshot: Json;
+          status: string;
+          title: string;
+          top_compatibility_score: number;
+          top_decision_score: number;
+          top_listing_id: string;
+          top_listing_title: string;
+          top_overall_score: number;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          app_version: string;
+          budget: number;
+          country: string;
+          created_at?: string;
+          currency: string;
+          id?: string;
+          is_favorite?: boolean;
+          platform_health: number;
+          primary_use_case: string;
+          snapshot: Json;
+          status?: string;
+          title: string;
+          top_compatibility_score: number;
+          top_decision_score: number;
+          top_listing_id: string;
+          top_listing_title: string;
+          top_overall_score: number;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          app_version?: string;
+          budget?: number;
+          country?: string;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          is_favorite?: boolean;
+          platform_health?: number;
+          primary_use_case?: string;
+          snapshot?: Json;
+          status?: string;
+          title?: string;
+          top_compatibility_score?: number;
+          top_decision_score?: number;
+          top_listing_id?: string;
+          top_listing_title?: string;
+          top_overall_score?: number;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       build_history: {
         Row: {
           action: string;
@@ -339,6 +405,8 @@ export type Database = {
 };
 
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+export type BuildSnapshotRow =
+  Database["public"]["Tables"]["build_snapshots"]["Row"];
 export type SavedBuildRow = Database["public"]["Tables"]["saved_builds"]["Row"];
 export type FavoriteBuildRow =
   Database["public"]["Tables"]["favorite_builds"]["Row"];

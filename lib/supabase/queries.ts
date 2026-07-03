@@ -1,13 +1,16 @@
 import { mockHardwareListings } from "@/data/mock-listings";
+import { readBuildSnapshot } from "@/lib/build-snapshots/snapshot";
 import { isSupabaseConfigured, supabaseSetupMessage } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   BuildHistoryRow,
+  BuildSnapshotRow,
   FavoriteBuildRow,
   SavedBuildRow,
   UserSettingsRow
 } from "@/types/database";
-import type { SearchPersistenceState } from "@/types/persistence";
+import type { BuildGeneratorInput } from "@/types/build-generator";
+import type { AuthGateState, SearchPersistenceState } from "@/types/persistence";
 
 async function getUserAndClient() {
   if (!isSupabaseConfigured) {
@@ -73,6 +76,23 @@ export async function getSearchPersistenceState(): Promise<SearchPersistenceStat
     isSignedIn: true,
     message: savedResult.error?.message ?? favoriteResult.error?.message,
     savedListingIds: savedResult.data?.map((saved) => saved.listing_id) ?? []
+  };
+}
+
+export async function getPersistenceGateState(): Promise<AuthGateState> {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  return {
+    isConfigured: true,
+    isSignedIn: Boolean(userId)
   };
 }
 
@@ -186,6 +206,111 @@ export async function getUserSettings() {
 
   return {
     data,
+    isConfigured: true,
+    isSignedIn: true,
+    message: error?.message
+  };
+}
+
+export async function getBuildSnapshots() {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: [] as BuildSnapshotRow[],
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return { data: [] as BuildSnapshotRow[], isConfigured: true, isSignedIn: false };
+  }
+
+  const { data, error } = await client
+    .from("build_snapshots")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  return {
+    data: data ?? [],
+    isConfigured: true,
+    isSignedIn: true,
+    message: error?.message
+  };
+}
+
+export async function getBuildSnapshotsByIds(snapshotIds: string[]) {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: [] as BuildSnapshotRow[],
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return { data: [] as BuildSnapshotRow[], isConfigured: true, isSignedIn: false };
+  }
+
+  if (snapshotIds.length === 0) {
+    return { data: [] as BuildSnapshotRow[], isConfigured: true, isSignedIn: true };
+  }
+
+  const { data, error } = await client
+    .from("build_snapshots")
+    .select("*")
+    .eq("user_id", userId)
+    .in("id", snapshotIds);
+  const rowsById = new Map((data ?? []).map((row) => [row.id, row]));
+
+  return {
+    data: snapshotIds
+      .map((snapshotId) => rowsById.get(snapshotId))
+      .filter((row): row is BuildSnapshotRow => Boolean(row)),
+    isConfigured: true,
+    isSignedIn: true,
+    message: error?.message
+  };
+}
+
+export async function getBuildSnapshotRestoreInput(snapshotId: string) {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: null as { input: BuildGeneratorInput; title: string } | null,
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return {
+      data: null as { input: BuildGeneratorInput; title: string } | null,
+      isConfigured: true,
+      isSignedIn: false
+    };
+  }
+
+  const { data, error } = await client
+    .from("build_snapshots")
+    .select("snapshot,title")
+    .eq("user_id", userId)
+    .eq("id", snapshotId)
+    .maybeSingle();
+  const snapshot = data ? readBuildSnapshot(data.snapshot) : null;
+  const restoredData =
+    data && snapshot ? { input: snapshot.input, title: data.title } : null;
+
+  return {
+    data: restoredData,
     isConfigured: true,
     isSignedIn: true,
     message: error?.message

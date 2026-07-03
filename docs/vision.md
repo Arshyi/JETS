@@ -81,23 +81,32 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.7 - Build Generator
 
-- Current.
-- Create the first complete end-user workflow.
+- Complete.
+- Created the first complete end-user workflow.
 - Let users choose budget, country, currency, primary use case, preferences, and already-owned hardware.
-- Generate Best Overall, Best Value, Highest Performance, Best Engineering, Best AI, Best Gaming, Best Workstation, and Sleeper Build recommendations.
-- Explain why each build ranks.
-- Show closest alternatives.
-- Reuse the decision engine and compatibility engine.
+- Generated Best Overall, Best Value, Highest Performance, Best Engineering, Best AI, Best Gaming, Best Workstation, and Sleeper Build recommendations.
+- Explained why each build ranks.
+- Showed closest alternatives.
+- Reused the decision engine and compatibility engine.
 - Do not implement AI, live scraping, or checkout.
 
 ### Version 0.8 - Decision Snapshots
 
-- Next.
-- Persist decision and compatibility report snapshots.
-- Persist generator inputs and generated recommendations.
-- Add notes around why a user accepted or rejected a recommendation.
-- Add comparison history between snapshots.
-- Keep deterministic audit trails before adding AI assistance.
+- Current.
+- Persist Build Generator decision snapshots.
+- Preserve budget, country, currency, preferences, owned hardware, generator outputs, decision scores, compatibility scores, platform health, explanations, alternatives, timestamps, and app version.
+- Let users view, compare, rename, favorite, delete, restore, and mark snapshots.
+- Add score-change comparison between saved generator runs.
+- Continue using Supabase-backed persistence instead of local-only storage.
+- Do not implement AI, live scraping, or checkout.
+
+### Version 0.9 - Decision Audit Foundation
+
+- Recommended next.
+- Introduce a shared activity model for saved builds, favorites, history, snapshots, status changes, notes, and future explanations.
+- Add snapshot notes and structured decision rationale.
+- Add export-ready audit records.
+- Keep this foundation deterministic before adding AI assistance.
 
 ## Idea Parking Lot
 
