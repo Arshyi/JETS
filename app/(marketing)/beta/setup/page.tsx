@@ -4,6 +4,7 @@ import { ClipboardCheck } from "lucide-react";
 
 import { ContentPage } from "@/components/pages/content-page";
 import { StatusPill } from "@/components/ui/status-pill";
+import { siteConfig } from "@/config/site";
 import { betaSetupChecklist } from "@/data/beta";
 import {
   isSupabaseConfigured,
@@ -22,7 +23,38 @@ const migrations = [
   "202607020003_v0_3_auth_persistence.sql",
   "202607020004_v0_4_ingestion_foundation.sql",
   "202607030008_v0_8_build_snapshots.sql",
-  "202607030009_v0_9_decision_audit.sql"
+  "202607030009_v0_9_decision_audit.sql",
+  "202607030011_v2_1_build_projects.sql",
+  "202607030012_v2_2_optimization_engine.sql",
+  "202607030013_v2_3_project_branching.sql"
+];
+
+const envRows = [
+  {
+    name: "NEXT_PUBLIC_SITE_URL",
+    status: process.env.NEXT_PUBLIC_SITE_URL ? "Set" : "Missing",
+    description: siteConfig.url
+  },
+  {
+    name: "NEXT_PUBLIC_SUPABASE_URL",
+    status: supabaseEnv.url ? "Set" : "Missing",
+    description: "Required for Supabase auth and persistence."
+  },
+  {
+    name: "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    status: supabaseEnv.anonKey ? "Set" : "Missing",
+    description: "Required for user-scoped Supabase access."
+  },
+  {
+    name: "SUPABASE_SERVICE_ROLE_KEY",
+    status: isSupabaseServiceRoleConfigured ? "Set" : "Missing",
+    description: "Required only for admin ingestion persistence."
+  },
+  {
+    name: "JETS_ADMIN_EMAILS",
+    status: process.env.JETS_ADMIN_EMAILS ? "Set" : "Missing",
+    description: "Comma-separated admin allowlist for /admin/ingestion."
+  }
 ];
 
 export default function BetaSetupPage() {
@@ -43,22 +75,13 @@ export default function BetaSetupPage() {
             </StatusPill>
           </div>
           <dl className="mt-5 grid gap-3 text-sm">
-            <div className="rounded-lg border border-border bg-background p-4">
-              <dt className="font-semibold">NEXT_PUBLIC_SUPABASE_URL</dt>
-              <dd className="mt-1 text-muted">{supabaseEnv.url ? "Set" : "Missing"}</dd>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-4">
-              <dt className="font-semibold">NEXT_PUBLIC_SUPABASE_ANON_KEY</dt>
-              <dd className="mt-1 text-muted">{supabaseEnv.anonKey ? "Set" : "Missing"}</dd>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-4">
-              <dt className="font-semibold">SUPABASE_SERVICE_ROLE_KEY</dt>
-              <dd className="mt-1 text-muted">
-                {isSupabaseServiceRoleConfigured
-                  ? "Set for admin dry-run persistence"
-                  : "Missing, required only for admin ingestion persistence"}
-              </dd>
-            </div>
+            {envRows.map((env) => (
+              <div key={env.name} className="rounded-lg border border-border bg-background p-4">
+                <dt className="font-semibold">{env.name}</dt>
+                <dd className="mt-1 text-muted">{env.status}</dd>
+                <dd className="mt-1 text-xs leading-5 text-muted">{env.description}</dd>
+              </div>
+            ))}
           </dl>
         </article>
 

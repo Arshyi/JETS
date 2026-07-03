@@ -46,6 +46,9 @@ Before a beta session:
    - `202607020004_v0_4_ingestion_foundation.sql`
    - `202607030008_v0_8_build_snapshots.sql`
    - `202607030009_v0_9_decision_audit.sql`
+   - `202607030011_v2_1_build_projects.sql`
+   - `202607030012_v2_2_optimization_engine.sql`
+   - `202607030013_v2_3_project_branching.sql`
 9. Run `npm run build`.
 10. Run `npm run lint -- --max-warnings=0`.
 

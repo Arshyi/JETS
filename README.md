@@ -188,6 +188,16 @@ JETS_ADMIN_EMAILS=
 
 Then run the SQL migrations in Supabase before using persistence features. `NEXT_PUBLIC_SITE_URL` should be the deployed app origin, such as `https://your-domain.com`; Vercel preview builds can fall back to `NEXT_PUBLIC_VERCEL_URL`. `SUPABASE_SERVICE_ROLE_KEY` is server-only and is used by the admin-gated dry-run action to persist ingestion logs. `JETS_ADMIN_EMAILS` is a comma-separated allowlist for `/admin/ingestion`.
 
+Apply these Supabase migrations in order:
+
+1. `202607020003_v0_3_auth_persistence.sql`
+2. `202607020004_v0_4_ingestion_foundation.sql`
+3. `202607030008_v0_8_build_snapshots.sql`
+4. `202607030009_v0_9_decision_audit.sql`
+5. `202607030011_v2_1_build_projects.sql`
+6. `202607030012_v2_2_optimization_engine.sql`
+7. `202607030013_v2_3_project_branching.sql`
+
 ## Vercel Deployment
 
 Use the default Vercel Next.js project settings:
