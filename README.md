@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is an AI-assisted hardware decision engine for used PCs, laptops, workstations, servers, and components.
 
-Version 0.9 adds the Decision Audit Foundation. JETS now records a unified activity trail for saved builds, favorites, build snapshots, notes, restores, status changes, and history actions without adding AI, live scraping, checkout, or live marketplace ingestion.
+Version 1.0 prepares JETS for a small private beta. It hardens setup guidance, onboarding, demo workflows, empty states, route metadata, feedback capture, and smoke-test documentation without adding AI, live scraping, checkout, or live marketplace ingestion.
 
 ## Commands
 
@@ -23,8 +23,9 @@ npm run lint
 - **0.6:** Deterministic compatibility engine and upgrade checks. Complete.
 - **0.7:** Build Generator recommendation workflow. Complete.
 - **0.8:** Decision snapshots and recommendation review workflow. Complete.
-- **0.9:** Decision audit foundation. Current.
-- **1.0:** Private beta hardening. Recommended next.
+- **0.9:** Decision audit foundation. Complete.
+- **1.0:** Private beta hardening. Current.
+- **1.1:** Beta QA instrumentation and release discipline. Recommended next.
 
 ## Version 0.2 Notes
 
@@ -110,6 +111,18 @@ npm run lint
 - Documentation lives in `docs/decision-audit.md`.
 - v0.9 does not implement AI, live scraping, checkout, or local-only persistence.
 
+## Version 1.0 Notes
+
+- Beta onboarding is available at `/beta`.
+- Supabase setup checklist is available at `/beta/setup`.
+- Demo data workflow is available at `/beta/demo-data`.
+- Feedback placeholder is available at `/feedback`.
+- Private beta documentation lives in `docs/private-beta.md`.
+- Smoke-test guidance is included in `docs/private-beta.md`.
+- Major routes now expose page-specific metadata titles and descriptions.
+- Empty/setup states now point testers toward the relevant next action.
+- v1.0 does not implement AI, live scraping, checkout, or production feedback submission.
+
 ## Supabase Environment
 
 Copy `.env.example` to `.env.local` and set:
@@ -125,4 +138,4 @@ Then run the SQL migrations in Supabase before using persistence features. `SUPA
 
 ## Compliance Boundary
 
-JETS v0.4 through v0.9 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v1.0 use local mock adapters, deterministic local rules, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.

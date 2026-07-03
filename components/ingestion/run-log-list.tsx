@@ -1,5 +1,7 @@
 import { History } from "lucide-react";
+import Link from "next/link";
 
+import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import type { IngestionRunRow } from "@/types/database";
 
@@ -30,10 +32,21 @@ export function RunLogList({ message, runs }: RunLogListProps) {
       {message ? <p className="mt-3 text-sm leading-6 text-warning">{message}</p> : null}
 
       {runs.length === 0 ? (
-        <p className="mt-3 text-sm leading-6 text-muted">
-          No persisted ingestion runs yet. Run a dry run after applying the v0.4
-          migration to write logs here.
-        </p>
+        <div className="mt-5">
+          <EmptyState
+            title="No persisted ingestion runs"
+            description="Run a dry run after applying the v0.4 migration and configuring the service role key to write logs here."
+            icon={History}
+            action={
+              <Link
+                href="/beta/setup"
+                className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Open setup checklist
+              </Link>
+            }
+          />
+        </div>
       ) : (
         <div className="mt-5 grid gap-3">
           {runs.map((run) => (

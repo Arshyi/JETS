@@ -1,5 +1,6 @@
 import { Rows3 } from "lucide-react";
 
+import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { normalizedListingToDecisionCandidate } from "@/lib/decision-engine/adapters";
 import { evaluateDecisionCandidate } from "@/lib/decision-engine/scoring";
@@ -16,6 +17,24 @@ type NormalizedListingTableProps = {
 };
 
 export function NormalizedListingTable({ listings }: NormalizedListingTableProps) {
+  if (listings.length === 0) {
+    return (
+      <article className="rounded-lg border border-border bg-panel p-5">
+        <div className="flex items-center gap-2">
+          <Rows3 className="h-4 w-4 text-accent-strong dark:text-accent" aria-hidden="true" />
+          <h2 className="text-lg font-semibold">Normalized listing sample</h2>
+        </div>
+        <div className="mt-5">
+          <EmptyState
+            title="No normalized listings"
+            description="The current dry-run report did not return normalized mock listings."
+            icon={Rows3}
+          />
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className="rounded-lg border border-border bg-panel p-5">
       <div className="flex items-center gap-2">

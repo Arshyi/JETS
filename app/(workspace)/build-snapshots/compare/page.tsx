@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { SignedOutState } from "@/components/auth/signed-out-state";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { BuildSnapshotCompare } from "@/components/build-snapshots/build-snapshot-compare";
@@ -8,6 +10,11 @@ import {
   getBuildSnapshotsByIds,
   getDecisionAuditEventsForSubjects
 } from "@/lib/supabase/queries";
+
+export const metadata: Metadata = {
+  title: "Compare Build Snapshots",
+  description: "Compare JETS build snapshot score changes and activity."
+};
 
 type BuildSnapshotComparePageProps = {
   searchParams?: Promise<{

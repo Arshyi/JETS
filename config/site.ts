@@ -18,6 +18,7 @@ export const mainNav: NavItem[] = [
   { title: "Generator", href: "/build-generator", status: "v0.9" },
   { title: "Snapshots", href: "/build-snapshots", status: "v0.9" },
   { title: "Activity", href: "/activity", status: "v0.9" },
+  { title: "Beta", href: "/beta", status: "v1.0" },
   { title: "Search", href: "/search", status: "v0.5" },
   { title: "Account", href: "/account", status: "v0.9" },
   { title: "Compatibility", href: "/compatibility", status: "v0.6" },
@@ -44,6 +45,18 @@ export const workspaceNav: NavItem[] = [
     href: "/activity",
     description: "Unified audit timeline for saved builds, favorites, snapshots, notes, and decision outcomes.",
     status: "v0.9"
+  },
+  {
+    title: "Private Beta",
+    href: "/beta",
+    description: "Onboarding, setup checklist, demo workflow, and smoke-test guidance for v1.0 beta sessions.",
+    status: "v1.0"
+  },
+  {
+    title: "Beta Feedback",
+    href: "/feedback",
+    description: "Static feedback placeholder for private beta testers.",
+    status: "v1.0"
   },
   {
     title: "Search",
@@ -105,6 +118,8 @@ export const footerNav: NavItem[] = [
   { title: "Privacy", href: "/privacy" },
   { title: "Terms", href: "/terms" },
   { title: "Contact", href: "/contact" },
+  { title: "Beta", href: "/beta" },
+  { title: "Feedback", href: "/feedback" },
   { title: "Account", href: "/account" },
   { title: "Roadmap", href: "/roadmap" }
 ];
@@ -250,7 +265,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "0.9",
     title: "Decision audit foundation",
-    status: "Now",
+    status: "Done",
     description:
       "Create durable audit trails and shared event models before expanding more user workflows.",
     items: [
@@ -263,7 +278,7 @@ export const roadmap: RoadmapMilestone[] = [
   {
     version: "1.0",
     title: "Private beta hardening",
-    status: "Next",
+    status: "Now",
     description:
       "Prepare the current deterministic product for a small real-user beta before adding AI or live scraping.",
     items: [

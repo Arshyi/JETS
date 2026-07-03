@@ -16,7 +16,10 @@ export function EmptyState({
   icon: Icon = SearchX
 }: EmptyStateProps) {
   return (
-    <div className="grid min-h-72 place-items-center rounded-lg border border-dashed border-border bg-panel p-8 text-center">
+    <div
+      className="grid min-h-72 place-items-center rounded-lg border border-dashed border-border bg-panel p-6 text-center sm:p-8"
+      role="status"
+    >
       <div className="max-w-md">
         <div className="mx-auto grid h-12 w-12 place-items-center rounded-lg bg-subtle text-muted">
           <Icon className="h-6 w-6" aria-hidden="true" />

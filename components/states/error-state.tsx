@@ -10,7 +10,7 @@ type ErrorStateProps = {
 export function ErrorState({ title, description, action }: ErrorStateProps) {
   return (
     <div className="rounded-lg border border-warning/40 bg-warning/10 p-6">
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row">
         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-warning/15 text-warning">
           <AlertTriangle className="h-5 w-5" aria-hidden="true" />
         </div>

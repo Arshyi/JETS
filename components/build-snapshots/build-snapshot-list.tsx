@@ -89,6 +89,14 @@ export function BuildSnapshotList({
         title="No build snapshots yet"
         description="Save a Build Generator result to preserve its inputs, scores, explanations, and alternatives."
         icon={Archive}
+        action={
+          <Link
+            href="/build-generator"
+            className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+          >
+            Open generator
+          </Link>
+        }
       />
     );
   }

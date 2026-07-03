@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+
 import { RoadmapList } from "@/components/marketing/roadmap-list";
 import { ContentPage } from "@/components/pages/content-page";
+
+export const metadata: Metadata = {
+  title: "Roadmap",
+  description: "Review the milestone roadmap for the JETS hardware decision engine."
+};
 
 export default function RoadmapPage() {
   return (

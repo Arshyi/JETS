@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
+
 import { ContentPage } from "@/components/pages/content-page";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "Learn how JETS helps users reason about used hardware value and risk."
+};
 
 export default function AboutPage() {
   return (

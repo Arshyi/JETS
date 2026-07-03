@@ -1,17 +1,24 @@
+import type { Metadata } from "next";
+
 import { ContentPage } from "@/components/pages/content-page";
+
+export const metadata: Metadata = {
+  title: "Terms",
+  description: "Private beta terms placeholder for JETS."
+};
 
 export default function TermsPage() {
   return (
     <ContentPage
       eyebrow="Terms placeholder"
       title="Terms"
-      description="This page is a plain-language placeholder for v0.1 and should be replaced with reviewed terms before public launch."
+      description="This page is a plain-language private beta placeholder and should be replaced with reviewed terms before public launch."
     >
       <div className="grid gap-4">
         {[
           [
             "No production recommendations yet",
-            "Version 0.1 is a foundation and does not provide live marketplace analysis or purchase advice."
+            "Version 1.0 is a private beta and does not provide live marketplace analysis, checkout, or purchase advice."
           ],
           [
             "Future marketplace data",

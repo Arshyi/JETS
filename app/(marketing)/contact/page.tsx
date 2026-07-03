@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { Mail, MessageSquare, Wrench } from "lucide-react";
 
 import { ContentPage } from "@/components/pages/content-page";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "JETS contact placeholder and feature idea guidance."
+};
 
 const contactItems = [
   {
@@ -25,7 +31,7 @@ export default function ContactPage() {
     <ContentPage
       eyebrow="Contact placeholder"
       title="Contact"
-      description="This page reserves the future communication surface without adding a backend, form handler, or support workflow in v0.1."
+      description="This page reserves the future communication surface without adding a production support backend before beta feedback is understood."
     >
       <div className="grid gap-4 lg:grid-cols-3">
         {contactItems.map((item) => {

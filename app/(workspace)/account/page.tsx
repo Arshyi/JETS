@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SignedOutState } from "@/components/auth/signed-out-state";
@@ -8,6 +9,11 @@ import { ContentPage } from "@/components/pages/content-page";
 import { StatusPill } from "@/components/ui/status-pill";
 import { getDecisionAuditEvents } from "@/lib/supabase/queries";
 import { getAuthContext } from "@/lib/supabase/session";
+
+export const metadata: Metadata = {
+  title: "Account",
+  description: "JETS account status, Supabase setup state, and recent decision activity."
+};
 
 export default async function AccountPage() {
   const [auth, activity] = await Promise.all([
@@ -25,7 +31,7 @@ export default async function AccountPage() {
         <div className="grid gap-6">
           <SupabaseSetupState />
           <article className="rounded-lg border border-border bg-panel p-5">
-            <h2 className="text-lg font-semibold">Required environment variables</h2>
+            <h2 className="text-lg font-semibold">Private beta setup path</h2>
             <div className="mt-4 grid gap-2 text-sm text-muted">
               <code className="rounded-lg border border-border bg-background px-3 py-2">
                 NEXT_PUBLIC_SUPABASE_URL
@@ -35,9 +41,18 @@ export default async function AccountPage() {
               </code>
             </div>
             <p className="mt-4 text-sm leading-6 text-muted">
-              After adding them, run the migration in Supabase, restart the dev
-              server, and the auth pages will activate.
+              After adding them, apply the Supabase migrations in order, restart
+              the dev server, and use the beta setup checklist before testing
+              persistence.
             </p>
+            <div className="mt-5">
+              <Link
+                href="/beta/setup"
+                className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Open setup checklist
+              </Link>
+            </div>
           </article>
         </div>
       ) : auth.user ? (

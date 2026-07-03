@@ -1,4 +1,5 @@
 import { Clock, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -16,6 +17,14 @@ export function HistoryList({ rows }: HistoryListProps) {
         title="No build history yet"
         description="Save or favorite mock listings from search to create a persisted research trail."
         icon={Clock}
+        action={
+          <Link
+            href="/beta/demo-data"
+            className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+          >
+            View demo workflow
+          </Link>
+        }
       />
     );
   }

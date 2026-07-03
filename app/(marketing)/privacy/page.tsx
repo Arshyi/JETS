@@ -1,21 +1,28 @@
+import type { Metadata } from "next";
+
 import { ContentPage } from "@/components/pages/content-page";
+
+export const metadata: Metadata = {
+  title: "Privacy",
+  description: "Private beta privacy placeholder for JETS account-backed persistence."
+};
 
 export default function PrivacyPage() {
   return (
     <ContentPage
       eyebrow="Policy placeholder"
       title="Privacy"
-      description="This v0.1 placeholder explains the current state of the app while leaving room for a full policy when accounts and persistence are introduced."
+      description="This placeholder explains the private beta data posture while leaving room for a reviewed policy before public launch."
     >
       <div className="grid gap-4">
         {[
           [
             "Current state",
-            "Version 0.1 does not implement accounts, databases, scraping, analytics, or AI requests."
+            "Version 1.0 uses Supabase-backed accounts and persistence for beta testing. It does not implement live scraping, checkout, analytics, or AI requests."
           ],
           [
             "Future state",
-            "When Supabase authentication and saved builds arrive, this page should be rewritten to describe collected data, retention, deletion, and user controls."
+            "Before public launch, this page should be rewritten to describe collected data, retention, deletion, and user controls."
           ],
           [
             "Product standard",

@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
+
 import { FeatureGrid } from "@/components/marketing/feature-grid";
 import { HeroSection } from "@/components/marketing/hero-section";
+
+export const metadata: Metadata = {
+  title: "Private Beta Hardware Decisions",
+  description:
+    "JETS private beta for deterministic used-hardware search, build generation, snapshots, and audit trails."
+};
 
 export default function HomePage() {
   return (

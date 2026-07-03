@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
+
 import { BuildGeneratorExperience } from "@/components/build-generator/build-generator-experience";
 import {
   getBuildSnapshotRestoreInput,
   getPersistenceGateState
 } from "@/lib/supabase/queries";
+
+export const metadata: Metadata = {
+  title: "Build Generator",
+  description:
+    "Generate deterministic hardware recommendations from JETS mock listings and save decision snapshots."
+};
 
 type BuildGeneratorPageProps = {
   searchParams?: Promise<{

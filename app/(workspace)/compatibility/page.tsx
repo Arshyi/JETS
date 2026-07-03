@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { CompatibilityResultList } from "@/components/compatibility/compatibility-result-list";
 import { CompatibilitySummary } from "@/components/compatibility/compatibility-summary";
 import { CompatibilityValidationList } from "@/components/compatibility/compatibility-validation-list";
@@ -13,6 +15,11 @@ const statusTone: Record<CompatibilityStatus, "accent" | "neutral" | "warning"> 
   Compatible: "accent",
   "Compatible with Warning": "warning",
   Incompatible: "warning"
+};
+
+export const metadata: Metadata = {
+  title: "Compatibility Report",
+  description: "Review deterministic JETS hardware compatibility fixtures and upgrade suggestions."
 };
 
 export default function CompatibilityReportPage() {

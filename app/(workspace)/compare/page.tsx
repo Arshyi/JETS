@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { CompareExperience } from "@/components/search/compare-experience";
 import { LoadingState } from "@/components/states/loading-state";
+
+export const metadata: Metadata = {
+  title: "Compare",
+  description: "Compare selected JETS mock listings side by side."
+};
 
 export default function ComparePage() {
   return (

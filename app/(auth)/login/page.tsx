@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { AuthForm } from "@/components/auth/auth-form";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -6,6 +8,11 @@ type LoginPageProps = {
   searchParams: Promise<{
     next?: string;
   }>;
+};
+
+export const metadata: Metadata = {
+  title: "Log In",
+  description: "Log in to JETS to use Supabase-backed persistence."
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {

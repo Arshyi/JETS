@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { AuthForm } from "@/components/auth/auth-form";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+
+export const metadata: Metadata = {
+  title: "Sign Up",
+  description: "Create a JETS account for saved builds, snapshots, favorites, and activity."
+};
 
 export default function SignupPage() {
   return (

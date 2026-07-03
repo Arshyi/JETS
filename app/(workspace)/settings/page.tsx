@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
+
 import { SignedOutState } from "@/components/auth/signed-out-state";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { ContentPage } from "@/components/pages/content-page";
 import { SettingsForm } from "@/components/persistence/settings-form";
 import { ErrorState } from "@/components/states/error-state";
 import { getUserSettings } from "@/lib/supabase/queries";
+
+export const metadata: Metadata = {
+  title: "Settings",
+  description: "Manage JETS account preferences and future search defaults."
+};
 
 export default async function SettingsPage() {
   const state = await getUserSettings();

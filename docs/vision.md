@@ -102,7 +102,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 0.9 - Decision Audit Foundation
 
-- Current.
+- Complete.
 - Introduce a shared activity model for saved builds, favorites, history, snapshots, status changes, notes, and future explanations.
 - Add snapshot and saved-build notes.
 - Add activity timeline page.
@@ -112,12 +112,21 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 1.0 - Private Beta Hardening
 
-- Recommended next.
+- Current.
 - Rehearse Supabase migrations and seed data.
 - Harden auth, persistence, and error handling.
 - Review responsive behavior and accessibility.
 - Add product onboarding for the existing deterministic workflow.
 - Do not add AI or live scraping until the beta workflow is stable.
+
+### Version 1.1 - Beta QA Instrumentation
+
+- Recommended next.
+- Add lightweight beta issue templates and manual QA run records.
+- Add migration rehearsal notes and release checklist.
+- Add accessibility review tasks.
+- Add privacy-conscious analytics only if the beta needs evidence beyond manual feedback.
+- Continue to defer AI and live scraping until beta reliability is proven.
 
 ## Idea Parking Lot
 

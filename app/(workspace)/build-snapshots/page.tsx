@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { SignedOutState } from "@/components/auth/signed-out-state";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { BuildSnapshotList } from "@/components/build-snapshots/build-snapshot-list";
@@ -7,6 +9,11 @@ import {
   getBuildSnapshots,
   getDecisionAuditEventsForSubjects
 } from "@/lib/supabase/queries";
+
+export const metadata: Metadata = {
+  title: "Build Snapshots",
+  description: "Review, compare, restore, annotate, and audit saved JETS build snapshots."
+};
 
 export default async function BuildSnapshotsPage() {
   const state = await getBuildSnapshots();

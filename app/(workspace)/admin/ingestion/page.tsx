@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
 import { SignedOutState } from "@/components/auth/signed-out-state";
 import { DuplicateList } from "@/components/ingestion/duplicate-list";
 import { DryRunSummary } from "@/components/ingestion/dry-run-summary";
@@ -12,6 +15,11 @@ import { getRecentIngestionRuns } from "@/lib/supabase/ingestion-queries";
 import { isSupabaseServiceRoleConfigured } from "@/lib/supabase/service-role";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Admin Ingestion Dry Run",
+  description: "Admin-only JETS mock ingestion dry-run controls and persisted run logs."
+};
 
 export default async function AdminIngestionPage() {
   const gate = await getAdminGate();
@@ -53,6 +61,14 @@ export default async function AdminIngestionPage() {
           <ErrorState
             title="Service role key required"
             description="Set SUPABASE_SERVICE_ROLE_KEY on the server before dry-run results can be persisted to ingestion tables."
+            action={
+              <Link
+                href="/beta/setup"
+                className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Open setup checklist
+              </Link>
+            }
           />
         ) : null}
 
