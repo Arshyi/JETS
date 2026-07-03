@@ -180,8 +180,8 @@ Copy `.env.example` to `.env.local` and configure these values for local or Verc
 
 | Variable | Purpose | Required? | Public or secret | Example value | Used by |
 | --- | --- | --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical app origin for metadata and Supabase redirect planning. | Yes for production | Public | `https://jets.example.com` | `config/site.ts`, `/beta/setup` |
-| `NEXT_PUBLIC_VERCEL_URL` | Optional preview host fallback when `NEXT_PUBLIC_SITE_URL` is not set. | No | Public | `jets-git-main-your-team.vercel.app` | `config/site.ts` |
+| `NEXT_PUBLIC_SITE_URL` | Canonical app origin for metadata and Supabase redirect planning. | Yes for production | Public | `https://jets.example.com` | `config/site.ts`, `lib/supabase/auth-redirect.ts`, `/beta/setup` |
+| `NEXT_PUBLIC_VERCEL_URL` | Optional preview host fallback when `NEXT_PUBLIC_SITE_URL` is not set. | No | Public | `jets-git-main-your-team.vercel.app` | `config/site.ts`, `lib/supabase/auth-redirect.ts` |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL for auth and persistence clients. | Yes for Supabase features | Public | `https://your-project-ref.supabase.co` | `lib/supabase/config.ts`, Supabase clients, `/beta/setup` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key for user-scoped auth and RLS-protected database access. | Yes for Supabase features | Public | `eyJ...` | `lib/supabase/config.ts`, Supabase clients, `/beta/setup` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only key for admin ingestion dry-run persistence. | Only for admin ingestion persistence | Secret | `eyJ...` | `lib/supabase/service-role.ts`, `/admin/ingestion`, `/beta/setup` |
@@ -222,11 +222,12 @@ In Supabase Auth URL Configuration, set the Site URL to the production Vercel or
 
 ```text
 http://localhost:3000/**
+https://your-domain.com/auth/callback
 https://your-domain.com/**
 https://*-your-vercel-team.vercel.app/**
 ```
 
-Use exact production redirect paths where possible, and keep wildcard preview redirects limited to the Vercel team or project pattern. Redeploy after changing Vercel environment variables.
+For the current production deployment, include `https://jets-lilac.vercel.app/auth/callback` and `https://jets-lilac.vercel.app/**`. Use exact production redirect paths where possible, and keep wildcard preview redirects limited to the Vercel team or project pattern. Redeploy after changing Vercel environment variables.
 
 ## Compliance Boundary
 

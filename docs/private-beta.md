@@ -40,6 +40,7 @@ Before a beta session:
 8. Configure Supabase Auth URL settings:
    - Site URL: production Vercel or custom-domain URL.
    - Local redirect allow-list: `http://localhost:3000/**`.
+   - Production auth callback: `https://your-domain.com/auth/callback`.
    - Production redirect allow-list: `https://your-domain.com/**`.
    - Vercel preview redirect allow-list: `https://*-your-vercel-team.vercel.app/**`.
 9. Apply migrations in order:

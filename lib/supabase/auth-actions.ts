@@ -1,8 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import {
+  buildAuthCallbackUrl,
+  getSafeAuthRedirectPath
+} from "@/lib/supabase/auth-redirect";
 import { isSupabaseConfigured, supabaseSetupMessage } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { ActionState } from "@/types/persistence";
@@ -28,7 +33,7 @@ export async function signInAction(
 
   const email = getText(formData, "email");
   const password = getText(formData, "password");
-  const next = getText(formData, "next") || "/account";
+  const next = getSafeAuthRedirectPath(getText(formData, "next") || "/account");
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
@@ -62,6 +67,8 @@ export async function signUpAction(
   const email = getText(formData, "email");
   const password = getText(formData, "password");
   const displayName = getText(formData, "displayName");
+  const next = getSafeAuthRedirectPath(getText(formData, "next") || "/account");
+  const requestHeaders = await headers();
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
@@ -73,7 +80,8 @@ export async function signUpAction(
     options: {
       data: {
         display_name: displayName || email.split("@")[0]
-      }
+      },
+      emailRedirectTo: buildAuthCallbackUrl(requestHeaders, next)
     },
     password
   });

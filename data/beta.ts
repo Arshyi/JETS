@@ -15,7 +15,7 @@ export const betaSetupChecklist = [
   {
     title: "Configure Supabase redirects",
     description:
-      "Set the Supabase Site URL to the deployed app URL and allow the local, production, and Vercel preview redirect URLs before testing email confirmation."
+      "Set the Supabase Site URL to the deployed app URL and allow the local, production /auth/callback, and Vercel preview redirect URLs before testing email confirmation."
   },
   {
     title: "Apply migrations in order",
