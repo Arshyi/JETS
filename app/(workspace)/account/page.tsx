@@ -6,7 +6,6 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { AuditTimeline } from "@/components/decision-audit/audit-timeline";
 import { ContentPage } from "@/components/pages/content-page";
-import { CreateProjectForm } from "@/components/solution-builder/create-project-form";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
   getBuildProjects,
@@ -168,11 +167,21 @@ export default async function AccountPage() {
                 </div>
               </article>
             ) : (
-              <CreateProjectForm
-                compact
-                heading="Create your first hardware project"
-                submitLabel="Create and open project"
-              />
+              <article className="rounded-lg border border-border bg-panel p-5">
+                <h2 className="text-lg font-semibold">
+                  Create your first hardware project
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-muted">
+                  Start with the hardware goal. JETS will create the project,
+                  choose a scoring preset, and open the builder.
+                </p>
+                <Link
+                  href="/solution-builder/projects/new"
+                  className="mt-5 inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                >
+                  Choose project goal
+                </Link>
+              </article>
             )}
 
             <article className="rounded-lg border border-border bg-panel p-5">

@@ -21,6 +21,27 @@ import type {
 import type { BuildGeneratorInput } from "@/types/build-generator";
 import type { DecisionAuditSubjectType } from "@/types/decision-audit";
 import type { AuthGateState, SearchPersistenceState } from "@/types/persistence";
+import type {
+  BuildSlotId,
+  BuildWorkspaceModel
+} from "@/types/solution-builder";
+
+export type BuildProjectDashboardSummary = {
+  branchCount: number;
+  lastActivity: BuildProjectAuditEventRow | null;
+  latestOptimizationRun: BuildProjectOptimizationRunRow | null;
+  missingRequiredSlots: string[];
+  model: BuildWorkspaceModel;
+  optimizationRunCount: number;
+  project: BuildProjectRow;
+  recommendedNextAction: {
+    description: string;
+    href: string;
+    label: string;
+  };
+  selectedRequiredSlotCount: number;
+  totalRequiredSlotCount: number;
+};
 
 async function getUserAndClient() {
   if (!isSupabaseConfigured) {
@@ -370,6 +391,198 @@ export async function getBuildProjects() {
   };
 }
 
+function getSlotInventoryHref(projectId: string, slotId: BuildSlotId) {
+  const params = new URLSearchParams({
+    projectId,
+    returnTo: `/solution-builder/projects/${projectId}`,
+    slot: slotId
+  });
+
+  return `/inventory?${params.toString()}`;
+}
+
+function getDashboardNextAction(
+  projectId: string,
+  model: BuildWorkspaceModel,
+  optimizationRunCount: number,
+  branchCount: number
+) {
+  const firstMissingRequiredSlot = model.evaluation.slots.find(
+    (slot) =>
+      slot.definition.requirement === "required" && slot.status === "missing"
+  );
+
+  if (firstMissingRequiredSlot) {
+    return {
+      description: `No ${firstMissingRequiredSlot.definition.label.toLowerCase()} selected yet.`,
+      href: getSlotInventoryHref(projectId, firstMissingRequiredSlot.definition.id),
+      label: `Add ${firstMissingRequiredSlot.definition.label}`
+    };
+  }
+
+  if (model.evaluation.blockingCount + model.evaluation.warningCount > 0) {
+    return {
+      description: "The build has validation warnings to review before optimizing.",
+      href: `/solution-builder/projects/${projectId}`,
+      label: "Review validation"
+    };
+  }
+
+  if (optimizationRunCount === 0) {
+    return {
+      description: "No optimization runs yet. Let JETS analyze unlocked slots.",
+      href: `/solution-builder/projects/${projectId}/optimize`,
+      label: "Optimize this build"
+    };
+  }
+
+  if (branchCount === 0) {
+    return {
+      description: "No branches yet. Try another scenario without changing the original.",
+      href: `/solution-builder/projects/${projectId}/optimize`,
+      label: "Try another scenario"
+    };
+  }
+
+  return {
+    description: "The project is ready for comparison and final review.",
+    href: `/solution-builder/projects/${projectId}`,
+    label: "Review finished solution"
+  };
+}
+
+export async function getBuildProjectDashboard() {
+  const { client, message, userId } = await getUserAndClient();
+
+  if (!isSupabaseConfigured || !client) {
+    return {
+      data: [] as BuildProjectDashboardSummary[],
+      isConfigured: false,
+      isSignedIn: false,
+      message
+    };
+  }
+
+  if (!userId) {
+    return {
+      data: [] as BuildProjectDashboardSummary[],
+      isConfigured: true,
+      isSignedIn: false
+    };
+  }
+
+  const { data: projects, error: projectsError } = await client
+    .from("build_projects")
+    .select("*")
+    .eq("user_id", userId)
+    .order("updated_at", { ascending: false });
+  const projectRows = (projects ?? []) as BuildProjectRow[];
+  const projectIds = projectRows.map((project) => project.id);
+
+  if (projectIds.length === 0) {
+    return {
+      data: [] as BuildProjectDashboardSummary[],
+      isConfigured: true,
+      isSignedIn: true,
+      message: projectsError?.message
+    };
+  }
+
+  const [slotsResult, auditResult, runsResult] = await Promise.all([
+    client
+      .from("build_project_slots")
+      .select("*")
+      .eq("user_id", userId)
+      .in("project_id", projectIds),
+    client
+      .from("build_project_audit_events")
+      .select("*")
+      .eq("user_id", userId)
+      .in("project_id", projectIds)
+      .order("created_at", { ascending: false })
+      .limit(200),
+    client
+      .from("build_project_optimization_runs")
+      .select("*")
+      .eq("user_id", userId)
+      .in("project_id", projectIds)
+      .order("created_at", { ascending: false })
+      .limit(200)
+  ]);
+  const slotsByProject = new Map<string, BuildProjectSlotRow[]>();
+  const auditByProject = new Map<string, BuildProjectAuditEventRow[]>();
+  const runsByProject = new Map<string, BuildProjectOptimizationRunRow[]>();
+
+  for (const slot of (slotsResult.data ?? []) as BuildProjectSlotRow[]) {
+    slotsByProject.set(slot.project_id, [
+      ...(slotsByProject.get(slot.project_id) ?? []),
+      slot
+    ]);
+  }
+
+  for (const event of (auditResult.data ?? []) as BuildProjectAuditEventRow[]) {
+    auditByProject.set(event.project_id, [
+      ...(auditByProject.get(event.project_id) ?? []),
+      event
+    ]);
+  }
+
+  for (const run of (runsResult.data ?? []) as BuildProjectOptimizationRunRow[]) {
+    runsByProject.set(run.project_id, [
+      ...(runsByProject.get(run.project_id) ?? []),
+      run
+    ]);
+  }
+
+  const summaries = projectRows.map((project) => {
+    const projectSlots = slotsByProject.get(project.id) ?? [];
+    const workspaceProject = buildWorkspaceProjectFromRows(project, projectSlots);
+    const model = createBuildWorkspaceModel(workspaceProject);
+    const requiredSlots = model.evaluation.slots.filter(
+      (slot) => slot.definition.requirement === "required"
+    );
+    const missingRequiredSlots = requiredSlots
+      .filter((slot) => slot.status === "missing")
+      .map((slot) => slot.definition.label);
+    const rootProjectId = project.root_project_id ?? project.id;
+    const branchCount = projectRows.filter(
+      (candidate) =>
+        candidate.id !== project.id &&
+        (candidate.root_project_id ?? candidate.id) === rootProjectId
+    ).length;
+    const optimizationRuns = runsByProject.get(project.id) ?? [];
+
+    return {
+      branchCount,
+      lastActivity: auditByProject.get(project.id)?.[0] ?? null,
+      latestOptimizationRun: optimizationRuns[0] ?? null,
+      missingRequiredSlots,
+      model,
+      optimizationRunCount: optimizationRuns.length,
+      project,
+      recommendedNextAction: getDashboardNextAction(
+        project.id,
+        model,
+        optimizationRuns.length,
+        branchCount
+      ),
+      selectedRequiredSlotCount: requiredSlots.length - missingRequiredSlots.length,
+      totalRequiredSlotCount: requiredSlots.length
+    };
+  });
+
+  return {
+    data: summaries,
+    isConfigured: true,
+    isSignedIn: true,
+    message:
+      projectsError?.message ??
+      slotsResult.error?.message ??
+      auditResult.error?.message ??
+      runsResult.error?.message
+  };
+}
+
 export async function getBuildProjectDetail(projectId: string) {
   const { client, message, userId } = await getUserAndClient();
 
@@ -407,7 +620,13 @@ export async function getBuildProjectDetail(projectId: string) {
   }
 
   const lineageRootId = projectRow.root_project_id ?? projectRow.id;
-  const [slotsResult, notesResult, auditResult, branchesResult] = await Promise.all([
+  const [
+    slotsResult,
+    notesResult,
+    auditResult,
+    branchesResult,
+    optimizationRunsResult
+  ] = await Promise.all([
     client
       .from("build_project_slots")
       .select("*")
@@ -433,7 +652,14 @@ export async function getBuildProjectDetail(projectId: string) {
       .eq("user_id", userId)
       .or(`id.eq.${lineageRootId},root_project_id.eq.${lineageRootId}`)
       .order("branch_depth", { ascending: true })
-      .order("updated_at", { ascending: false })
+      .order("updated_at", { ascending: false }),
+    client
+      .from("build_project_optimization_runs")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(8)
   ]);
   const slotRows = (slotsResult.data ?? []) as BuildProjectSlotRow[];
   const workspaceProject = buildWorkspaceProjectFromRows(projectRow, slotRows);
@@ -444,6 +670,7 @@ export async function getBuildProjectDetail(projectId: string) {
       branches: (branchesResult.data ?? []) as BuildProjectRow[],
       model: createBuildWorkspaceModel(workspaceProject),
       notes: (notesResult.data ?? []) as BuildProjectNoteRow[],
+      optimizationRuns: (optimizationRunsResult.data ?? []) as BuildProjectOptimizationRunRow[],
       projectRow,
       slotRows
     },
@@ -453,7 +680,8 @@ export async function getBuildProjectDetail(projectId: string) {
       slotsResult.error?.message ??
       notesResult.error?.message ??
       auditResult.error?.message ??
-      branchesResult.error?.message
+      branchesResult.error?.message ??
+      optimizationRunsResult.error?.message
   };
 }
 

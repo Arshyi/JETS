@@ -104,7 +104,15 @@ export function ProjectBranchWorkspace({
             ))}
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div className="mt-5 rounded-lg border border-border bg-background p-4">
+          <p className="text-sm font-semibold">No branches yet</p>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            Try another scenario when you want to test different hardware without
+            changing this builder.
+          </p>
+        </div>
+      )}
     </section>
   );
 }

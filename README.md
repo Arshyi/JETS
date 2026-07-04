@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths.
 
-Version 2.3 adds Project Branching & Optimization Workspace. JETS now treats hardware ideas like engineering branches: preserve the original project, explore optimized variants, then compare.
+JETS is now project-centered. The primary experience is: choose a goal, create a project, fill slots through contextual inventory, validate the build, optimize, branch or compare scenarios, then review a finished solution.
 
 ## Commands
 
@@ -30,6 +30,19 @@ npm run lint
 - **2.2:** Optimization Engine Foundation. Complete.
 - **2.3:** Project Branching & Optimization Workspace. Current.
 - **2.4:** Branch comparison, merge-style apply, and project history diffs. Recommended next.
+
+## Primary Workflow
+
+1. Home asks what the user is trying to build.
+2. The goal-first project wizard creates the project with a scoring preset and optimization direction.
+3. Builder opens as the project home.
+4. Slot inventory appears in context when the builder needs hardware.
+5. Validation runs continuously.
+6. Optimization proposes deterministic improvements.
+7. Branching preserves alternatives without mutating the original.
+8. Compare and Finish remain optional review stages.
+
+See `docs/user-workflow.md` for the journey diagram and UX rules.
 
 ## Version 0.2 Notes
 
@@ -187,6 +200,7 @@ npm run lint
 ## Inventory Model
 
 - Inventory is the supporting surface for Solution Builder projects, not the main marketplace.
+- Inventory should feel like a hardware picker launched from a project slot.
 - `/inventory` groups mock/demo items by hardware category so GPUs, laptops, base systems, adapters, and full systems do not appear as one universal ranking list.
 - `/search` remains available as an alias for old links, but user-facing navigation now says Inventory.
 - Slot-driven URLs such as `/inventory?slot=gpu&projectId=<id>` show only relevant categories and allow typed components to be added to the project slot.

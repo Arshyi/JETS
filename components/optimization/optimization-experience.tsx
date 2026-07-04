@@ -2,6 +2,7 @@ import { GitBranch, Lock, Sparkles, Unlock } from "lucide-react";
 import Link from "next/link";
 
 import { EmptyState } from "@/components/states/empty-state";
+import { ProjectWorkflowProgress } from "@/components/solution-builder/project-workflow-progress";
 import { StatusPill } from "@/components/ui/status-pill";
 import { formatAuditTimestamp } from "@/lib/decision-audit/format";
 import { createOptimizedProjectBranchAction } from "@/lib/supabase/branch-actions";
@@ -62,6 +63,9 @@ export function OptimizationExperience({
 }: OptimizationExperienceProps) {
   const { model, projectRow } = detail;
   const returnTo = `/solution-builder/projects/${projectRow.id}/optimize`;
+  const branchCount = detail.branches.filter((branch) => branch.id !== projectRow.id).length;
+  const warningCount =
+    model.evaluation.warningCount + model.evaluation.blockingCount;
 
   return (
     <main className="bg-background pb-16">
@@ -82,6 +86,17 @@ export function OptimizationExperience({
               <StatusPill>{model.evaluation.overallStatus}</StatusPill>
               <StatusPill>{runs.length} runs</StatusPill>
             </div>
+          </div>
+
+          <div className="mt-6">
+            <ProjectWorkflowProgress
+              branchCount={branchCount}
+              completionPercent={model.evaluation.completionPercent}
+              currentStage="optimize"
+              hasOptimizationRuns={runs.length > 0}
+              projectId={projectRow.id}
+              warningCount={warningCount}
+            />
           </div>
         </div>
       </section>

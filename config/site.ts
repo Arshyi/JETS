@@ -34,11 +34,10 @@ export const siteConfig = {
 
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
-  { title: "Solution Builder", href: "/solution-builder", status: "v2.0" },
-  { title: "Projects", href: "/solution-builder/projects", status: "v2.1" },
-  { title: "Recommend", href: "/solution-builder/recommend", status: "v2.0" },
-  { title: "Inventory", href: "/inventory", status: "demo" },
-  { title: "Account", href: "/account", status: "beta" }
+  { title: "Projects", href: "/solution-builder/projects" },
+  { title: "Builder", href: "/solution-builder" },
+  { title: "Inventory", href: "/inventory" },
+  { title: "Account", href: "/account" }
 ];
 
 export const workspaceNav: NavItem[] = [

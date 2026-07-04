@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BuildValidationSummary } from "@/components/solution-builder/build-validation-summary";
 import { CompareAgainstJets } from "@/components/solution-builder/compare-against-jets";
 import { ProjectBranchWorkspace } from "@/components/solution-builder/project-branch-workspace";
+import { ProjectWorkflowProgress } from "@/components/solution-builder/project-workflow-progress";
 import { ProjectAuditTimeline } from "@/components/solution-builder/project-audit-timeline";
 import { SlotInventoryPicker } from "@/components/solution-builder/slot-inventory-picker";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -29,6 +30,8 @@ const sectionLabels: Record<BuildSlotRequirement, string> = {
 export function ProjectDetail({ data }: ProjectDetailProps) {
   const { model, projectRow } = data;
   const returnTo = `/solution-builder/projects/${projectRow.id}`;
+  const warningCount = model.evaluation.warningCount + model.evaluation.blockingCount;
+  const branchCount = data.branches.filter((branch) => branch.id !== projectRow.id).length;
   const slotGroups = (["required", "optional", "solution"] as const).map(
     (requirement) => ({
       requirement,
@@ -45,11 +48,12 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-                Build project
+                Builder
               </p>
               <h1 className="mt-3 max-w-3xl text-4xl font-bold">{model.project.title}</h1>
               <p className="mt-4 max-w-3xl text-base leading-7 text-muted">
-                Persisted slot workspace backed by typed component inventory and deterministic validation.
+                Fill hardware slots, validate the build, optimize unlocked parts,
+                and branch ideas without losing the original.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -96,6 +100,17 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
                 {projectRow.status === "archived" ? "Restore" : "Archive"}
               </button>
             </form>
+          </div>
+
+          <div className="mt-6">
+            <ProjectWorkflowProgress
+              branchCount={branchCount}
+              completionPercent={model.evaluation.completionPercent}
+              currentStage="components"
+              hasOptimizationRuns={data.optimizationRuns.length > 0}
+              projectId={projectRow.id}
+              warningCount={warningCount}
+            />
           </div>
         </div>
       </section>
@@ -150,7 +165,7 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
             href="/solution-builder/projects"
             className="inline-flex items-center justify-center rounded-lg border border-border bg-panel px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
           >
-            Back to projects
+            Back to dashboard
           </Link>
         </aside>
 
@@ -175,6 +190,15 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
           ))}
 
           <CompareAgainstJets preview={model.comparePreview} />
+
+          <section className="rounded-lg border border-border bg-panel p-5">
+            <h2 className="text-xl font-bold">Finished Solution</h2>
+            <p className="mt-3 text-sm leading-6 text-muted">
+              {model.evaluation.completionPercent >= 100 && warningCount === 0
+                ? "This project has all required slots filled and no blocking validation warnings. Review optimization branches, compare scenarios, then mark the solution ready outside JETS."
+                : "A finished solution needs required components, a clean validation pass, and at least one optimization review. Continue with the next action shown in the dashboard or progress bar."}
+            </p>
+          </section>
 
           <section>
             <h2 className="mb-4 text-xl font-bold">Project audit history</h2>

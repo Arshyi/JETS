@@ -5,6 +5,11 @@ import { redirect } from "next/navigation";
 
 import { appVersion } from "@/lib/app-version";
 import {
+  getGoalOwnedItems,
+  getGoalPreferences,
+  getProjectGoalTemplate
+} from "@/data/project-goals";
+import {
   countryCurrencyDefaults,
   defaultBuildGeneratorPreferences,
   defaultOwnedItems
@@ -174,6 +179,72 @@ export async function createBuildProjectAction(formData: FormData) {
     metadata: { appVersion },
     projectId: data.id,
     summary: `Created build project ${title}.`
+  });
+
+  revalidateProjectPaths(data.id);
+  redirect(`/solution-builder/projects/${data.id}`);
+}
+
+export async function createGoalBuildProjectAction(formData: FormData) {
+  const template = getProjectGoalTemplate(getText(formData, "goalId"));
+  const rawCountry = getText(formData, "country") || "United States";
+  const country = parseCountry(rawCountry);
+  const currency = parseCurrency(getText(formData, "currency") || "USD", country);
+  const title = (getText(formData, "title") || template.defaultTitle).slice(0, 120);
+  const budget = parseBudget(
+    getText(formData, "budget") || String(template.defaultBudget)
+  );
+  const preferences = getGoalPreferences(template);
+  const ownedItems = getGoalOwnedItems(template);
+  const { supabase, user } = await requireProjectPersistence(
+    "/solution-builder/projects/new"
+  );
+  const branchNotes = [
+    `Goal: ${template.title}.`,
+    `Scoring preset: ${template.scoringPreset}.`,
+    `Optimize for: ${template.optimizeFor}.`
+  ].join(" ");
+  const { data, error } = await supabase
+    .from("build_projects")
+    .insert({
+      app_version: appVersion,
+      branch_notes: branchNotes,
+      budget,
+      country,
+      currency,
+      owned_items: ownedItems as unknown as Json,
+      preferences: preferences as unknown as Json,
+      purpose: template.purpose,
+      title,
+      user_id: user.id
+    })
+    .select("id")
+    .single();
+
+  if (!data || error) {
+    redirect("/solution-builder/projects/new");
+  }
+
+  await supabase.from("build_project_notes").insert({
+    note: `${template.templateSummary} First suggested slot: ${template.firstSlotId}.`,
+    project_id: data.id,
+    user_id: user.id
+  });
+  await recordProjectAuditEvent(supabase, user.id, {
+    afterState: {
+      budget,
+      country,
+      currency,
+      goalId: template.id,
+      optimizeFor: template.optimizeFor,
+      purpose: template.purpose,
+      scoringPreset: template.scoringPreset,
+      title
+    },
+    eventType: "project_created",
+    metadata: { appVersion, goalId: template.id, template: "goal-first" },
+    projectId: data.id,
+    summary: `Created ${template.title} project ${title}.`
   });
 
   revalidateProjectPaths(data.id);

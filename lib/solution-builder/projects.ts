@@ -19,6 +19,7 @@ import type {
 import type {
   BuildProjectAuditEventRow,
   BuildProjectNoteRow,
+  BuildProjectOptimizationRunRow,
   BuildProjectRow,
   BuildProjectSlotRow,
   Json
@@ -40,6 +41,7 @@ export type BuildProjectDetailData = {
   branches: BuildProjectRow[];
   model: BuildWorkspaceModel;
   notes: BuildProjectNoteRow[];
+  optimizationRuns: BuildProjectOptimizationRunRow[];
   projectRow: BuildProjectRow;
   slotRows: BuildProjectSlotRow[];
 };

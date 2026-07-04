@@ -67,7 +67,7 @@ export function SlotInventoryPicker({
             className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
           >
             <Boxes className="h-4 w-4" aria-hidden="true" />
-            Open inventory
+            Choose in inventory
           </Link>
         </div>
       </div>
@@ -82,7 +82,7 @@ export function SlotInventoryPicker({
           />
         ) : (
           <p className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted">
-            No component selected.
+            No {slot.definition.label.toLowerCase()} selected yet.
           </p>
         )}
 
@@ -91,7 +91,7 @@ export function SlotInventoryPicker({
           <input type="hidden" name="slotId" value={slot.definition.id} />
           <input type="hidden" name="returnTo" value={returnTo} />
           <label className="grid gap-2 text-sm font-medium">
-            Slot inventory
+            Choose a {slot.definition.label}
             <select
               name="componentId"
               disabled={components.length === 0}
@@ -119,7 +119,7 @@ export function SlotInventoryPicker({
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Save className="h-4 w-4" aria-hidden="true" />
-            Save slot
+            Save component
           </button>
         </form>
 

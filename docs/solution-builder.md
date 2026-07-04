@@ -1,6 +1,6 @@
 # JETS Solution Builder
 
-Version 2.0 was the first architectural redesign of JETS. Version 2.1 added persisted projects and component-aware slot inventory. Version 2.2 added the Optimization Engine Foundation. Version 2.3 adds Project Branching & Optimization Workspace.
+Version 2.0 was the first architectural redesign of JETS. Version 2.1 added persisted projects and component-aware slot inventory. Version 2.2 added the Optimization Engine Foundation. Version 2.3 adds Project Branching & Optimization Workspace. The current product-flow patch connects these layers into one continuous workflow.
 
 The product center is no longer browsing listings. JETS is now organized around solving a hardware problem through two workflows:
 
@@ -8,6 +8,17 @@ The product center is no longer browsing listings. JETS is now organized around 
 - Let JETS Recommend: a recommendation workflow that synthesizes complete solution paths from budget, purpose, preferences, and owned hardware.
 
 Existing inventory, compatibility, decision scoring, snapshots, audit, and source ingestion remain functional. They are now supporting services under the Solution Builder architecture. Optimization is the workflow layer that combines those services into suggested changes. Branching is the safety layer that lets users explore those changes without losing the original build.
+
+The intended journey is:
+
+1. Home asks what the user is trying to build.
+2. Goal-first project wizard creates the project.
+3. Builder opens as the project home.
+4. Slot-by-slot Inventory selection fills components.
+5. Validation summarizes missing and risky areas.
+6. Optimization analyzes unlocked slots.
+7. Branching preserves alternatives.
+8. Compare and Finish review the solution.
 
 ## Architecture Review
 
@@ -76,6 +87,7 @@ Server actions live in `lib/supabase/project-actions.ts`.
 Users can:
 
 - create a project
+- create a project from a goal template
 - rename a project
 - archive or restore a project
 - delete a project
@@ -85,6 +97,26 @@ Users can:
 - view project audit history
 
 The app still handles missing Supabase environment variables gracefully.
+
+## Goal-First Wizard
+
+The Create Project flow starts at `/solution-builder/projects/new`.
+
+Supported goals:
+
+- Gaming PC
+- AI workstation
+- CAD / Engineering workstation
+- Home server
+- Office PC
+- Upgrade existing computer
+- Custom project
+
+Goal templates live in `data/project-goals.ts`. They set the project title,
+purpose, budget default, preference preset, owned-hardware assumptions, first
+suggested slot, scoring preset, and optimization intent. Project creation still
+uses the existing Supabase `build_projects`, `build_project_notes`, and
+`build_project_audit_events` tables.
 
 ## v2.1 Component Inventory
 
@@ -202,6 +234,19 @@ Each slot resolves to one of:
 - Missing
 
 The workspace summary reports completion, platform health, upgrade path, and current validation warnings.
+
+Project pages now share a progress spine:
+
+- Project
+- Components
+- Validate
+- Optimize
+- Compare
+- Finish
+
+The project dashboard summarizes score, completion, missing slots, validation,
+optimization status, branch count, last activity, and the recommended next
+action.
 
 ## Shared Services
 

@@ -20,6 +20,12 @@ JETS currently uses mock/demo inventory. Live ingestion and scraping are planned
 
 Optimization is the differentiator. The long-term workflow should become Build -> Analyze -> Optimize -> Branch -> Compare, where JETS searches solution paths people would not normally consider while still explaining every tradeoff.
 
+The near-term user journey should feel continuous:
+
+Home -> Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
+
+Inventory should usually appear from inside a builder slot, not as a place users manually browse first.
+
 ## Current Rule
 
 Do not build ideas the moment they appear.
@@ -56,6 +62,16 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Add project-slot actions when inventory has project and slot context.
 - Preserve `/search` only as a compatibility alias.
 - Do not add AI, live scraping, or checkout.
+
+### Workflow Consolidation
+
+- Current product-flow patch.
+- Redesign Home around "What are you trying to build today?"
+- Add the goal-first project wizard.
+- Make Builder the home of every project.
+- Add project dashboard summaries with score, completion, missing slots, validation, optimization, branches, last activity, and next action.
+- Add workflow progress: Project, Components, Validate, Optimize, Compare, Finish.
+- Keep Inventory as contextual slot support.
 
 ### Version 0.3 - Supabase Accounts
 

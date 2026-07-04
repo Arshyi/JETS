@@ -3,16 +3,16 @@ import type { Metadata } from "next";
 import { SignedOutState } from "@/components/auth/signed-out-state";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { ProjectDashboard } from "@/components/solution-builder/project-dashboard";
-import { getBuildProjects } from "@/lib/supabase/queries";
+import { getBuildProjectDashboard } from "@/lib/supabase/queries";
 
 export const metadata: Metadata = {
-  title: "Build Projects",
+  title: "Projects",
   description:
-    "Create, restore, archive, and open persisted JETS Build My Own projects."
+    "Create, resume, archive, restore, and review JETS hardware solution projects."
 };
 
 export default async function BuildProjectsPage() {
-  const state = await getBuildProjects();
+  const state = await getBuildProjectDashboard();
 
   if (!state.isConfigured) {
     return (

@@ -6,7 +6,7 @@ import { SignedOutState } from "@/components/auth/signed-out-state";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { ContentPage } from "@/components/pages/content-page";
-import { CreateProjectForm } from "@/components/solution-builder/create-project-form";
+import { ProjectGoalWizard } from "@/components/solution-builder/project-goal-wizard";
 import { StatusPill } from "@/components/ui/status-pill";
 import { getBuildProjects } from "@/lib/supabase/queries";
 import { getAuthContext } from "@/lib/supabase/session";
@@ -94,7 +94,7 @@ export default async function OnboardingPage({
                     href="#first-project"
                     className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
                   >
-                    Create first project
+                    Choose project goal
                   </Link>
                 )}
                 <Link
@@ -153,11 +153,7 @@ export default async function OnboardingPage({
                   </div>
                 </article>
               ) : (
-                <CreateProjectForm
-                  compact
-                  heading="Create your first hardware project"
-                  submitLabel="Create and open project"
-                />
+                <ProjectGoalWizard />
               )}
             </div>
 

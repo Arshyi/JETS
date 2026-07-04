@@ -8,9 +8,9 @@ import { EmptyState } from "@/components/states/empty-state";
 import { getBuildProjectDetail } from "@/lib/supabase/queries";
 
 export const metadata: Metadata = {
-  title: "Build Project",
+  title: "Builder",
   description:
-    "Fill persisted JETS build slots with component-aware inventory and review project audit history."
+    "Open the JETS project builder to fill slots, validate, optimize, branch, compare, and finish a hardware solution."
 };
 
 type BuildProjectPageProps = {
@@ -54,7 +54,7 @@ export default async function BuildProjectPage({ params }: BuildProjectPageProps
               href="/solution-builder/projects"
               className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
             >
-              Back to projects
+              Back to dashboard
             </Link>
           }
         />
