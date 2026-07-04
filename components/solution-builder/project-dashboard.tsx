@@ -1,19 +1,14 @@
-import { Archive, FolderKanban, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { Archive, FolderKanban, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
 
+import { CreateProjectForm } from "@/components/solution-builder/create-project-form";
 import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
   archiveBuildProjectAction,
-  createBuildProjectAction,
   deleteBuildProjectAction,
   restoreBuildProjectAction
 } from "@/lib/supabase/project-actions";
-import {
-  buildGeneratorCountries,
-  buildGeneratorCurrencies
-} from "@/types/build-generator";
-import { hardwareUseCases, useCaseLabels } from "@/types/hardware";
 import type { BuildProjectRow } from "@/types/database";
 
 type ProjectDashboardProps = {
@@ -44,87 +39,14 @@ export function ProjectDashboard({ projects }: ProjectDashboardProps) {
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[340px_1fr] lg:px-8">
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <form action={createBuildProjectAction} className="rounded-lg border border-border bg-panel p-5">
-            <div className="flex items-center gap-3">
-              <Plus className="h-5 w-5 text-accent-strong dark:text-accent" aria-hidden="true" />
-              <h2 className="text-lg font-semibold">New project</h2>
-            </div>
-            <div className="mt-5 grid gap-4">
-              <label className="grid gap-2 text-sm font-medium">
-                Title
-                <input
-                  name="title"
-                  defaultValue="Engineering Workstation"
-                  className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                Purpose
-                <select
-                  name="purpose"
-                  defaultValue="engineering"
-                  className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
-                >
-                  {hardwareUseCases.map((useCase) => (
-                    <option key={useCase} value={useCase}>
-                      {useCaseLabels[useCase]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                Budget
-                <input
-                  name="budget"
-                  type="number"
-                  min="0"
-                  defaultValue="850"
-                  className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                Country
-                <select
-                  name="country"
-                  defaultValue="United States"
-                  className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
-                >
-                  {buildGeneratorCountries.map((country) => (
-                    <option key={country} value={country}>
-                      {country}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                Currency
-                <select
-                  name="currency"
-                  defaultValue="USD"
-                  className="h-10 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25"
-                >
-                  {buildGeneratorCurrencies.map((currency) => (
-                    <option key={currency} value={currency}>
-                      {currency}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-              >
-                Create project
-              </button>
-            </div>
-          </form>
+          <CreateProjectForm />
         </aside>
 
         <div>
           {projects.length === 0 ? (
             <EmptyState
               title="No build projects yet"
-              description="Create a project to start filling hardware slots with component-aware inventory."
+              description="Create your first hardware project to start filling slots, validating compatibility, and preparing optimization runs."
               icon={FolderKanban}
             />
           ) : (

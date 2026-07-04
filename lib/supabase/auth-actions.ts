@@ -33,7 +33,7 @@ export async function signInAction(
 
   const email = getText(formData, "email");
   const password = getText(formData, "password");
-  const next = getSafeAuthRedirectPath(getText(formData, "next") || "/account");
+  const next = getSafeAuthRedirectPath(getText(formData, "next") || "/onboarding");
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
@@ -67,7 +67,7 @@ export async function signUpAction(
   const email = getText(formData, "email");
   const password = getText(formData, "password");
   const displayName = getText(formData, "displayName");
-  const next = getSafeAuthRedirectPath(getText(formData, "next") || "/account");
+  const next = getSafeAuthRedirectPath(getText(formData, "next") || "/onboarding");
   const requestHeaders = await headers();
   const supabase = await createSupabaseServerClient();
 
@@ -95,7 +95,7 @@ export async function signUpAction(
 
   return {
     message:
-      "Account created. Check email confirmation settings in Supabase, then sign in.",
+      "Account created. Check your email to confirm the account, then continue into onboarding.",
     status: "success"
   };
 }

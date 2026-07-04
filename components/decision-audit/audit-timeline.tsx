@@ -43,14 +43,14 @@ export function AuditTimeline({ compact = false, events }: AuditTimelineProps) {
     return (
       <EmptyState
         title="No decision activity yet"
-        description="Save builds, create snapshots, update notes, or mark outcomes to build an audit trail."
+        description="Create a hardware project, fill a slot, run optimization, or save a decision to start the audit trail."
         icon={FileClock}
         action={
           <Link
-            href="/beta/demo-data"
+            href="/solution-builder/projects"
             className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
           >
-            View demo workflow
+            Open projects
           </Link>
         }
       />

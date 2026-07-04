@@ -91,10 +91,22 @@ export const workspaceNav: NavItem[] = [
     status: "v0.9"
   },
   {
+    title: "Post-Auth Onboarding",
+    href: "/onboarding",
+    description: "Signed-in first-run page for creating the first hardware project and testing persistence.",
+    status: "beta"
+  },
+  {
     title: "Private Beta",
     href: "/beta",
     description: "Onboarding, setup checklist, demo workflow, and smoke-test guidance for v1.0 beta sessions.",
     status: "v1.0"
+  },
+  {
+    title: "Beta Smoke Test",
+    href: "/beta/smoke-test",
+    description: "Signed-in checklist for auth, project persistence, snapshots, activity, and session recovery.",
+    status: "beta"
   },
   {
     title: "Beta Feedback",

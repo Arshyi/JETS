@@ -11,9 +11,29 @@ import { StatusPill } from "@/components/ui/status-pill";
 import { mainNav, workspaceNav } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-export function SiteHeader() {
+export type HeaderAuthState = {
+  displayName?: string | null;
+  email?: string | null;
+  isConfigured: boolean;
+  isSignedIn: boolean;
+};
+
+function getAuthLabel(auth: HeaderAuthState) {
+  if (!auth.isConfigured) {
+    return "Auth setup";
+  }
+
+  if (!auth.isSignedIn) {
+    return "Sign in";
+  }
+
+  return auth.displayName ?? auth.email ?? "Account";
+}
+
+export function SiteHeader({ auth }: { auth: HeaderAuthState }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const authLabel = getAuthLabel(auth);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur">
@@ -36,6 +56,24 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link
+            href={auth.isConfigured ? (auth.isSignedIn ? "/account" : "/login") : "/beta/setup"}
+            className={cn(
+              "hidden max-w-48 items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-sm font-semibold transition hover:bg-subtle focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background sm:inline-flex",
+              auth.isSignedIn ? "text-foreground" : "text-muted"
+            )}
+          >
+            <span
+              className={cn(
+                "h-2 w-2 rounded-full",
+                auth.isSignedIn ? "bg-accent" : "bg-warning"
+              )}
+              aria-hidden="true"
+            />
+            <span className="truncate">
+              {auth.isSignedIn ? `Signed in as ${authLabel}` : authLabel}
+            </span>
+          </Link>
           <ThemeToggle />
           <button
             type="button"
@@ -56,6 +94,21 @@ export function SiteHeader() {
       {isOpen ? (
         <div className="border-t border-border bg-background px-4 py-4 md:hidden">
           <nav className="mx-auto grid max-w-7xl gap-2" aria-label="Mobile navigation">
+            <Link
+              href={auth.isConfigured ? (auth.isSignedIn ? "/account" : "/login") : "/beta/setup"}
+              onClick={() => setIsOpen(false)}
+              className="flex items-center justify-between rounded-lg border border-border bg-panel px-3 py-3 text-sm font-medium text-muted hover:bg-subtle hover:text-foreground"
+            >
+              {auth.isSignedIn ? `Signed in as ${authLabel}` : authLabel}
+              <StatusPill
+                tone={
+                  auth.isSignedIn ? "accent" : auth.isConfigured ? "neutral" : "warning"
+                }
+              >
+                {auth.isSignedIn ? "active" : auth.isConfigured ? "signed out" : "setup"}
+              </StatusPill>
+            </Link>
+
             {mainNav.map((item) => (
               <Link
                 key={item.href}

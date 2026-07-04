@@ -32,14 +32,22 @@ export default async function FavoritesPage() {
       ) : state.data.length === 0 ? (
         <EmptyState
           title="No favorites yet"
-          description="Use the Favorite button on search results to persist mock listings here."
+          description="Create a hardware project first, then favorite inventory candidates while filling slots or comparing branches."
           action={
-            <Link
-              href="/search"
-              className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-            >
-              Open search
-            </Link>
+            <div className="flex flex-col justify-center gap-2 sm:flex-row">
+              <Link
+                href="/solution-builder/projects"
+                className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Open projects
+              </Link>
+              <Link
+                href="/search"
+                className="inline-flex items-center justify-center rounded-lg border border-border bg-panel px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-subtle focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Browse inventory
+              </Link>
+            </div>
           }
         />
       ) : (

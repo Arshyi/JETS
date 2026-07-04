@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, Database, MessageSquare, Rocket } from "lucide-react";
+import {
+  CheckCircle2,
+  ClipboardCheck,
+  Database,
+  MessageSquare,
+  Rocket
+} from "lucide-react";
 
 import { ContentPage } from "@/components/pages/content-page";
 import { betaDemoWorkflow, betaSetupChecklist, betaSmokeTests } from "@/data/beta";
@@ -23,6 +29,12 @@ const betaCards = [
     description: "Walk through the seeded mock listings, snapshots, audit events, and dry-run sources.",
     href: "/beta/demo-data",
     icon: Database
+  },
+  {
+    title: "Smoke test",
+    description: "Validate the signed-in onboarding, project, persistence, and audit paths.",
+    href: "/beta/smoke-test",
+    icon: ClipboardCheck
   },
   {
     title: "Feedback",
@@ -53,7 +65,7 @@ export default function BetaOnboardingPage() {
           </p>
         </article>
 
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-4">
           {betaCards.map((card) => {
             const Icon = card.icon;
 

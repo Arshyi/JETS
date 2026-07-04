@@ -68,6 +68,14 @@ function getLoginRedirectUrl(
   return loginUrl;
 }
 
+function getSuccessRedirectUrl(requestUrl: URL, next: string) {
+  const successUrl = new URL(next, requestUrl.origin);
+  successUrl.searchParams.set("authStatus", "success");
+  successUrl.searchParams.set("authMessage", "email-confirmed");
+
+  return successUrl;
+}
+
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
@@ -104,7 +112,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.redirect(new URL(next, requestUrl.origin));
+    return NextResponse.redirect(getSuccessRedirectUrl(requestUrl, next));
   }
 
   if (tokenHash && type) {
@@ -125,7 +133,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.redirect(new URL(next, requestUrl.origin));
+    return NextResponse.redirect(getSuccessRedirectUrl(requestUrl, next));
   }
 
   return NextResponse.redirect(

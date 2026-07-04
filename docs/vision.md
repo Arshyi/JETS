@@ -173,6 +173,16 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Show branch workspace on project detail.
 - Keep merge/apply behavior deferred until branches are easy to inspect.
 
+### Post-Auth Beta Hardening
+
+- Current beta-readiness patch.
+- Keep the first authenticated experience centered on projects, not listing browsing.
+- Send signup and email confirmation into onboarding where users create the first hardware project.
+- Make `/account` a control panel for continuing projects, checking persistence, smoke testing, and signing out.
+- Add signed-in smoke testing so beta testers can verify auth, project persistence, snapshots, activity, and sign out/sign in recovery.
+- Keep Search as inventory and saved research as supporting infrastructure.
+- Do not add AI, live scraping, or checkout during auth hardening.
+
 ### Version 2.4 - Branch Comparison and Merge Preview
 
 - Recommended next.

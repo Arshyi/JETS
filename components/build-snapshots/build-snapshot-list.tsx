@@ -87,15 +87,23 @@ export function BuildSnapshotList({
     return (
       <EmptyState
         title="No build snapshots yet"
-        description="Save a Build Generator result to preserve its inputs, scores, explanations, and alternatives."
+        description="Use Solution Builder as the primary workflow, then preserve generated recommendations or optimization decisions as snapshots."
         icon={Archive}
         action={
-          <Link
-            href="/build-generator"
-            className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-          >
-            Open generator
-          </Link>
+          <div className="flex flex-col justify-center gap-2 sm:flex-row">
+            <Link
+              href="/solution-builder/projects"
+              className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+            >
+              Open projects
+            </Link>
+            <Link
+              href="/build-generator"
+              className="inline-flex items-center justify-center rounded-lg border border-border bg-panel px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-subtle focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+            >
+              Open generator
+            </Link>
+          </div>
         }
       />
     );

@@ -24,7 +24,8 @@ export const betaSetupChecklist = [
   },
   {
     title: "Create a beta account",
-    description: "Use /signup, then confirm the account according to the Supabase auth settings."
+    description:
+      "Use /signup, confirm the account, and verify the success path lands on /onboarding or routes back through /login with a clear message."
   },
   {
     title: "Run verification",
@@ -67,9 +68,13 @@ export const betaDemoWorkflow = [
 
 export const betaSmokeTests = [
   "Homepage loads in light and dark mode.",
+  "Signup confirmation redirects to /auth/callback and then to /onboarding with a clear success message.",
+  "Header shows whether the visitor is signed in, signed out, or missing Supabase setup.",
+  "Signed-in onboarding can create the first hardware project and opens the new project detail page.",
+  "/beta/smoke-test reflects the current signed-in project, snapshot, research, and audit state.",
   "Search filters, sorting, compare selection, save, and favorite controls remain usable.",
   "Build Generator saves a snapshot and restores it from /build-generator?snapshot=<id>.",
-  "Saved builds, favorites, history, snapshots, and activity show friendly empty states.",
+  "Saved builds, favorites, history, snapshots, and activity show project-first empty states.",
   "Snapshot rename, notes, favorite, status, restore, compare, and delete actions record audit events.",
   "Missing Supabase env vars show setup guidance rather than a broken page.",
   "Vercel production and preview deployments use the expected NEXT_PUBLIC_SITE_URL or NEXT_PUBLIC_VERCEL_URL metadata base.",
