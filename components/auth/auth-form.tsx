@@ -6,17 +6,22 @@ import { useActionState } from "react";
 import { signInAction, signUpAction } from "@/lib/supabase/auth-actions";
 import type { ActionState } from "@/types/persistence";
 
-const initialState: ActionState = {
+const defaultActionState: ActionState = {
   message: "",
   status: "idle"
 };
 
 type AuthFormProps = {
+  initialState?: ActionState;
   mode: "login" | "signup";
   next?: string;
 };
 
-export function AuthForm({ mode, next = "/account" }: AuthFormProps) {
+export function AuthForm({
+  initialState = defaultActionState,
+  mode,
+  next = "/account"
+}: AuthFormProps) {
   const action = mode === "login" ? signInAction : signUpAction;
   const [state, formAction, isPending] = useActionState(action, initialState);
 

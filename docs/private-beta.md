@@ -43,6 +43,7 @@ Before a beta session:
    - Production auth callback: `https://your-domain.com/auth/callback`.
    - Production redirect allow-list: `https://your-domain.com/**`.
    - Vercel preview redirect allow-list: `https://*-your-vercel-team.vercel.app/**`.
+   - Email template: keep `{{ .ConfirmationURL }}` or use a custom `/auth/callback?token_hash={{ .TokenHash }}&type=email` link.
 9. Apply migrations in order:
    - `202607020003_v0_3_auth_persistence.sql`
    - `202607020004_v0_4_ingestion_foundation.sql`
