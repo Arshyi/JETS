@@ -109,10 +109,10 @@ export function BuildCard({ row, type }: BuildCardProps) {
           Compare
         </Link>
         <Link
-          href="/search"
+          href="/inventory"
           className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
         >
-          Back to search
+          Back to inventory
         </Link>
       </div>
     </article>

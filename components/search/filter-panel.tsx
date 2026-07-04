@@ -49,7 +49,7 @@ export function FilterPanel({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold">Filters</h2>
-          <p className="mt-1 text-sm text-muted">{resultCount} matching listings</p>
+          <p className="mt-1 text-sm text-muted">{resultCount} matching items</p>
         </div>
         <button
           type="button"
@@ -64,7 +64,7 @@ export function FilterPanel({
 
       <div className="mt-6 grid gap-5">
         <label className="grid gap-2 text-sm font-medium">
-          Search
+          Inventory search
           <span className="relative">
             <Search
               className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"

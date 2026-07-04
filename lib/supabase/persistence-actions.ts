@@ -53,7 +53,7 @@ function getNumber(formData: FormData, key: string) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-async function requirePersistence(next = "/search") {
+async function requirePersistence(next = "/inventory") {
   if (!isSupabaseConfigured) {
     redirect("/account");
   }
@@ -138,7 +138,7 @@ async function recordHistory(
 
 export async function saveBuildAction(formData: FormData) {
   const listingId = getText(formData, "listingId");
-  const returnTo = getText(formData, "returnTo") || "/search";
+  const returnTo = getText(formData, "returnTo") || "/inventory";
   const listing = getMockListingById(listingId);
 
   if (!listing) {
@@ -163,7 +163,7 @@ export async function saveBuildAction(formData: FormData) {
   await recordAuditEvent(supabase, user.id, {
     afterState: listing as unknown as Json,
     eventType: "build_saved",
-    metadata: { listingId: listing.id, source: "search" },
+    metadata: { listingId: listing.id, source: "inventory" },
     subjectId: listing.id,
     subjectTitle: listing.title,
     subjectType: "hardware_listing",
@@ -172,6 +172,7 @@ export async function saveBuildAction(formData: FormData) {
 
   revalidatePath("/saved-builds");
   revalidatePath("/history");
+  revalidatePath("/inventory");
   revalidatePath("/search");
   revalidateAuditPaths();
   redirect(returnTo);
@@ -179,7 +180,7 @@ export async function saveBuildAction(formData: FormData) {
 
 export async function favoriteBuildAction(formData: FormData) {
   const listingId = getText(formData, "listingId");
-  const returnTo = getText(formData, "returnTo") || "/search";
+  const returnTo = getText(formData, "returnTo") || "/inventory";
   const listing = getMockListingById(listingId);
 
   if (!listing) {
@@ -204,7 +205,7 @@ export async function favoriteBuildAction(formData: FormData) {
   await recordAuditEvent(supabase, user.id, {
     afterState: listing as unknown as Json,
     eventType: "build_favorited",
-    metadata: { listingId: listing.id, source: "search" },
+    metadata: { listingId: listing.id, source: "inventory" },
     subjectId: listing.id,
     subjectTitle: listing.title,
     subjectType: "hardware_listing",
@@ -213,6 +214,7 @@ export async function favoriteBuildAction(formData: FormData) {
 
   revalidatePath("/favorites");
   revalidatePath("/history");
+  revalidatePath("/inventory");
   revalidatePath("/search");
   revalidateAuditPaths();
   redirect(returnTo);
@@ -229,6 +231,7 @@ export async function removeSavedBuildAction(formData: FormData) {
     .eq("listing_id", listingId);
 
   revalidatePath("/saved-builds");
+  revalidatePath("/inventory");
   revalidatePath("/search");
 }
 
@@ -243,6 +246,7 @@ export async function removeFavoriteBuildAction(formData: FormData) {
     .eq("listing_id", listingId);
 
   revalidatePath("/favorites");
+  revalidatePath("/inventory");
   revalidatePath("/search");
 }
 

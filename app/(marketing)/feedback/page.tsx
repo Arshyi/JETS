@@ -41,7 +41,8 @@ export default function FeedbackPage() {
             <label className="grid gap-2 text-sm font-medium">
               Area tested
               <select className="h-11 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25">
-                <option>Search</option>
+                <option>Inventory</option>
+                <option>Solution Builder</option>
                 <option>Build Generator</option>
                 <option>Snapshots</option>
                 <option>Activity</option>

@@ -1,4 +1,4 @@
-import { CheckCircle2, Search, TriangleAlert, XCircle } from "lucide-react";
+import { Boxes, CheckCircle2, TriangleAlert, XCircle } from "lucide-react";
 import Link from "next/link";
 
 import { StatusPill } from "@/components/ui/status-pill";
@@ -58,10 +58,10 @@ export function BuildSlotCard({ slot }: BuildSlotCardProps) {
         <Link
           href={slot.searchHref}
           className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-background text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-          aria-label={`Search inventory for ${slot.definition.label}`}
-          title={`Search inventory for ${slot.definition.label}`}
+          aria-label={`Open inventory for ${slot.definition.label}`}
+          title={`Open inventory for ${slot.definition.label}`}
         >
-          <Search className="h-4 w-4" aria-hidden="true" />
+          <Boxes className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
 

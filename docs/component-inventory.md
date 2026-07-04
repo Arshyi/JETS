@@ -2,7 +2,7 @@
 
 Version 2.1 adds component-aware slot inventory. Version 2.2 uses this inventory as optimizer search space.
 
-Before this milestone, Search mixed whole PCs, laptops, GPUs, and other listings in one listing-shaped model. That was useful for ranking experiments, but it did not respect Build My Own slots.
+Before this milestone, the old Search surface mixed whole PCs, laptops, GPUs, and other listings in one listing-shaped model. That was useful for ranking experiments, but it did not respect Build My Own slots.
 
 The new component inventory layer lets JETS answer a more precise question:
 
@@ -14,7 +14,8 @@ Which inventory candidates are valid for this hardware slot?
 - `data/mock-components.ts`: local mock component inventory.
 - `lib/component-inventory.ts`: slot-to-category filtering, lookup helpers, and workspace selection conversion.
 - `components/solution-builder/slot-inventory-picker.tsx`: slot-scoped picker UI.
-- `components/search/search-experience.tsx`: Search now shows slot-filtered component inventory when opened with a slot query param.
+- `lib/inventory.ts`: category grouping and slot-relevant inventory classification.
+- `components/inventory/inventory-experience.tsx`: Inventory shows category-grouped, slot-filtered component inventory.
 
 ## Categories
 

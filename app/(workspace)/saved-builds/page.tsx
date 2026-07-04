@@ -21,7 +21,7 @@ export default async function SavedBuildsPage() {
     <ContentPage
       eyebrow="Version 0.3"
       title="Saved Builds"
-      description="Persisted saved build candidates from the mock search experience."
+      description="Persisted saved inventory candidates from the mock/demo inventory experience."
     >
       {!state.isConfigured ? (
         <SupabaseSetupState />
@@ -32,7 +32,7 @@ export default async function SavedBuildsPage() {
       ) : state.data.length === 0 ? (
         <EmptyState
           title="No saved builds yet"
-          description="Start with a hardware project, then use Search as inventory when a slot needs candidate parts or systems."
+          description="Start with a hardware project, then use Inventory when a slot needs candidate parts or systems."
           action={
             <div className="flex flex-col justify-center gap-2 sm:flex-row">
               <Link
@@ -42,7 +42,7 @@ export default async function SavedBuildsPage() {
                 Open projects
               </Link>
               <Link
-                href="/search"
+                href="/inventory"
                 className="inline-flex items-center justify-center rounded-lg border border-border bg-panel px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-subtle focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
               >
                 Browse inventory

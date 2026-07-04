@@ -22,7 +22,7 @@ export default function AboutPage() {
           ],
           [
             "How",
-            "The product will grow from clean search interfaces into saved research, marketplace ingestion, and transparent ranking."
+            "The product will grow from mock/demo inventory and saved research into compliant marketplace ingestion and transparent solution ranking."
           ],
           [
             "Principle",

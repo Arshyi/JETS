@@ -12,7 +12,11 @@ Build My Own is a slot-based workspace. Users create a project, fill hardware sl
 
 Let JETS Recommend is a solution synthesis workflow. Users provide budget, country, purpose, preferences, and already-owned hardware. JETS searches possible solution strategies and explains complete recommendations, not just listings.
 
-Search is inventory. Compatibility, decision scoring, snapshots, audit, and sources are reusable services used by both workflows.
+Inventory is supporting infrastructure. Compatibility, decision scoring, snapshots, audit, and sources are reusable services used by both workflows.
+
+Inventory must not look like a flat marketplace where GPUs, laptops, sleeper bases, adapters, and full systems compete as equivalent products. It should stay category grouped and slot aware. `/inventory` is the user-facing surface; `/search` remains only as a backward-compatible alias.
+
+JETS currently uses mock/demo inventory. Live ingestion and scraping are planned but not active.
 
 Optimization is the differentiator. The long-term workflow should become Build -> Analyze -> Optimize -> Branch -> Compare, where JETS searches solution paths people would not normally consider while still explaining every tradeoff.
 
@@ -42,6 +46,16 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Added compare selection for up to three listings through URL query params.
 - Kept all data static.
 - Did not scrape marketplaces.
+
+### Inventory Reframe
+
+- Current product-consolidation patch.
+- Rename the user-facing Search surface to Inventory.
+- Group inventory by complete systems, base systems, GPUs, CPUs, RAM, storage, PSUs, cooling, adapters, and other components.
+- Make slot-opened inventory show only relevant categories.
+- Add project-slot actions when inventory has project and slot context.
+- Preserve `/search` only as a compatibility alias.
+- Do not add AI, live scraping, or checkout.
 
 ### Version 0.3 - Supabase Accounts
 
@@ -138,7 +152,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Add Solution Builder overview.
 - Add Build My Own slot workspace foundation.
 - Add Let JETS Recommend as the primary recommendation mode.
-- Reposition search as shared inventory.
+- Reposition Inventory as shared project support.
 - Keep decision, compatibility, snapshots, audit, and sources reusable.
 - Do not add AI, live scraping, checkout, or project persistence yet.
 
@@ -180,7 +194,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Send signup and email confirmation into onboarding where users create the first hardware project.
 - Make `/account` a control panel for continuing projects, checking persistence, smoke testing, and signing out.
 - Add signed-in smoke testing so beta testers can verify auth, project persistence, snapshots, activity, and sign out/sign in recovery.
-- Keep Search as inventory and saved research as supporting infrastructure.
+- Keep Inventory and saved research as supporting infrastructure.
 - Do not add AI, live scraping, or checkout during auth hardening.
 
 ### Version 2.4 - Branch Comparison and Merge Preview

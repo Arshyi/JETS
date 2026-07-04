@@ -35,8 +35,8 @@ npm run lint
 
 - All listing data lives in `data/mock-listings.ts`.
 - Hardware domain types live in `types/hardware.ts`.
-- Search/filter/sort helpers live in `lib/hardware-search.ts`.
-- The search experience is client-side and static.
+- Inventory/search filter and sort helpers live in `lib/hardware-search.ts` and `lib/inventory.ts`.
+- The inventory experience is client-side, category grouped, and static.
 - The compare page reads mock listing IDs from `/compare?ids=id-one,id-two`.
 
 ## Version 0.3 Notes
@@ -61,7 +61,7 @@ npm run lint
 
 - Decision engine types live in `types/decision.ts`.
 - Use-case presets and score formulas live in `lib/decision-engine`.
-- Search cards show decision score breakdowns and why-this-ranks explanations.
+- Inventory listing cards show decision score breakdowns and why-this-ranks explanations within their category.
 - Normalized ingestion samples can be scored without live scraping.
 - Deterministic validation fixtures live in `data/decision-engine/validation-fixtures.ts`.
 - Formula documentation lives in `docs/decision-engine.md`.
@@ -135,7 +135,7 @@ npm run lint
 - Solution Builder domain types live in `types/solution-builder.ts`.
 - Slot definitions, solution strategies, and starter workspace data live in `data/solution-builder.ts`.
 - Rule-based project validation and orchestration live in `lib/solution-builder`.
-- Search now accepts slot-driven inventory query params and remains available at `/search`.
+- Inventory now accepts slot-driven query params at `/inventory`; `/search` remains a backward-compatible alias.
 - Build Generator remains available at `/build-generator` as a supporting deterministic recommendation service.
 - Documentation lives in `docs/solution-builder.md`.
 - v2.0 does not implement AI, live scraping, checkout, or project persistence.
@@ -182,7 +182,16 @@ npm run lint
 - The global header shows whether the visitor is signed in, signed out, or missing Supabase setup.
 - `/account` is now a beta control panel for continuing projects, running smoke tests, checking persistence counts, and signing out.
 - `/beta/smoke-test` is the signed-in checklist for account creation, first project creation, persistence, snapshots, activity, and session recovery.
-- Empty saved-build, favorite, history, snapshot, and activity states point testers toward Solution Builder before falling back to old Search inventory.
+- Empty saved-build, favorite, history, snapshot, and activity states point testers toward Solution Builder before falling back to Inventory.
+
+## Inventory Model
+
+- Inventory is the supporting surface for Solution Builder projects, not the main marketplace.
+- `/inventory` groups mock/demo items by hardware category so GPUs, laptops, base systems, adapters, and full systems do not appear as one universal ranking list.
+- `/search` remains available as an alias for old links, but user-facing navigation now says Inventory.
+- Slot-driven URLs such as `/inventory?slot=gpu&projectId=<id>` show only relevant categories and allow typed components to be added to the project slot.
+- JETS still uses local mock/demo inventory only. Live ingestion and scraping are planned but not active.
+- Inventory documentation lives in `docs/inventory.md`.
 
 ## Environment Variables
 

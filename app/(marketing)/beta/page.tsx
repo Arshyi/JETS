@@ -26,7 +26,7 @@ const betaCards = [
   },
   {
     title: "Demo data",
-    description: "Walk through the seeded mock listings, snapshots, audit events, and dry-run sources.",
+    description: "Walk through demo inventory, snapshots, audit events, and dry-run sources.",
     href: "/beta/demo-data",
     icon: Database
   },
@@ -58,10 +58,11 @@ export default function BetaOnboardingPage() {
             <h2 className="text-lg font-semibold">Beta scope</h2>
           </div>
           <p className="mt-3 max-w-4xl text-sm leading-6 text-muted">
-            JETS v1.0 is for testing the existing local mock search, deterministic
-            Build Generator, saved snapshots, audit trail, auth, and dry-run
-            ingestion foundation. It intentionally does not include AI, live
-            scraping, checkout, or production marketplace data.
+            JETS v1.0 is for testing project-first onboarding, mock/demo
+            inventory, deterministic Build Generator, saved snapshots, audit
+            trail, auth, and dry-run ingestion foundation. It intentionally does
+            not include AI, live scraping, checkout, or production marketplace
+            data.
           </p>
         </article>
 

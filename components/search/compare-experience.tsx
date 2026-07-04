@@ -48,15 +48,15 @@ export function CompareExperience() {
       <main className="bg-background">
         <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <EmptyState
-            title="No listings selected"
-            description="Select up to three mock listings from search to build a comparison."
+            title="No inventory listings selected"
+            description="Select up to three mock listings from Inventory to build a comparison."
             icon={GitCompare}
             action={
               <Link
-                href="/search"
+                href="/inventory"
                 className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
               >
-                Go to search
+                Go to inventory
               </Link>
             }
           />
@@ -74,10 +74,10 @@ export function CompareExperience() {
             description="The compare URL only supports mock listing IDs from the local v0.2 dataset."
             action={
               <Link
-                href="/search"
+                href="/inventory"
                 className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
               >
-                Return to search
+                Return to inventory
               </Link>
             }
           />
@@ -93,11 +93,11 @@ export function CompareExperience() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
-                Version 0.2
+                Supporting comparison
               </p>
-              <h1 className="mt-3 text-4xl font-bold">Compare Listings</h1>
+              <h1 className="mt-3 text-4xl font-bold">Compare Inventory Listings</h1>
               <p className="mt-4 max-w-3xl text-base leading-7 text-muted">
-                Side-by-side mock listing comparison from URL query params.
+                Side-by-side comparison for selected mock inventory listings.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -118,10 +118,10 @@ export function CompareExperience() {
 
         <div className="mb-6 flex justify-end">
           <Link
-            href="/search"
+            href="/inventory"
             className="rounded-lg border border-border bg-panel px-4 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
           >
-            Back to search
+            Back to inventory
           </Link>
         </div>
 

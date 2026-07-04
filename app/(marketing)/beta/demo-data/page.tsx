@@ -19,7 +19,7 @@ export default function BetaDemoDataPage() {
     <ContentPage
       eyebrow="Private beta"
       title="Demo Data Workflow"
-      description="A stable walkthrough for beta testers using the current local mock listings, dry-run source data, and Supabase-backed user records."
+      description="A stable walkthrough for beta testers using current mock/demo inventory, dry-run source data, and Supabase-backed user records."
     >
       <div className="grid gap-6">
         <article className="rounded-lg border border-border bg-panel p-5">
@@ -29,7 +29,7 @@ export default function BetaDemoDataPage() {
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-lg border border-border bg-background p-4">
-              <p className="text-xs font-semibold uppercase text-muted">Mock listings</p>
+              <p className="text-xs font-semibold uppercase text-muted">Mock inventory listings</p>
               <p className="mt-2 text-2xl font-bold">{mockHardwareListings.length}</p>
             </div>
             <div className="rounded-lg border border-border bg-background p-4">
@@ -79,10 +79,10 @@ export default function BetaDemoDataPage() {
           </ul>
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
-              href="/search"
+              href="/inventory"
               className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
             >
-              Start in Search
+              Open Inventory
             </Link>
             <Link
               href="/build-generator"

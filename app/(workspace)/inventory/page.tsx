@@ -11,10 +11,10 @@ export const metadata: Metadata = {
     "Browse JETS demo inventory used by Solution Builder projects. No live marketplace scraping."
 };
 
-type SearchPageProps = {
+type InventoryPageProps = {
   searchParams?: Promise<InventorySearchParams>;
 };
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
-  return <InventoryPageShell routePath="/search" searchParams={searchParams} />;
+export default async function InventoryPage({ searchParams }: InventoryPageProps) {
+  return <InventoryPageShell searchParams={searchParams} />;
 }

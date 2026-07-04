@@ -10,7 +10,7 @@ The post-auth beta path is now project-first: signup confirmation should send th
 
 Beta testers should validate:
 
-- local mock search
+- project-first mock/demo inventory
 - deterministic ranking
 - compare flow
 - Build Generator
@@ -84,7 +84,7 @@ Recommended flow:
 4. Run project optimization from the project page.
 5. Sign out, sign back in, and confirm the project still appears on `/account`.
 6. Open `/beta/smoke-test` and review the signed-in checklist.
-7. Open `/search` only as supporting inventory, then save and favorite one item.
+7. Open `/inventory` as supporting inventory, then save and favorite one item.
 8. Open `/build-generator` and save at least two snapshots.
 9. Open `/build-snapshots`, rename a snapshot, add notes, favorite it, and change its status.
 10. Compare two snapshots.
@@ -108,7 +108,7 @@ Run this checklist before sharing a beta build:
 - `/account` shows project-first actions, persistence counts, recent activity, and sign out.
 - `/onboarding` can create the first hardware project and open the project detail page.
 - `/beta/smoke-test` reflects signed-in project, snapshot, research, and activity state.
-- Search filters, sort, compare, save, and favorite controls remain usable.
+- Inventory filters, category sections, compare, save, and favorite controls remain usable.
 - Saved builds show a project-first empty state before data exists.
 - Favorites show a project-first empty state before data exists.
 - History shows a project-first empty state before data exists.

@@ -35,9 +35,9 @@ export const betaSetupChecklist = [
 
 export const betaDemoWorkflow = [
   {
-    title: "Search and save",
+    title: "Inventory and save",
     description:
-      "Open /search, filter the local mock listings, save one build, favorite one build, then check /saved-builds and /favorites."
+      "Open /inventory, filter mock/demo inventory, save one item, favorite one item, then check /saved-builds and /favorites."
   },
   {
     title: "Generate a decision snapshot",
@@ -72,7 +72,7 @@ export const betaSmokeTests = [
   "Header shows whether the visitor is signed in, signed out, or missing Supabase setup.",
   "Signed-in onboarding can create the first hardware project and opens the new project detail page.",
   "/beta/smoke-test reflects the current signed-in project, snapshot, research, and audit state.",
-  "Search filters, sorting, compare selection, save, and favorite controls remain usable.",
+  "Inventory filters, category sections, compare selection, save, and favorite controls remain usable.",
   "Build Generator saves a snapshot and restores it from /build-generator?snapshot=<id>.",
   "Saved builds, favorites, history, snapshots, and activity show project-first empty states.",
   "Snapshot rename, notes, favorite, status, restore, compare, and delete actions record audit events.",

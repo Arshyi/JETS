@@ -12,7 +12,7 @@ export function SortControl({ sortKey, onChange }: SortControlProps) {
   return (
     <label className="flex items-center gap-3 text-sm font-medium">
       <ArrowDownUp className="h-4 w-4 text-muted" aria-hidden="true" />
-      <span className="sr-only">Sort listings</span>
+      <span className="sr-only">Sort inventory listings</span>
       <select
         value={sortKey}
         onChange={(event) => onChange(event.target.value as HardwareSortKey)}

@@ -1,4 +1,5 @@
-import { Save } from "lucide-react";
+import { Boxes, Save } from "lucide-react";
+import Link from "next/link";
 
 import { SelectedComponentCard } from "@/components/solution-builder/selected-component-card";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -23,6 +24,26 @@ export function SlotInventoryPicker({
 }: SlotInventoryPickerProps) {
   const components = getComponentsForSlot(slot.definition.id);
   const selectedComponent = getComponentById(slot.selectedHardware?.componentId);
+  const inventoryParams = new URLSearchParams({
+    projectId,
+    query: slot.definition.searchIntent.query,
+    returnTo,
+    slot: slot.definition.id
+  });
+
+  if (slot.definition.searchIntent.formFactor) {
+    inventoryParams.set("formFactor", slot.definition.searchIntent.formFactor);
+  }
+
+  if (slot.definition.searchIntent.useCase) {
+    inventoryParams.set("useCase", slot.definition.searchIntent.useCase);
+  }
+
+  if (slot.definition.searchIntent.condition) {
+    inventoryParams.set("condition", slot.definition.searchIntent.condition);
+  }
+
+  const inventoryHref = `/inventory?${inventoryParams.toString()}`;
 
   return (
     <article className="rounded-lg border border-border bg-panel p-5">
@@ -39,7 +60,16 @@ export function SlotInventoryPicker({
             {getComponentInventorySummary(slot.definition.id)}
           </p>
         </div>
-        <StatusPill>{components.length} candidates</StatusPill>
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusPill>{components.length} candidates</StatusPill>
+          <Link
+            href={inventoryHref}
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+          >
+            <Boxes className="h-4 w-4" aria-hidden="true" />
+            Open inventory
+          </Link>
+        </div>
       </div>
 
       <div className="mt-4 grid gap-4">

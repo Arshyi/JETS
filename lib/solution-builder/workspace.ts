@@ -60,7 +60,7 @@ export function getSlotSearchHref(definition: BuildWorkspaceSlotDefinition) {
     params.set("condition", definition.searchIntent.condition);
   }
 
-  return `/search?${params.toString()}`;
+  return `/inventory?${params.toString()}`;
 }
 
 export function getSlotInventoryContext(slotId: string | undefined) {
@@ -71,9 +71,10 @@ export function getSlotInventoryContext(slotId: string | undefined) {
   }
 
   return {
-    description: `${definition.label} candidates from the shared component inventory service. These results remain mock data until live ingestion is intentionally added.`,
+    description: `${definition.label} candidates from the shared component inventory service. These results are mock/demo data until live marketplace ingestion is intentionally added.`,
     slotId: definition.id,
-    title: `${definition.label} Inventory`
+    slotLabel: definition.label,
+    title: `Choose a ${definition.label} for this build`
   };
 }
 

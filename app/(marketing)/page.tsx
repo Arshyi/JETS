@@ -20,14 +20,14 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
               Product discipline
             </p>
-            <h2 className="mt-3 text-3xl font-bold">Search is infrastructure now.</h2>
+            <h2 className="mt-3 text-3xl font-bold">Inventory supports projects.</h2>
           </div>
           <div className="rounded-lg border border-border bg-panel p-6">
             <p className="text-base leading-8 text-muted">
-              The product is shifting from browsing listings to solving hardware
-              problems. Search, compatibility, scoring, snapshots, audit, and
-              sources remain available, but v2.0 organizes them under complete
-              solution workflows.
+              JETS currently uses mock/demo inventory for components, base
+              systems, adapters, and complete systems. Live ingestion and
+              scraping are planned, but not active; the product center is
+              Solution Builder projects.
             </p>
           </div>
         </div>

@@ -37,14 +37,8 @@ export const mainNav: NavItem[] = [
   { title: "Solution Builder", href: "/solution-builder", status: "v2.0" },
   { title: "Projects", href: "/solution-builder/projects", status: "v2.1" },
   { title: "Recommend", href: "/solution-builder/recommend", status: "v2.0" },
-  { title: "Snapshots", href: "/build-snapshots", status: "v0.9" },
-  { title: "Activity", href: "/activity", status: "v0.9" },
-  { title: "Search", href: "/search", status: "v0.5" },
-  { title: "Account", href: "/account", status: "v0.9" },
-  { title: "Compatibility", href: "/compatibility", status: "v0.6" },
-  { title: "Sources", href: "/sources", status: "v0.4" },
-  { title: "Roadmap", href: "/roadmap" },
-  { title: "About", href: "/about" }
+  { title: "Inventory", href: "/inventory", status: "demo" },
+  { title: "Account", href: "/account", status: "beta" }
 ];
 
 export const workspaceNav: NavItem[] = [
@@ -115,10 +109,16 @@ export const workspaceNav: NavItem[] = [
     status: "v1.0"
   },
   {
-    title: "Search",
-    href: "/search",
-    description: "Shared inventory service for slot searches, comparison, saves, and favorites.",
+    title: "Inventory",
+    href: "/inventory",
+    description: "Shared mock/demo inventory service for slot searches, comparison, saves, and favorites.",
     status: "service"
+  },
+  {
+    title: "Legacy Search URL",
+    href: "/search",
+    description: "Backward-compatible alias that now renders the Inventory experience.",
+    status: "alias"
   },
   {
     title: "Saved Builds",
@@ -413,14 +413,14 @@ export const roadmap: RoadmapMilestone[] = [
 
 export const placeholderPages = {
   search: {
-    eyebrow: "Future search workspace",
-    title: "Search",
+    eyebrow: "Inventory support workspace",
+    title: "Inventory",
     description:
-      "The search page is reserved for the v0.2 dummy data workflow: query input, filters, ranking controls, and listing results.",
+      "Inventory is the supporting surface for project slots, component candidates, adapters, base systems, and mock listings.",
     planned: [
-      "Marketplace-style listing cards",
-      "Filters for budget, form factor, CPU, GPU, memory, storage, and location",
-      "Sort modes for value, performance, age, and upgrade potential"
+      "Category-grouped inventory cards",
+      "Slot-driven component filters",
+      "Future live ingestion after compliance and quality gates"
     ]
   },
   savedBuilds: {

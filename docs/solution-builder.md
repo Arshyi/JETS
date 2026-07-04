@@ -7,20 +7,20 @@ The product center is no longer browsing listings. JETS is now organized around 
 - Build My Own: a slot-based project workspace for composing hardware like a CAD-style build.
 - Let JETS Recommend: a recommendation workflow that synthesizes complete solution paths from budget, purpose, preferences, and owned hardware.
 
-Existing search, compatibility, decision scoring, snapshots, audit, and source ingestion remain functional. They are now supporting services under the Solution Builder architecture. Optimization is the workflow layer that combines those services into suggested changes. Branching is the safety layer that lets users explore those changes without losing the original build.
+Existing inventory, compatibility, decision scoring, snapshots, audit, and source ingestion remain functional. They are now supporting services under the Solution Builder architecture. Optimization is the workflow layer that combines those services into suggested changes. Branching is the safety layer that lets users explore those changes without losing the original build.
 
 ## Architecture Review
 
 The v1 architecture had strong foundations:
 
-- Search had typed local listings, filters, sorting, compare selection, save, and favorite flows.
+- Search had typed local listings, filters, sorting, compare selection, save, and favorite flows. It is now reframed as Inventory.
 - The decision engine exposed deterministic scores and explanations.
 - The compatibility engine used reusable rule modules.
 - Build Generator reused scoring and compatibility rather than duplicating them.
 - Snapshots and audit gave decisions durable history.
 - Supabase configuration degraded gracefully when environment variables were missing.
 
-The main architectural gap was product shape. Users still entered through search or a generator, which made JETS feel like a listing browser with scoring attached. The long-term product needs projects, slots, validation, solution strategies, and comparison between a user's own build and JETS-generated alternatives.
+The main architectural gap was product shape. Users still entered through a flat listing surface or a generator, which made JETS feel like a listing browser with scoring attached. The long-term product needs projects, slots, validation, solution strategies, and comparison between a user's own build and JETS-generated alternatives.
 
 ## Technical Debt Addressed in v2.1
 
@@ -44,7 +44,7 @@ New data registries live in `data/solution-builder.ts`:
 New rule and orchestration modules live in `lib/solution-builder`:
 
 - `rules.ts` evaluates missing required slots, physical fit, PCIe, power, RAM, storage, cooling, upgrade path, platform health, and display planning.
-- `workspace.ts` composes slot definitions, inventory search counts, deterministic recommendations, and Compare Against JETS preview data.
+- `workspace.ts` composes slot definitions, inventory counts, deterministic recommendations, and Compare Against JETS preview data.
 
 New routes:
 
@@ -54,13 +54,13 @@ New routes:
 - `/solution-builder/projects`
 - `/solution-builder/projects/[projectId]`
 
-Search now accepts slot-driven inventory intent through URL query params such as:
+Inventory now accepts slot-driven intent through URL query params such as:
 
 ```text
-/search?slot=gpu&query=gpu&formFactor=component&useCase=gaming
+/inventory?slot=gpu&query=gpu&formFactor=component&useCase=gaming
 ```
 
-This keeps search reusable without making it the primary product surface.
+`/search` remains as a backward-compatible alias, but the user-facing product label is Inventory. This keeps inventory reusable without making it the primary product surface.
 
 ## v2.1 Persistence
 
@@ -101,7 +101,24 @@ Build My Own slots now filter typed inventory by slot:
 - PSU slots show internal and external power options.
 - Chassis slots show cases and base systems.
 
-Search remains available as inventory. When opened from a slot, it shows typed component inventory before legacy mock listing results.
+Inventory is available at `/inventory`. When opened from a slot, it shows only relevant categories for that slot and can add typed components directly to the project slot when project context exists.
+
+## Inventory Reframe
+
+Inventory is grouped by hardware category instead of one universal ranking list:
+
+- Complete systems
+- Base systems / sleeper chassis
+- GPUs
+- CPUs
+- RAM
+- Storage
+- PSUs
+- Cooling
+- Adapters / eGPU / special paths
+- Other components
+
+This prevents a GPU, laptop, base workstation, adapter path, and complete PC from looking like equivalent products. JETS currently uses mock/demo inventory only; live ingestion and scraping are planned but not active.
 
 ## v2.2 Optimization
 
@@ -190,7 +207,7 @@ The workspace summary reports completion, platform health, upgrade path, and cur
 
 Both workflows should continue to reuse:
 
-- Search as inventory.
+- Inventory as project slot support.
 - Decision engine for deterministic scoring.
 - Compatibility engine for hardware constraints.
 - Build snapshots for saved decision state.

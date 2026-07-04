@@ -44,7 +44,7 @@ export default async function OnboardingPage({
     <ContentPage
       eyebrow="Private beta"
       title="Welcome to JETS"
-      description="Start with a hardware project. Search, optimization, snapshots, and audit history are supporting tools around that project."
+      description="Start with a hardware project. Inventory, optimization, snapshots, and audit history are supporting tools around that project."
     >
       {!auth.isConfigured ? (
         <SupabaseSetupState />

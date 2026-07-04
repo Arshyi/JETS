@@ -19,7 +19,7 @@ export default async function HistoryPage() {
     <ContentPage
       eyebrow="Version 0.3"
       title="History"
-      description="A persisted research trail for saved and favorited mock listings."
+      description="A persisted research trail for saved and favorited mock/demo inventory items."
     >
       {!state.isConfigured ? (
         <SupabaseSetupState />

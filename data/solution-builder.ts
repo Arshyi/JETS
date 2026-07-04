@@ -26,8 +26,8 @@ export const solutionBuilderModes: SolutionBuilderMode[] = [
 
 export const solutionBuilderServiceDependencies: SolutionBuilderServiceDependency[] = [
   {
-    href: "/search",
-    name: "Search inventory",
+    href: "/inventory",
+    name: "Inventory",
     role: "Provides filtered inventory candidates for project slots and generated solution paths."
   },
   {
@@ -225,7 +225,7 @@ export const solutionStrategyDefinitions: SolutionStrategyDefinition[] = [
   {
     description: "Used enterprise tower or workstation base upgraded around reliability and expansion.",
     id: "enterprise-workstation",
-    serviceDependencies: ["Search", "Decision Engine", "Compatibility Engine"],
+    serviceDependencies: ["Inventory", "Decision Engine", "Compatibility Engine"],
     stage: "active",
     title: "Enterprise workstation",
     tradeoffs: ["Heavier shipping", "Practical chassis", "Strong upgrade path"]
@@ -233,7 +233,7 @@ export const solutionStrategyDefinitions: SolutionStrategyDefinition[] = [
   {
     description: "Balanced desktop built from gaming towers, office conversions, or GPU upgrades.",
     id: "gaming-desktop",
-    serviceDependencies: ["Search", "Decision Engine", "Compatibility Engine"],
+    serviceDependencies: ["Inventory", "Decision Engine", "Compatibility Engine"],
     stage: "active",
     title: "Gaming desktop",
     tradeoffs: ["PSU checks matter", "GPU age risk", "High value when parts test cleanly"]
@@ -241,7 +241,7 @@ export const solutionStrategyDefinitions: SolutionStrategyDefinition[] = [
   {
     description: "Portable complete system when mobility, low setup friction, or power efficiency wins.",
     id: "used-gaming-laptop",
-    serviceDependencies: ["Search", "Decision Engine", "Snapshots"],
+    serviceDependencies: ["Inventory", "Decision Engine", "Snapshots"],
     stage: "active",
     title: "Used gaming laptop",
     tradeoffs: ["Lower upgradeability", "Battery and thermal checks", "Easy shipping"]
@@ -249,7 +249,7 @@ export const solutionStrategyDefinitions: SolutionStrategyDefinition[] = [
   {
     description: "Laptop plus external GPU path for users who already own a compatible mobile platform.",
     id: "laptop-egpu",
-    serviceDependencies: ["Search", "Compatibility Engine", "Decision Audit"],
+    serviceDependencies: ["Inventory", "Compatibility Engine", "Decision Audit"],
     stage: "foundation",
     title: "Laptop + eGPU",
     tradeoffs: ["Adapter complexity", "Bandwidth limits", "Useful for owned laptop scenarios"]
@@ -257,7 +257,7 @@ export const solutionStrategyDefinitions: SolutionStrategyDefinition[] = [
   {
     description: "Adapter-assisted solution for reusing laptop memory where the platform allows it.",
     id: "laptop-ram-adapter",
-    serviceDependencies: ["Search", "Compatibility Engine"],
+    serviceDependencies: ["Inventory", "Compatibility Engine"],
     stage: "foundation",
     title: "Laptop RAM + adapter",
     tradeoffs: ["Niche compatibility", "More validation required", "Can reduce sunk cost"]

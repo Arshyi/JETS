@@ -13,10 +13,10 @@ export function SettingsForm({ settings }: SettingsFormProps) {
   return (
     <form action={updateSettingsAction} className="rounded-lg border border-border bg-panel p-6">
       <div>
-        <h2 className="text-xl font-semibold">Search defaults</h2>
+        <h2 className="text-xl font-semibold">Inventory defaults</h2>
         <p className="mt-2 text-sm leading-6 text-muted">
           These settings are persisted in Supabase and can become defaults for
-          future search, alerts, and saved-build workflows.
+          future inventory, alerts, and saved-build workflows.
         </p>
       </div>
 

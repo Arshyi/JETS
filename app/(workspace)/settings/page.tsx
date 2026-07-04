@@ -9,7 +9,7 @@ import { getUserSettings } from "@/lib/supabase/queries";
 
 export const metadata: Metadata = {
   title: "Settings",
-  description: "Manage JETS account preferences and future search defaults."
+  description: "Manage JETS account preferences and future inventory defaults."
 };
 
 export default async function SettingsPage() {
@@ -19,7 +19,7 @@ export default async function SettingsPage() {
     <ContentPage
       eyebrow="Version 0.3"
       title="Settings"
-      description="Persisted account preferences for future search defaults and notification behavior."
+      description="Persisted account preferences for future inventory defaults and notification behavior."
     >
       {!state.isConfigured ? (
         <SupabaseSetupState />

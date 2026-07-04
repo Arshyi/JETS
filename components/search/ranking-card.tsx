@@ -30,6 +30,7 @@ type RankingCardProps = {
   listing: HardwareListing;
   onToggleCompare: (id: string) => void;
   rankingUseCase?: HardwareUseCase;
+  returnTo?: string;
 };
 
 export function RankingCard({
@@ -40,7 +41,8 @@ export function RankingCard({
   isSelectionDisabled,
   listing,
   onToggleCompare,
-  rankingUseCase
+  rankingUseCase,
+  returnTo = "/inventory"
 }: RankingCardProps) {
   const checkboxId = `compare-${listing.id}`;
   const evaluation = evaluateHardwareListing(
@@ -105,7 +107,7 @@ export function RankingCard({
       <div className="mt-5 flex flex-wrap gap-2">
         <form action={saveBuildAction}>
           <input type="hidden" name="listingId" value={listing.id} />
-          <input type="hidden" name="returnTo" value="/search" />
+          <input type="hidden" name="returnTo" value={returnTo} />
           <button
             type="submit"
             disabled={!isPersistenceReady}
@@ -114,18 +116,18 @@ export function RankingCard({
               isPersistenceReady
                 ? isSaved
                   ? "Saved in Supabase"
-                  : "Save build"
-                : "Sign in and configure Supabase to save builds"
+                  : "Save inventory item"
+                : "Sign in and configure Supabase to save inventory items"
             }
           >
             <Save className="h-4 w-4" aria-hidden="true" />
-            {isSaved ? "Saved" : "Save build"}
+            {isSaved ? "Saved" : "Save item"}
           </button>
         </form>
 
         <form action={favoriteBuildAction}>
           <input type="hidden" name="listingId" value={listing.id} />
-          <input type="hidden" name="returnTo" value="/search" />
+          <input type="hidden" name="returnTo" value={returnTo} />
           <button
             type="submit"
             disabled={!isPersistenceReady}
@@ -134,8 +136,8 @@ export function RankingCard({
               isPersistenceReady
                 ? isFavorited
                   ? "Favorited in Supabase"
-                  : "Favorite build"
-                : "Sign in and configure Supabase to favorite builds"
+                  : "Favorite inventory item"
+                : "Sign in and configure Supabase to favorite inventory items"
             }
           >
             <Heart className="h-4 w-4" aria-hidden="true" />
