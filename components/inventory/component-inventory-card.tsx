@@ -1,7 +1,12 @@
 import { MapPin, Plus, ShieldAlert } from "lucide-react";
 
+import { PlatformKnowledgeSummary } from "@/components/platform-knowledge/platform-knowledge-summary";
 import { StatusPill } from "@/components/ui/status-pill";
 import { getComponentCategoryLabel } from "@/lib/component-inventory";
+import {
+  getPlatformKnowledgeForComponent,
+  getPlatformKnowledgeInsightForProfile
+} from "@/lib/platform-knowledge";
 import { saveBuildProjectSlotAction } from "@/lib/supabase/project-actions";
 import { conditionLabels, useCaseLabels } from "@/types/hardware";
 import type { ComponentInventoryItem } from "@/types/component-inventory";
@@ -20,6 +25,15 @@ export function ComponentInventoryCard({
   component,
   projectContext
 }: ComponentInventoryCardProps) {
+  const platformKnowledge = getPlatformKnowledgeForComponent(component);
+  const platformInsight = platformKnowledge.profile
+    ? getPlatformKnowledgeInsightForProfile(
+        platformKnowledge.profile,
+        platformKnowledge.matchedBy,
+        component.title
+      )
+    : null;
+
   return (
     <article className="rounded-lg border border-border bg-panel p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -76,6 +90,12 @@ export function ComponentInventoryCard({
           </ul>
         </div>
       </div>
+
+      {platformInsight ? (
+        <div className="mt-5">
+          <PlatformKnowledgeSummary insight={platformInsight} />
+        </div>
+      ) : null}
 
       {projectContext ? (
         <form action={saveBuildProjectSlotAction} className="mt-5">

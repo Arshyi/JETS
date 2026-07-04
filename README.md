@@ -28,8 +28,10 @@ npm run lint
 - **2.0:** Solution Builder workflow redesign. Complete.
 - **2.1:** Project persistence and component-aware slot inventory. Complete.
 - **2.2:** Optimization Engine Foundation. Complete.
-- **2.3:** Project Branching & Optimization Workspace. Current.
-- **2.4:** Branch comparison, merge-style apply, and project history diffs. Recommended next.
+- **2.3:** Project Branching & Optimization Workspace. Complete.
+- **2.4:** Project-first workflow consolidation. Complete.
+- **2.5:** Platform Knowledge Engine. Current.
+- **2.6:** Knowledge-backed optimization and branch comparison. Recommended next.
 
 ## Primary Workflow
 
@@ -37,7 +39,7 @@ npm run lint
 2. The goal-first project wizard creates the project with a scoring preset and optimization direction.
 3. Builder opens as the project home.
 4. Slot inventory appears in context when the builder needs hardware.
-5. Validation runs continuously.
+5. Validation and platform knowledge run continuously.
 6. Optimization proposes deterministic improvements.
 7. Branching preserves alternatives without mutating the original.
 8. Compare and Finish remain optional review stages.
@@ -187,6 +189,18 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/project-branching.md`.
 - v2.3 does not implement AI, live scraping, checkout, or automatic merge behavior.
 
+## Version 2.5 Notes
+
+- Platform knowledge types live in `types/platform-knowledge.ts`.
+- Curated demo platform profiles and adapter intelligence live in `data/platform-knowledge.ts`.
+- Platform lookup and project summary utilities live in `lib/platform-knowledge.ts`.
+- The Solution Builder model exposes `platformInsight` so projects, inventory, optimization, and future branch comparison can reuse the same platform context.
+- Platform knowledge UI lives in `components/platform-knowledge`.
+- Project detail pages now show platform potential, constraints, PCIe reasoning, upgrade opportunities, adapter recommendations, and upgrade timelines for recognized bases.
+- Inventory and selected component cards show platform knowledge summaries when an item maps to a known platform.
+- Documentation lives in `docs/platform-knowledge-engine.md`.
+- v2.5 does not implement AI, live scraping, marketplace APIs, checkout, or automatic knowledge verification.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -266,4 +280,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v2.3 use local mock adapters, deterministic local rules, component-aware mock inventory, deterministic optimization, branch-safe project variants, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, and removal requests. See `docs/ingestion.md` for the current ingestion notes.
+JETS v0.4 through v2.5 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic optimization, branch-safe project variants, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. See `docs/ingestion.md` and `docs/platform-knowledge-engine.md` for the current ingestion and knowledge notes.

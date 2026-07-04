@@ -36,6 +36,11 @@ export const solutionBuilderServiceDependencies: SolutionBuilderServiceDependenc
     role: "Evaluates physical, electrical, thermal, RAM, storage, BIOS, and platform constraints."
   },
   {
+    href: "/solution-builder/projects",
+    name: "Platform knowledge",
+    role: "Adds platform quirks, hidden upgrade paths, adapter options, PCIe reasoning, and community-discovered tradeoffs."
+  },
+  {
     href: "/build-generator",
     name: "Decision engine",
     role: "Scores value, performance, reliability, risk, upgrade potential, and use-case fit."

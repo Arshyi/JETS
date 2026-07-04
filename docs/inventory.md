@@ -70,6 +70,9 @@ Current inventory combines:
 - `data/mock-components.ts`: typed component-aware demo inventory.
 - `data/mock-listings.ts`: legacy mock listing candidates retained for compare,
   saved research, generator, and decision-engine coverage.
+- `data/platform-knowledge.ts`: separate platform profiles and adapter
+  intelligence linked from inventory when a component or listing represents a
+  known base platform.
 
 Future live ingestion should normalize marketplace data into this inventory
 model only after compliance, quality, freshness, duplicate detection, and user
@@ -90,5 +93,7 @@ Inventory should:
 - make mock/demo status clear
 - support slot-driven filtering
 - preserve category context
+- surface platform knowledge for known bases without embedding that knowledge
+  directly inside inventory objects
 - reuse existing decision and compatibility services where useful
 - remain safe to replace with normalized ingestion later

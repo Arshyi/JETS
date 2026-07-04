@@ -13,6 +13,7 @@ flowchart LR
   Builder["Builder home"]
   Inventory["Contextual inventory picker"]
   Validate["Continuous validation"]
+  Knowledge["Platform knowledge"]
   Optimize["Optimize build"]
   Branch["Branch scenario"]
   Compare["Compare alternatives"]
@@ -24,7 +25,8 @@ flowchart LR
   Builder --> Inventory
   Inventory --> Builder
   Builder --> Validate
-  Validate --> Optimize
+  Validate --> Knowledge
+  Knowledge --> Optimize
   Optimize --> Branch
   Branch --> Compare
   Compare --> Finish
@@ -77,14 +79,17 @@ The project builder uses one progress spine:
 1. Project
 2. Components
 3. Validate
-4. Optimize
-5. Compare
-6. Finish
+4. Platform Knowledge
+5. Optimize
+6. Compare
+7. Finish
 
 Stages unlock naturally:
 
 - Components begin when at least one slot is filled.
 - Validate becomes meaningful once required slots are filled.
+- Platform Knowledge becomes meaningful when a known base system, chassis, or
+  motherboard is selected.
 - Optimize becomes meaningful after the build has enough hardware context.
 - Compare becomes useful after branches or alternatives exist.
 - Finish requires required slots, validation review, and at least one optimization pass.

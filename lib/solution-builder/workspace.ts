@@ -6,6 +6,7 @@ import {
 } from "@/data/solution-builder";
 import { generateBuildRecommendations } from "@/lib/build-generator/engine";
 import { getComponentsForSlot } from "@/lib/component-inventory";
+import { getPlatformKnowledgeInsightForProject } from "@/lib/platform-knowledge";
 import { evaluateBuildWorkspace } from "@/lib/solution-builder/rules";
 import type { BuildGeneratorInput } from "@/types/build-generator";
 import type {
@@ -166,6 +167,7 @@ export function createBuildWorkspaceModel(
   return {
     comparePreview: getComparePreview(project, completeEvaluation),
     evaluation: completeEvaluation,
+    platformInsight: getPlatformKnowledgeInsightForProject(project),
     project,
     services: solutionBuilderServiceDependencies,
     strategies: solutionStrategyDefinitions

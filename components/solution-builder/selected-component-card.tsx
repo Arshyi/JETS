@@ -1,7 +1,12 @@
 import { Cpu, X } from "lucide-react";
 
+import { PlatformKnowledgeSummary } from "@/components/platform-knowledge/platform-knowledge-summary";
 import { StatusPill } from "@/components/ui/status-pill";
 import { getComponentCategoryLabel } from "@/lib/component-inventory";
+import {
+  getPlatformKnowledgeForComponent,
+  getPlatformKnowledgeInsightForProfile
+} from "@/lib/platform-knowledge";
 import { clearBuildProjectSlotAction } from "@/lib/supabase/project-actions";
 import type { ComponentInventoryItem } from "@/types/component-inventory";
 
@@ -18,6 +23,15 @@ export function SelectedComponentCard({
   returnTo,
   slotId
 }: SelectedComponentCardProps) {
+  const platformKnowledge = getPlatformKnowledgeForComponent(component);
+  const platformInsight = platformKnowledge.profile
+    ? getPlatformKnowledgeInsightForProfile(
+        platformKnowledge.profile,
+        platformKnowledge.matchedBy,
+        component.title
+      )
+    : null;
+
   return (
     <div className="rounded-lg border border-border bg-background p-4">
       <div className="flex items-start justify-between gap-4">
@@ -39,6 +53,11 @@ export function SelectedComponentCard({
           {component.location}
         </span>
       </div>
+      {platformInsight ? (
+        <div className="mt-4">
+          <PlatformKnowledgeSummary insight={platformInsight} />
+        </div>
+      ) : null}
       <form action={clearBuildProjectSlotAction} className="mt-4">
         <input type="hidden" name="projectId" value={projectId} />
         <input type="hidden" name="slotId" value={slotId} />

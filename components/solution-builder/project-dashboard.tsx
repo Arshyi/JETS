@@ -147,9 +147,13 @@ export function ProjectDashboard({ projects }: ProjectDashboardProps) {
                     </div>
                   </div>
 
-                  <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+                  <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-7">
                     {[
                       ["Build score", project.model.comparePreview.yourBuild.score],
+                      [
+                        "Platform potential",
+                        project.model.platformInsight?.potentialScore ?? "Not set"
+                      ],
                       ["Completion", `${evaluation.completionPercent}%`],
                       [
                         "Required slots",
@@ -190,11 +194,20 @@ export function ProjectDashboard({ projects }: ProjectDashboardProps) {
                       </p>
                     </div>
                     <div className="rounded-lg border border-border bg-background p-4">
-                      <p className="text-sm font-semibold">Optimization status</p>
+                      <p className="text-sm font-semibold">Platform knowledge</p>
                       <p className="mt-2 text-sm leading-6 text-muted">
-                        {getOptimizationLabel(project)}
+                        {project.model.platformInsight
+                          ? `${project.model.platformInsight.platformName}: ${project.model.platformInsight.opportunityCount} opportunities, ${project.model.platformInsight.constraintCount} constraints.`
+                          : "Choose a recognized base system or motherboard to reveal platform knowledge."}
                       </p>
                     </div>
+                  </div>
+
+                  <div className="mt-5 rounded-lg border border-border bg-background p-4">
+                    <p className="text-sm font-semibold">Optimization status</p>
+                    <p className="mt-2 text-sm leading-6 text-muted">
+                      {getOptimizationLabel(project)}
+                    </p>
                   </div>
 
                   <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_280px]">

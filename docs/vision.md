@@ -12,13 +12,15 @@ Build My Own is a slot-based workspace. Users create a project, fill hardware sl
 
 Let JETS Recommend is a solution synthesis workflow. Users provide budget, country, purpose, preferences, and already-owned hardware. JETS searches possible solution strategies and explains complete recommendations, not just listings.
 
-Inventory is supporting infrastructure. Compatibility, decision scoring, snapshots, audit, and sources are reusable services used by both workflows.
+Inventory is supporting infrastructure. Compatibility, decision scoring, platform knowledge, snapshots, audit, and sources are reusable services used by both workflows.
 
 Inventory must not look like a flat marketplace where GPUs, laptops, sleeper bases, adapters, and full systems compete as equivalent products. It should stay category grouped and slot aware. `/inventory` is the user-facing surface; `/search` remains only as a backward-compatible alias.
 
 JETS currently uses mock/demo inventory. Live ingestion and scraping are planned but not active.
 
 Optimization is the differentiator. The long-term workflow should become Build -> Analyze -> Optimize -> Branch -> Compare, where JETS searches solution paths people would not normally consider while still explaining every tradeoff.
+
+Platform knowledge is the moat. JETS should know the quirks, hidden upgrade paths, adapter tricks, PCIe tradeoffs, and community discoveries that make one used platform much more useful than another similarly priced machine.
 
 The near-term user journey should feel continuous:
 
@@ -195,7 +197,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 2.3 - Project Branching and Optimization Workspace
 
-- Current.
+- Complete.
 - Treat branches like Git for hardware ideas.
 - Let users create manual project branches.
 - Let optimizer suggestions create child branches without mutating the original.
@@ -213,13 +215,30 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Keep Inventory and saved research as supporting infrastructure.
 - Do not add AI, live scraping, or checkout during auth hardening.
 
-### Version 2.4 - Branch Comparison and Merge Preview
+### Version 2.4 - Project-First Workflow Consolidation
+
+- Complete.
+- Make Home ask what the user is trying to build.
+- Add the goal-first project wizard.
+- Make Builder the home of every project.
+- Show project dashboard summaries and next actions.
+- Keep Inventory as a contextual picker instead of the main marketplace.
+
+### Version 2.5 - Platform Knowledge Engine
+
+- Current.
+- Add structured platform profiles for workstations, office bases, and enthusiast platforms.
+- Separate specifications, platform knowledge, community discoveries, upgrade opportunities, adapter intelligence, and PCIe reasoning.
+- Add Platform Potential as a score separate from the decision score.
+- Surface platform knowledge inside projects and inventory.
+- Keep all knowledge curated/demo only until sourcing, moderation, and correction workflows exist.
+
+### Version 2.6 - Knowledge-Backed Optimization and Branch Comparison
 
 - Recommended next.
-- Compare root, manual, and optimized branches side by side.
-- Show slot-level diffs and score deltas.
-- Add merge-style apply into the preferred branch.
-- Add rollback and branch audit events.
+- Feed platform opportunities and constraints into optimizer explanations.
+- Compare branches with platform-potential deltas.
+- Show slot-level diffs, knowledge-backed warnings, and merge previews.
 - Preserve project history before destructive changes.
 
 ## Idea Parking Lot
@@ -247,6 +266,8 @@ Ideas below are valuable, but they are not current milestone scope.
 - Optimization branches and project version history
 - Branch diff viewer
 - Merge preview for hardware slot changes
+- Platform knowledge sourcing and moderation
+- Community-discovered upgrade evidence tracking
 
 ## Product Principles
 

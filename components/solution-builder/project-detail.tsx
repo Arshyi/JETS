@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { BuildValidationSummary } from "@/components/solution-builder/build-validation-summary";
 import { CompareAgainstJets } from "@/components/solution-builder/compare-against-jets";
+import { PlatformKnowledgePanel } from "@/components/platform-knowledge/platform-knowledge-panel";
 import { ProjectBranchWorkspace } from "@/components/solution-builder/project-branch-workspace";
 import { ProjectWorkflowProgress } from "@/components/solution-builder/project-workflow-progress";
 import { ProjectAuditTimeline } from "@/components/solution-builder/project-audit-timeline";
@@ -14,6 +15,7 @@ import {
   renameBuildProjectAction,
   restoreBuildProjectAction
 } from "@/lib/supabase/project-actions";
+import { getPlatformKnowledgeById } from "@/lib/platform-knowledge";
 import type { BuildProjectDetailData } from "@/lib/solution-builder/projects";
 import type { BuildSlotRequirement } from "@/types/solution-builder";
 
@@ -30,6 +32,9 @@ const sectionLabels: Record<BuildSlotRequirement, string> = {
 export function ProjectDetail({ data }: ProjectDetailProps) {
   const { model, projectRow } = data;
   const returnTo = `/solution-builder/projects/${projectRow.id}`;
+  const platformProfile = getPlatformKnowledgeById(
+    model.platformInsight?.platformId
+  );
   const warningCount = model.evaluation.warningCount + model.evaluation.blockingCount;
   const branchCount = data.branches.filter((branch) => branch.id !== projectRow.id).length;
   const slotGroups = (["required", "optional", "solution"] as const).map(
@@ -188,6 +193,8 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
               </div>
             </section>
           ))}
+
+          <PlatformKnowledgePanel profile={platformProfile} />
 
           <CompareAgainstJets preview={model.comparePreview} />
 

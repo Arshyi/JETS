@@ -10,6 +10,7 @@ import type {
   HardwareFormFactor,
   HardwareUseCase
 } from "@/types/hardware";
+import type { PlatformKnowledgeInsight } from "@/types/platform-knowledge";
 
 export const buildSlotIds = [
   "chassis",
@@ -224,6 +225,7 @@ export type CompareAgainstJetsPreview = {
 export type BuildWorkspaceModel = {
   comparePreview: CompareAgainstJetsPreview;
   evaluation: BuildWorkspaceEvaluation;
+  platformInsight: PlatformKnowledgeInsight | null;
   project: BuildWorkspaceProject;
   services: SolutionBuilderServiceDependency[];
   strategies: SolutionStrategyDefinition[];
