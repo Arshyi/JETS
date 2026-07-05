@@ -26,6 +26,8 @@ Solution intelligence is the product becoming active. JETS should combine CPU, G
 
 Marketplace intelligence is the Phase 3 feeder layer. Marketplace listings are not the product; they are raw input that must become normalized hardware with confidence, platform detection, health, opportunities, and future solution paths before Builder, Knowledge, Intelligence, Optimization, or Recommendation layers use it.
 
+Evidence is the trust layer. Every important conclusion should be able to answer why JETS believes it, where the claim came from, how it was extracted, whether it has been verified, and whether conflicting evidence exists.
+
 The near-term user journey should feel continuous:
 
 Home -> Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
@@ -248,7 +250,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 3.0 - Marketplace Intelligence Layer
 
-- Current.
+- Complete.
 - Create adapter definitions for future sources including Dubizzle, Facebook Marketplace, eBay, Kijiji, Craigslist, Yahoo Auctions, Mercari, Amazon Renewed, Newegg, local stores, CSV imports, manual entry, and future APIs.
 - Normalize raw marketplace listings into marketplace metadata, seller metadata, hardware metadata, price, location, condition, description, images, platform detection, detected components, confidence, listing health, opportunities, and possible futures.
 - Add deterministic platform detection and parser confidence while leaving unknown fields unknown.
@@ -256,14 +258,28 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Show a demo pipeline from Raw Listing to Normalized Listing to Detected Platform to Knowledge to Recommendation Path.
 - Do not implement live scraping, website automation, marketplace APIs, OCR, image recognition, AI extraction, checkout, or listing persistence.
 
-### Version 3.1 - Normalized Listing Persistence and Evidence Review
+### Version 3.1 - Evidence Engine and Knowledge Provenance
+
+- Current.
+- Add a reusable Evidence model for source type, confidence, extraction method, supporting text, date added, version, and verification status.
+- Support source categories including official documentation, manufacturer specs, service manuals, community discoveries, forums, videos, benchmarks, moderator verification, user submissions, manual research, future AI extraction, future OCR, and future scraper output.
+- Add verification states for unverified, pending review, verified, deprecated, disputed, superseded, and archived.
+- Attach provenance and Evidence Panels to Platform Knowledge, adapter intelligence, Marketplace Intelligence parser output, and Solution Intelligence reasoning.
+- Preserve conflicting evidence instead of overwriting it.
+- Add community discovery and knowledge timeline architecture without implementing moderation yet.
+- Add Knowledge Quality as a score separate from hardware quality and recommendation score.
+- Do not implement live scraping, marketplace APIs, OCR, image recognition, AI extraction, checkout, moderation queues, or persisted evidence tables.
+
+### Version 3.2 - Persisted Evidence Review and Moderation Foundation
 
 - Recommended next.
-- Persist normalized marketplace listings with raw-source references and parsed-field confidence.
+- Persist evidence records, conflicts, community discoveries, and knowledge timeline events.
+- Add moderation and reviewer states before allowing user-submitted or extracted claims to influence recommendations.
+- Add evidence audit views for platforms, parsed fields, and project recommendations.
+- Add parsed-field evidence links from normalized marketplace listings.
 - Add adapter fixture tests so each future source can be validated before it is connected.
-- Add evidence review, user correction, moderation state, and conflict handling for parsed facts.
 - Add source attribution and removal/takedown workflow before any live ingestion is considered.
-- Keep live scraping, AI extraction, and marketplace APIs deferred until review and compliance foundations are stable.
+- Keep live scraping, AI extraction, OCR, image recognition, and marketplace APIs deferred until evidence review is stable.
 
 ## Idea Parking Lot
 
@@ -299,6 +315,10 @@ Ideas below are valuable, but they are not current milestone scope.
 - Parsed-field evidence links
 - User correction workflow for marketplace facts
 - Source-specific compliance review templates
+- Evidence persistence tables
+- Conflict review queue
+- Moderator verification workflow
+- Knowledge Quality history
 
 ## Product Principles
 
@@ -306,5 +326,6 @@ Ideas below are valuable, but they are not current milestone scope.
 - Every milestone should leave the codebase easier to extend.
 - Recommendations should explain their reasoning.
 - Marketplace data should be handled carefully and transparently.
+- Evidence should feed knowledge; future AI, OCR, scraping, and community input should never write trusted knowledge directly.
 - Users should stay in control of decisions, saved data, and preferences.
 - Scraping, AI, and authentication should enter only when the surrounding product is ready for them.

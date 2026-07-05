@@ -1,6 +1,8 @@
 import { Lightbulb } from "lucide-react";
 
+import { EvidencePanel } from "@/components/evidence/evidence-panel";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getEvidenceSummaryForSubject } from "@/lib/evidence-engine";
 import type { PlatformUpgradeOpportunity } from "@/types/platform-knowledge";
 
 type UpgradeOpportunityCardProps = {
@@ -10,6 +12,8 @@ type UpgradeOpportunityCardProps = {
 export function UpgradeOpportunityCard({
   opportunity
 }: UpgradeOpportunityCardProps) {
+  const evidenceSummary = getEvidenceSummaryForSubject(opportunity.id);
+
   return (
     <article className="rounded-lg border border-border bg-background p-4">
       <div className="flex items-start gap-3">
@@ -59,6 +63,10 @@ export function UpgradeOpportunityCard({
           ))}
         </div>
       ) : null}
+
+      <div className="mt-4">
+        <EvidencePanel compact summary={evidenceSummary} />
+      </div>
     </article>
   );
 }

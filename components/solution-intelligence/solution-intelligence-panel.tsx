@@ -7,7 +7,9 @@ import {
   Sparkles
 } from "lucide-react";
 
+import { EvidencePanel } from "@/components/evidence/evidence-panel";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getEvidenceSummaryForSubject } from "@/lib/evidence-engine";
 import type {
   BottleneckFinding,
   CostAllocationStatus,
@@ -63,6 +65,9 @@ export function SolutionIntelligencePanel({
   report
 }: SolutionIntelligencePanelProps) {
   const bottlenecks = Object.entries(report.bottlenecks);
+  const evidenceSummary = getEvidenceSummaryForSubject(
+    "solution-intelligence-report"
+  );
 
   return (
     <section className="rounded-lg border border-border bg-panel p-5">
@@ -81,6 +86,14 @@ export function SolutionIntelligencePanel({
           <p className="mt-2 text-xl font-bold">{report.confidence.confidence}</p>
           <p className="mt-1 text-xs text-muted">{formatLabel(report.confidence.source)}</p>
         </div>
+      </div>
+
+      <div className="mt-6">
+        <EvidencePanel
+          compact
+          summary={evidenceSummary}
+          title="Why do we trust this reasoning?"
+        />
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-2">

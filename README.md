@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths.
 
-JETS is now project-centered. The primary experience is: choose a goal, create a project, fill slots through contextual inventory, validate the build, optimize, branch or compare scenarios, then review a finished solution. Phase 3 adds Marketplace Intelligence as the feeder architecture that will eventually transform real-world listings into normalized hardware evidence for those workflows.
+JETS is now project-centered. The primary experience is: choose a goal, create a project, fill slots through contextual inventory, validate the build, optimize, branch or compare scenarios, then review a finished solution. Phase 3 adds Marketplace Intelligence and Evidence as the feeder architecture that will eventually transform real-world listings into trustworthy normalized hardware evidence for those workflows.
 
 ## Commands
 
@@ -32,8 +32,9 @@ npm run lint
 - **2.4:** Project-first workflow consolidation. Complete.
 - **2.5:** Platform Knowledge Engine. Complete.
 - **2.6:** Solution Intelligence Engine. Complete.
-- **3.0:** Marketplace Intelligence Layer. Current.
-- **3.1:** Normalized listing persistence, evidence review, and adapter fixtures. Recommended next.
+- **3.0:** Marketplace Intelligence Layer. Complete.
+- **3.1:** Evidence Engine and knowledge provenance. Current.
+- **3.2:** Persisted evidence review, conflicts, and moderation workflow. Recommended next.
 
 ## Primary Workflow
 
@@ -49,10 +50,10 @@ npm run lint
 Marketplace Intelligence sits below the workflow as input plumbing:
 
 ```text
-Raw Marketplace Data -> Normalized Hardware -> Platform Knowledge -> Solution Intelligence -> Optimization -> Recommendation
+Raw Marketplace Data -> Normalized Hardware -> Evidence -> Platform Knowledge -> Solution Intelligence -> Optimization -> Recommendation
 ```
 
-Ingestion and parsing do not make recommendations. Optimization and reasoning do not know how a listing was captured.
+Ingestion and parsing do not make recommendations. Optimization and reasoning do not know how a listing was captured. Evidence records explain why JETS trusts a parsed field, knowledge item, or recommendation.
 
 See `docs/user-workflow.md` for the journey diagram and UX rules.
 
@@ -231,6 +232,16 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/marketplace-intelligence.md`.
 - v3.0 does not implement live scraping, website automation, marketplace APIs, checkout, AI extraction, OCR, image recognition, or listing persistence.
 
+## Version 3.1 Notes
+
+- Evidence domain types live in `types/evidence.ts`.
+- Representative source trust, evidence records, conflicts, community discoveries, and knowledge history live in `data/evidence.ts`.
+- Evidence query and Knowledge Quality scoring utilities live in `lib/evidence-engine.ts`.
+- Reusable Evidence Panel UI lives in `components/evidence/evidence-panel.tsx`.
+- Platform Knowledge, adapter intelligence, Marketplace Intelligence parser output, and Solution Intelligence reasoning now expose provenance, confidence, verification state, and conflict awareness where appropriate.
+- Documentation lives in `docs/evidence-engine.md`.
+- v3.1 does not implement live scraping, marketplace APIs, AI extraction, OCR, image recognition, checkout, moderation queues, or persisted evidence tables.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -310,4 +321,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v3.0 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through v3.1 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, and user-submitted data should feed Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.

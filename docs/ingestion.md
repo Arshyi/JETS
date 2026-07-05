@@ -6,6 +6,7 @@ Phase 3 adds Marketplace Intelligence on top of this foundation. The distinction
 
 - Ingestion records source health, dry-run behavior, compliance posture, freshness, and duplicate candidates.
 - Marketplace Intelligence normalizes raw marketplace input into hardware metadata, detected platforms, parsed components, confidence, listing health, opportunities, and possible futures.
+- Evidence records how parsed facts were produced, where they came from, whether they were verified, and whether conflicts exist.
 - Builder, Platform Knowledge, Solution Intelligence, Optimization, and Recommendation should consume normalized hardware evidence, not raw marketplace-specific fields.
 
 ## Current Sources
@@ -58,6 +59,7 @@ These are architecture definitions only. No live adapter is implemented, no brow
 - Normalize into `types/ingestion.ts` without leaking source-specific fields into UI components.
 - Normalize marketplace listing content into `types/marketplace-intelligence.ts` before Builder, Knowledge, Intelligence, Optimization, or Recommendation consumes it.
 - Attach confidence and source metadata to every parsed field.
+- Attach Evidence records before parsed fields can strengthen trusted knowledge.
 - Leave unknown hardware facts unknown instead of inferring unsupported values.
 - Record an ingestion run for every adapter attempt.
 - Mark freshness based on `lastSeenAt`, not on the time a user views the page.

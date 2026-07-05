@@ -1,4 +1,9 @@
 import type {
+  EvidenceRecord,
+  EvidenceVerificationStatus,
+  EvidenceExtractionMethod
+} from "@/types/evidence";
+import type {
   HardwareCondition,
   HardwareFormFactor,
   HardwareUseCase
@@ -59,8 +64,11 @@ export type MarketplaceFieldSource =
 
 export type ParsedListingField<T> = {
   confidence: ConfidenceLevel;
+  evidenceIds?: Array<EvidenceRecord["id"]>;
+  extractionMethod?: EvidenceExtractionMethod;
   source: MarketplaceFieldSource;
   value: T | null;
+  verificationStatus?: EvidenceVerificationStatus;
 };
 
 export type RawMarketplaceListing = {

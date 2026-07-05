@@ -1,6 +1,8 @@
 import { Cable } from "lucide-react";
 
+import { EvidencePanel } from "@/components/evidence/evidence-panel";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getEvidenceSummaryForSubject } from "@/lib/evidence-engine";
 import type { AdapterIntelligenceProfile } from "@/types/platform-knowledge";
 
 type AdapterIntelligenceCardProps = {
@@ -8,6 +10,8 @@ type AdapterIntelligenceCardProps = {
 };
 
 export function AdapterIntelligenceCard({ adapter }: AdapterIntelligenceCardProps) {
+  const evidenceSummary = getEvidenceSummaryForSubject(adapter.id);
+
   return (
     <article className="rounded-lg border border-border bg-background p-4">
       <div className="flex items-start gap-3">
@@ -37,6 +41,10 @@ export function AdapterIntelligenceCard({ adapter }: AdapterIntelligenceCardProp
           <li key={note}>{note}</li>
         ))}
       </ul>
+
+      <div className="mt-4">
+        <EvidencePanel compact summary={evidenceSummary} />
+      </div>
     </article>
   );
 }

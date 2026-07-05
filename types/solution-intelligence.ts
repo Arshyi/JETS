@@ -1,4 +1,5 @@
 import type { ComponentCategory } from "@/types/component-inventory";
+import type { EvidenceRecord } from "@/types/evidence";
 import type { BuildSlotId } from "@/types/solution-builder";
 
 export const qualitativeRiskLevels = [
@@ -51,6 +52,7 @@ export type ConfidenceSourceType =
 
 export type ConfidenceSignal = {
   confidence: ConfidenceLevel;
+  evidenceIds?: Array<EvidenceRecord["id"]>;
   reason: string;
   source: ConfidenceSourceType;
 };

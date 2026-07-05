@@ -55,6 +55,11 @@ Phase 3 Marketplace Intelligence may detect that a raw listing maps to one of
 these platform profiles. That detection should link to platform knowledge; it
 should not copy marketplace-specific fields into the platform registry.
 
+Version 3.1 adds the Evidence Engine around this layer. Platform Knowledge can
+now show provenance, confidence, verification status, conflicting claims,
+community discoveries, Knowledge Quality, and knowledge history without changing
+the underlying platform model.
+
 ## Separation Of Concerns
 
 Specifications are stable-ish facts:
@@ -125,6 +130,47 @@ The score helps distinguish a cheap complete system from a base platform with
 unusual future usefulness. For example, a workstation base can have a higher
 platform potential than a faster but closed-off consumer tower.
 
+## Evidence And Provenance
+
+Every important platform claim should eventually point to evidence.
+
+Evidence can support:
+
+- specifications
+- constraints
+- knowledge cards
+- upgrade opportunities
+- adapter intelligence
+- PCIe reasoning
+- community discoveries
+
+The current demo includes representative evidence records and fallback pending
+review states. If a knowledge item does not have dedicated evidence yet, the UI
+shows that it is pending review instead of pretending it is verified.
+
+Evidence includes:
+
+- source type
+- confidence
+- extraction method
+- supporting text
+- date added
+- version
+- verification status
+
+Knowledge Quality is separate from Platform Potential. Platform Potential asks
+"how useful is this hardware?" Knowledge Quality asks "how well supported is our
+knowledge about it?"
+
+## Conflict Handling
+
+Conflicting evidence is preserved.
+
+For example, a manufacturer spec may record one maximum RAM value while
+community reports claim a larger BIOS-dependent configuration works. JETS should
+show both, mark the conflict, and explain the active handling rule. It should
+not silently overwrite the official value or discard the community discovery.
+
 ## PCIe Intelligence
 
 The engine models PCIe qualitatively:
@@ -191,7 +237,8 @@ signals. It should provide parsed hardware fields, platform detection,
 confidence, and evidence references before any platform record is updated.
 
 Future AI assistance could extract candidate knowledge, but should not publish
-it directly. The durable record should include:
+it directly. Future AI, OCR, scraper, CSV, API, and user-submitted claims should
+create evidence candidates first. The durable record should include:
 
 - source URL or document reference
 - extraction timestamp

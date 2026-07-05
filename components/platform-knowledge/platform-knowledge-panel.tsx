@@ -1,8 +1,17 @@
 import { AlertTriangle, Cpu, Gauge, Lightbulb, Wrench } from "lucide-react";
 
+import { EvidencePanel } from "@/components/evidence/evidence-panel";
 import { AdapterIntelligenceCard } from "@/components/platform-knowledge/adapter-intelligence-card";
 import { UpgradeOpportunityCard } from "@/components/platform-knowledge/upgrade-opportunity-card";
 import { StatusPill } from "@/components/ui/status-pill";
+import {
+  getCommunityDiscoveriesForPlatform,
+  getEvidenceConflictsForPlatform,
+  getEvidenceSummaryForPlatform,
+  getEvidenceSummaryForSubject,
+  getKnowledgeQualityForPlatform,
+  getKnowledgeTimelineForPlatform
+} from "@/lib/evidence-engine";
 import { getRecommendedAdaptersForPlatform } from "@/lib/platform-knowledge";
 import type { PlatformKnowledgeProfile } from "@/types/platform-knowledge";
 
@@ -39,6 +48,11 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
   }
 
   const adapters = getRecommendedAdaptersForPlatform(profile.id).slice(0, 4);
+  const evidenceSummary = getEvidenceSummaryForPlatform(profile.id);
+  const quality = getKnowledgeQualityForPlatform(profile);
+  const conflicts = getEvidenceConflictsForPlatform(profile.id);
+  const discoveries = getCommunityDiscoveriesForPlatform(profile.id);
+  const knowledgeTimeline = getKnowledgeTimelineForPlatform(profile.id);
 
   return (
     <section className="rounded-lg border border-border bg-panel p-5">
@@ -77,6 +91,17 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
         ))}
       </div>
 
+      <div className="mt-6">
+        <EvidencePanel
+          conflicts={conflicts}
+          discoveries={discoveries}
+          quality={quality}
+          summary={evidenceSummary}
+          timeline={knowledgeTimeline}
+          title="Why do we believe this platform profile?"
+        />
+      </div>
+
       <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_0.9fr]">
         <section>
           <div className="mb-4 flex items-center gap-3">
@@ -95,6 +120,12 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
                 </div>
                 <h4 className="mt-3 text-base font-semibold">{card.title}</h4>
                 <p className="mt-2 text-sm leading-6 text-muted">{card.body}</p>
+                <div className="mt-3">
+                  <EvidencePanel
+                    compact
+                    summary={getEvidenceSummaryForSubject(card.id)}
+                  />
+                </div>
               </article>
             ))}
           </div>
@@ -128,6 +159,12 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
                     {constraint.mitigation}
                   </p>
                 ) : null}
+                <div className="mt-3">
+                  <EvidencePanel
+                    compact
+                    summary={getEvidenceSummaryForSubject(constraint.id)}
+                  />
+                </div>
               </article>
             ))}
           </div>

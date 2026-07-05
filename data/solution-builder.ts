@@ -69,6 +69,11 @@ export const solutionBuilderServiceDependencies: SolutionBuilderServiceDependenc
     href: "/sources",
     name: "Marketplace intelligence",
     role: "Transforms raw marketplace inputs into normalized hardware, platform detection, confidence, and future solution pathways."
+  },
+  {
+    href: "/sources",
+    name: "Evidence engine",
+    role: "Attaches provenance, confidence, verification state, conflicts, and knowledge quality to hardware facts."
   }
 ];
 

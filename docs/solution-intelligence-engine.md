@@ -49,6 +49,11 @@ normalized hardware evidence only. The reasoning engine should not read raw
 marketplace fields, scraper output, marketplace HTML, or source-specific seller
 metadata.
 
+Version 3.1 adds Evidence as the trust layer under reasoning. Solution
+Intelligence findings can reference evidence IDs through their confidence
+signals, and the panel can show why the deterministic reasoning should be
+trusted.
+
 ## Reasoning Engine
 
 The report includes:
@@ -190,6 +195,7 @@ Every recommendation includes:
 - confidence level
 - source
 - reason
+- optional evidence IDs
 
 Current sources:
 
@@ -210,6 +216,10 @@ Future source types are already represented:
 
 This is deliberate. AI should eventually feed a moderated confidence pipeline,
 not bypass it.
+
+Evidence is the durable trust record. Confidence is the reasoning signal shown
+inside a report. Future work should connect the two so every recommendation can
+expand into source, verification, conflicts, and review state.
 
 ## Decision History
 
@@ -257,6 +267,7 @@ Durable recommendations should cite:
 
 - deterministic rules
 - platform knowledge records
+- evidence records
 - source documents
 - confidence state
 - moderation state
@@ -269,6 +280,7 @@ v2.6 is intentionally conservative:
 - no live scraping
 - no AI
 - no persisted intelligence reports
+- no persisted evidence review
 - no actual branch diff engine yet
 - no benchmark database
 - no official hardware-source citations

@@ -29,6 +29,7 @@ Future marketplace data should enter the journey only after it has moved through
 ```text
 Raw Marketplace Data
 -> Normalized Hardware
+-> Evidence
 -> Platform Knowledge
 -> Solution Intelligence
 -> Optimization
@@ -336,6 +337,7 @@ Both workflows should continue to reuse:
 
 - Inventory as project slot support.
 - Marketplace Intelligence for normalized listing input, source confidence, platform detection, and opportunity previews.
+- Evidence Engine for provenance, verification status, conflicts, community discoveries, and Knowledge Quality.
 - Platform knowledge for hidden upgrade paths, platform quirks, PCIe reasoning, and adapter recommendations.
 - Solution intelligence for complete-system explanations, bottlenecks, use-case fit, cost efficiency, and confidence.
 - Decision engine for deterministic scoring.
@@ -369,13 +371,37 @@ The parser is deterministic. Unknown fields remain unknown. Every parsed field
 has a confidence and source, so future OCR, image recognition, LLM extraction,
 or official API data can feed the same contracts without changing the Builder.
 
-## v3.1 Recommendation
+## Phase 3 Evidence Engine
+
+Evidence lives in:
+
+- `types/evidence.ts`
+- `data/evidence.ts`
+- `lib/evidence-engine.ts`
+- `components/evidence/evidence-panel.tsx`
+
+The Evidence Engine is the trust layer between normalized input and trusted
+knowledge. It attaches source type, confidence, extraction method, supporting
+text, date added, version, verification status, conflicts, community
+discoveries, knowledge timeline, and Knowledge Quality to important facts.
+
+Future AI, OCR, scraper, CSV, API, and user-submitted claims should become
+evidence candidates. They should not mutate Platform Knowledge, Solution
+Intelligence, Optimization, or Recommendations directly.
+
+## v3.2 Recommendation
 
 The next milestone should make Marketplace Intelligence durable and reviewable
 before adding live sources, AI extraction, or scraping.
 
 Build:
 
+- persisted evidence records
+- persisted conflicts
+- persisted community discoveries
+- persisted knowledge timeline
+- moderator review state
+- evidence edit history
 - normalized listing persistence
 - raw source references and source attribution
 - parsed-field evidence records

@@ -1,4 +1,5 @@
 import type { BuildSlotId } from "@/types/solution-builder";
+import type { EvidenceRecord } from "@/types/evidence";
 
 export const platformKnowledgeIds = [
   "thinkstation-p520",
@@ -75,6 +76,7 @@ export type PlatformKnowledgeCard = {
   body: string;
   category: PlatformKnowledgeCategory;
   confidence: KnowledgeConfidence;
+  evidenceIds?: Array<EvidenceRecord["id"]>;
   id: string;
   title: string;
 };
@@ -82,6 +84,7 @@ export type PlatformKnowledgeCard = {
 export type PlatformConstraint = {
   confidence: KnowledgeConfidence;
   description: string;
+  evidenceIds?: Array<EvidenceRecord["id"]>;
   id: string;
   mitigation?: string;
   severity: PlatformConstraintSeverity;
@@ -96,6 +99,7 @@ export type PlatformUpgradeOpportunity = {
   adapterIds?: PlatformAdapterId[];
   confidence: KnowledgeConfidence;
   difficulty: UpgradeDifficulty;
+  evidenceIds?: Array<EvidenceRecord["id"]>;
   estimatedCostUsd: number;
   expectedBenefitRating: 1 | 2 | 3 | 4 | 5;
   id: string;
@@ -124,6 +128,7 @@ export type PlatformPcieBottleneck = {
 
 export type PlatformUpgradeTimelineStep = {
   description: string;
+  evidenceIds?: Array<EvidenceRecord["id"]>;
   id: string;
   title: string;
 };
@@ -150,6 +155,7 @@ export type AdapterIntelligenceProfile = {
   compatibilityConfidence: KnowledgeConfidence;
   costUsd: number;
   difficulty: UpgradeDifficulty;
+  evidenceIds?: Array<EvidenceRecord["id"]>;
   expectedPerformance: string;
   id: PlatformAdapterId;
   notes: string[];

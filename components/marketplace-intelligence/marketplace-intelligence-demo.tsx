@@ -1,7 +1,10 @@
 import { BrainCircuit, Database, FileSearch, ShieldCheck } from "lucide-react";
 
+import { EvidencePanel } from "@/components/evidence/evidence-panel";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getEvidenceSummaryForSubject } from "@/lib/evidence-engine";
 import { getPlatformKnowledgeById } from "@/lib/platform-knowledge";
+import type { EvidenceConfidence } from "@/types/evidence";
 import type {
   MarketplaceImportPipelineResult,
   MarketplaceNormalizedListing
@@ -26,10 +29,12 @@ function formatPrice(listing: MarketplaceNormalizedListing) {
 }
 
 function FieldSummary({
+  confidence,
   label,
   source,
   value
 }: {
+  confidence: EvidenceConfidence;
   label: string;
   source: string;
   value: string | null;
@@ -38,7 +43,10 @@ function FieldSummary({
     <div className="rounded-lg border border-border bg-panel px-3 py-2">
       <p className="text-xs font-semibold uppercase text-muted">{label}</p>
       <p className="mt-1 text-sm font-semibold">{value ?? "Unknown"}</p>
-      <p className="mt-1 text-xs text-muted">{source}</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        <StatusPill>{source}</StatusPill>
+        <StatusPill>{confidence} confidence</StatusPill>
+      </div>
     </div>
   );
 }
@@ -46,6 +54,10 @@ function FieldSummary({
 export function MarketplaceIntelligenceDemo({
   report
 }: MarketplaceIntelligenceDemoProps) {
+  const parserEvidence = getEvidenceSummaryForSubject(
+    "marketplace-platform-detection"
+  );
+
   return (
     <section className="rounded-lg border border-border bg-panel p-5">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -65,6 +77,14 @@ export function MarketplaceIntelligenceDemo({
           <StatusPill>{report.totals.platformMatches} platform matches</StatusPill>
           <StatusPill>{report.totals.sourcesRepresented} demo sources</StatusPill>
         </div>
+      </div>
+
+      <div className="mt-6">
+        <EvidencePanel
+          compact
+          summary={parserEvidence}
+          title="How do we know parsed marketplace fields?"
+        />
       </div>
 
       <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -139,21 +159,25 @@ export function MarketplaceIntelligenceDemo({
                   </div>
                   <div className="mt-3 grid gap-2">
                     <FieldSummary
+                      confidence={listing.hardware.detectedComponents.cpu.confidence}
                       label="CPU"
                       source={listing.hardware.detectedComponents.cpu.source}
                       value={listing.hardware.detectedComponents.cpu.value}
                     />
                     <FieldSummary
+                      confidence={listing.hardware.detectedComponents.gpu.confidence}
                       label="GPU"
                       source={listing.hardware.detectedComponents.gpu.source}
                       value={listing.hardware.detectedComponents.gpu.value}
                     />
                     <FieldSummary
+                      confidence={listing.hardware.detectedComponents.memory.confidence}
                       label="RAM"
                       source={listing.hardware.detectedComponents.memory.source}
                       value={listing.hardware.detectedComponents.memory.value}
                     />
                     <FieldSummary
+                      confidence={listing.hardware.detectedComponents.storage.confidence}
                       label="Storage"
                       source={listing.hardware.detectedComponents.storage.source}
                       value={listing.hardware.detectedComponents.storage.value}

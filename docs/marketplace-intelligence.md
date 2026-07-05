@@ -16,6 +16,7 @@ The intended pipeline is:
 ```text
 Raw Marketplace Data
 -> Normalized Hardware
+-> Evidence
 -> Platform Knowledge
 -> Solution Intelligence
 -> Optimization
@@ -38,6 +39,10 @@ Marketplace Intelligence lives in:
 The current demo is rendered on `/sources` alongside the older dry-run source
 health panel. That is intentional: source health remains operational plumbing;
 Marketplace Intelligence is the normalization and reasoning-entry contract.
+
+Version 3.1 adds Evidence as the trust boundary after normalization. Parsed
+fields can carry evidence IDs, extraction method, and verification status when
+future providers are connected.
 
 ## Source Adapters
 
@@ -133,6 +138,9 @@ Each parsed field carries:
 - value
 - confidence
 - source
+- optional evidence IDs
+- optional extraction method
+- optional verification status
 
 Examples:
 
@@ -146,6 +154,10 @@ detection, and listing health.
 Current confidence sources are deterministic demo signals. Future confidence may
 come from official documentation, community reports, live scraping, AI
 extraction, and manual moderation, but those sources must feed the same shape.
+
+The Evidence Engine answers a different question from parser confidence. Parser
+confidence says "the text looks like a GPU." Evidence says "where did this claim
+come from, how was it extracted, and has it been verified?"
 
 ## Marketplace Health
 
@@ -201,6 +213,7 @@ Strict direction:
 ```text
 Marketplace
 -> Normalization
+-> Evidence
 -> Knowledge
 -> Reasoning
 -> Optimization
@@ -220,7 +233,9 @@ Good:
 
 - source adapter produces raw listing input
 - parser normalizes fields with confidence
+- parser attaches evidence candidates when available
 - platform detection links to platform knowledge
+- evidence review decides whether parsed facts can strengthen trusted knowledge
 - solution intelligence explains tradeoffs
 - optimizer uses normalized, reasoned project data
 - recommendation explains the final choice
@@ -255,6 +270,7 @@ Before live ingestion:
 - add adapter fixture tests
 - add source attribution and takedown workflow
 - add normalized listing persistence
+- add persisted evidence records for parsed fields
 - add moderation state for parsed facts
 - add conflict handling between sources
 - add evidence links for platform claims
