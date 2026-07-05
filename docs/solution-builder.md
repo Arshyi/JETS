@@ -1,6 +1,6 @@
 # JETS Solution Builder
 
-Version 2.0 was the first architectural redesign of JETS. Version 2.1 added persisted projects and component-aware slot inventory. Version 2.2 added the Optimization Engine Foundation. Version 2.3 added Project Branching & Optimization Workspace. Version 2.4 connected these layers into one continuous workflow. Version 2.5 added the Platform Knowledge Engine. Version 2.6 adds the Solution Intelligence Engine.
+Version 2.0 was the first architectural redesign of JETS. Version 2.1 added persisted projects and component-aware slot inventory. Version 2.2 added the Optimization Engine Foundation. Version 2.3 added Project Branching & Optimization Workspace. Version 2.4 connected these layers into one continuous workflow. Version 2.5 added the Platform Knowledge Engine. Version 2.6 added the Solution Intelligence Engine. Phase 3 begins Marketplace Intelligence, the feeder architecture that will eventually supply normalized real-world hardware data without redesigning the builder.
 
 The product center is no longer browsing listings. JETS is now organized around solving a hardware problem through two workflows:
 
@@ -8,6 +8,8 @@ The product center is no longer browsing listings. JETS is now organized around 
 - Let JETS Recommend: a recommendation workflow that synthesizes complete solution paths from budget, purpose, preferences, and owned hardware.
 
 Existing inventory, compatibility, platform knowledge, solution intelligence, decision scoring, snapshots, audit, and source ingestion remain functional. They are now supporting services under the Solution Builder architecture. Optimization is the workflow layer that combines those services into suggested changes. Branching is the safety layer that lets users explore those changes without losing the original build.
+
+Marketplace Intelligence is below those systems. It turns raw marketplace input into normalized hardware evidence, detected platforms, parsed components, confidence, listing health, opportunities, and possible futures. It does not score complete builds or mutate projects.
 
 The intended journey is:
 
@@ -21,6 +23,17 @@ The intended journey is:
 8. Optimization analyzes unlocked slots.
 9. Branching preserves alternatives.
 10. Compare and Finish review the solution.
+
+Future marketplace data should enter the journey only after it has moved through:
+
+```text
+Raw Marketplace Data
+-> Normalized Hardware
+-> Platform Knowledge
+-> Solution Intelligence
+-> Optimization
+-> Recommendation
+```
 
 ## Architecture Review
 
@@ -322,6 +335,7 @@ action.
 Both workflows should continue to reuse:
 
 - Inventory as project slot support.
+- Marketplace Intelligence for normalized listing input, source confidence, platform detection, and opportunity previews.
 - Platform knowledge for hidden upgrade paths, platform quirks, PCIe reasoning, and adapter recommendations.
 - Solution intelligence for complete-system explanations, bottlenecks, use-case fit, cost efficiency, and confidence.
 - Decision engine for deterministic scoring.
@@ -332,22 +346,45 @@ Both workflows should continue to reuse:
 
 No scoring or compatibility logic should be duplicated inside workflow components.
 
-## v2.7 Recommendation
+## Phase 3 Marketplace Intelligence
 
-The next milestone should persist and compare solution intelligence across
-branches without adding AI or live scraping.
+Marketplace Intelligence lives in:
+
+- `types/marketplace-intelligence.ts`
+- `data/mock-marketplace-intelligence.ts`
+- `lib/marketplace-intelligence/normalize.ts`
+- `components/marketplace-intelligence/marketplace-intelligence-demo.tsx`
+
+The layer supports future adapters for marketplaces, store feeds, CSV imports,
+manual entry, browser extension capture, and APIs. Current adapters are
+definitions only. They do not make network requests.
+
+The normalized listing model separates marketplace metadata, seller metadata,
+hardware metadata, price, location, condition, description, images, platform
+detection, detected components, confidence, listing health, opportunities, and
+possible futures. Marketplace-specific raw fields stay isolated from Builder,
+Platform Knowledge, Solution Intelligence, Optimization, and Recommendation.
+
+The parser is deterministic. Unknown fields remain unknown. Every parsed field
+has a confidence and source, so future OCR, image recognition, LLM extraction,
+or official API data can feed the same contracts without changing the Builder.
+
+## v3.1 Recommendation
+
+The next milestone should make Marketplace Intelligence durable and reviewable
+before adding live sources, AI extraction, or scraping.
 
 Build:
 
-- branch diff viewer
-- original vs optimized branch comparison
-- slot-level before/after changes
-- score snapshots before and after optimization
-- Platform Potential deltas
-- knowledge-backed constraint and opportunity explanations
-- persisted solution intelligence snapshots
-- decision-history merge with persisted project audit events
-- merge-style apply into a selected branch
-- rollback and branch audit events
+- normalized listing persistence
+- raw source references and source attribution
+- parsed-field evidence records
+- adapter fixture tests
+- moderation and correction workflow
+- conflict handling when sources disagree
+- source-specific compliance reviews
+- removal/takedown workflow
+- project slot suggestions from reviewed normalized listings
 
-Do not add AI or live scraping yet. The v2 product shape should become stable before adding probabilistic recommendations or live marketplace data.
+Do not add AI or live scraping yet. Phase 3 needs trusted normalized evidence
+before probabilistic extraction or scheduled marketplace ingestion.

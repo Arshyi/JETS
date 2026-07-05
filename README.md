@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths.
 
-JETS is now project-centered. The primary experience is: choose a goal, create a project, fill slots through contextual inventory, validate the build, optimize, branch or compare scenarios, then review a finished solution.
+JETS is now project-centered. The primary experience is: choose a goal, create a project, fill slots through contextual inventory, validate the build, optimize, branch or compare scenarios, then review a finished solution. Phase 3 adds Marketplace Intelligence as the feeder architecture that will eventually transform real-world listings into normalized hardware evidence for those workflows.
 
 ## Commands
 
@@ -31,8 +31,9 @@ npm run lint
 - **2.3:** Project Branching & Optimization Workspace. Complete.
 - **2.4:** Project-first workflow consolidation. Complete.
 - **2.5:** Platform Knowledge Engine. Complete.
-- **2.6:** Solution Intelligence Engine. Current.
-- **2.7:** Knowledge-backed branch comparison and persisted intelligence reports. Recommended next.
+- **2.6:** Solution Intelligence Engine. Complete.
+- **3.0:** Marketplace Intelligence Layer. Current.
+- **3.1:** Normalized listing persistence, evidence review, and adapter fixtures. Recommended next.
 
 ## Primary Workflow
 
@@ -44,6 +45,14 @@ npm run lint
 6. Optimization proposes deterministic improvements.
 7. Branching preserves alternatives without mutating the original.
 8. Compare and Finish remain optional review stages.
+
+Marketplace Intelligence sits below the workflow as input plumbing:
+
+```text
+Raw Marketplace Data -> Normalized Hardware -> Platform Knowledge -> Solution Intelligence -> Optimization -> Recommendation
+```
+
+Ingestion and parsing do not make recommendations. Optimization and reasoning do not know how a listing was captured.
 
 See `docs/user-workflow.md` for the journey diagram and UX rules.
 
@@ -212,6 +221,16 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/solution-intelligence-engine.md`.
 - v2.6 does not implement AI, live scraping, marketplace APIs, checkout, benchmark databases, or persisted intelligence reports.
 
+## Version 3.0 Notes
+
+- Marketplace Intelligence types live in `types/marketplace-intelligence.ts`.
+- Representative source adapter definitions and raw marketplace fixtures live in `data/mock-marketplace-intelligence.ts`.
+- Deterministic normalization, platform detection, parser confidence, listing health, opportunity preview, and future-path generation live in `lib/marketplace-intelligence/normalize.ts`.
+- The `/sources` page now shows the Phase 3 pipeline demo beside the older dry-run source health tooling.
+- Demo imports cover Dell Precision, ThinkStation, OptiPlex, Mac Pro, gaming PC, laptop, and mini PC examples.
+- Documentation lives in `docs/marketplace-intelligence.md`.
+- v3.0 does not implement live scraping, website automation, marketplace APIs, checkout, AI extraction, OCR, image recognition, or listing persistence.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -291,4 +310,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v2.6 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. See `docs/ingestion.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through v3.0 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.

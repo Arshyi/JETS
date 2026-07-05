@@ -44,6 +44,11 @@ The project detail page calls:
 The engine consumes the existing `BuildWorkspaceModel`. It does not duplicate
 inventory, compatibility, platform knowledge, or optimization persistence.
 
+Phase 3 Marketplace Intelligence can eventually feed this model through
+normalized hardware evidence only. The reasoning engine should not read raw
+marketplace fields, scraper output, marketplace HTML, or source-specific seller
+metadata.
+
 ## Reasoning Engine
 
 The report includes:
@@ -193,6 +198,7 @@ Current sources:
 - platform knowledge
 - manual curation
 - demo fixture
+- normalized marketplace evidence
 
 Future source types are already represented:
 

@@ -51,6 +51,10 @@ The Solution Builder model now exposes:
 That keeps platform knowledge reusable by Projects, Inventory, Optimization,
 future branch comparison, future recommendation synthesis, and future ingestion.
 
+Phase 3 Marketplace Intelligence may detect that a raw listing maps to one of
+these platform profiles. That detection should link to platform knowledge; it
+should not copy marketplace-specific fields into the platform registry.
+
 ## Separation Of Concerns
 
 Specifications are stable-ish facts:
@@ -181,6 +185,10 @@ Potential sources:
 - build logs
 - technician notes
 - normalized marketplace listings
+
+Marketplace Intelligence is the normalization boundary for marketplace-derived
+signals. It should provide parsed hardware fields, platform detection,
+confidence, and evidence references before any platform record is updated.
 
 Future AI assistance could extract candidate knowledge, but should not publish
 it directly. The durable record should include:

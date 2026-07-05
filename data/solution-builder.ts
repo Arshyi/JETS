@@ -64,6 +64,11 @@ export const solutionBuilderServiceDependencies: SolutionBuilderServiceDependenc
     href: "/sources",
     name: "Sources",
     role: "Keeps ingestion status, dry-run adapters, normalized listings, and freshness metadata reusable."
+  },
+  {
+    href: "/sources",
+    name: "Marketplace intelligence",
+    role: "Transforms raw marketplace inputs into normalized hardware, platform detection, confidence, and future solution pathways."
   }
 ];
 

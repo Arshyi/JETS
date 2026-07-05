@@ -5,8 +5,10 @@ import { DuplicateList } from "@/components/ingestion/duplicate-list";
 import { DryRunSummary } from "@/components/ingestion/dry-run-summary";
 import { NormalizedListingTable } from "@/components/ingestion/normalized-listing-table";
 import { SourceHealthCard } from "@/components/ingestion/source-health-card";
+import { MarketplaceIntelligenceDemo } from "@/components/marketplace-intelligence/marketplace-intelligence-demo";
 import { ContentPage } from "@/components/pages/content-page";
 import { ErrorState } from "@/components/states/error-state";
+import { buildMarketplaceImportPipelineReport } from "@/lib/marketplace-intelligence/normalize";
 import { getSourceStatusState } from "@/lib/supabase/ingestion-queries";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +20,7 @@ export const metadata: Metadata = {
 
 export default async function SourcesPage() {
   const state = await getSourceStatusState();
+  const marketplaceIntelligenceReport = buildMarketplaceImportPipelineReport();
 
   return (
     <ContentPage
@@ -42,6 +45,8 @@ export default async function SourcesPage() {
         ) : null}
 
         <DryRunSummary report={state.report} />
+
+        <MarketplaceIntelligenceDemo report={marketplaceIntelligenceReport} />
 
         <div className="grid gap-4">
           {state.report.health.map((health) => (

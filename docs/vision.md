@@ -24,6 +24,8 @@ Platform knowledge is the moat. JETS should know the quirks, hidden upgrade path
 
 Solution intelligence is the product becoming active. JETS should combine CPU, GPU, RAM, PSU, platform, cooling, budget, and use-case context into a complete-system explanation so users do not do that reasoning manually.
 
+Marketplace intelligence is the Phase 3 feeder layer. Marketplace listings are not the product; they are raw input that must become normalized hardware with confidence, platform detection, health, opportunities, and future solution paths before Builder, Knowledge, Intelligence, Optimization, or Recommendation layers use it.
+
 The near-term user journey should feel continuous:
 
 Home -> Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
@@ -237,20 +239,31 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 2.6 - Solution Intelligence Engine
 
-- Current.
+- Complete.
 - Add a deterministic reasoning layer above compatibility, decision scoring, and platform knowledge.
 - Explain why builds work and why parts are rejected.
 - Add CPU, GPU, RAM, PCIe, VRAM, storage, cooling, and PSU bottleneck analysis.
 - Add upgrade impact simulation, use-case analysis, cost efficiency, hidden opportunities, optimization advisor modes, confidence signals, decision history, and branch intelligence scaffolding.
 - Do not add AI, live scraping, marketplace APIs, or checkout.
 
-### Version 2.7 - Knowledge-Backed Branch Comparison and Persisted Intelligence
+### Version 3.0 - Marketplace Intelligence Layer
+
+- Current.
+- Create adapter definitions for future sources including Dubizzle, Facebook Marketplace, eBay, Kijiji, Craigslist, Yahoo Auctions, Mercari, Amazon Renewed, Newegg, local stores, CSV imports, manual entry, and future APIs.
+- Normalize raw marketplace listings into marketplace metadata, seller metadata, hardware metadata, price, location, condition, description, images, platform detection, detected components, confidence, listing health, opportunities, and possible futures.
+- Add deterministic platform detection and parser confidence while leaving unknown fields unknown.
+- Connect normalized listings into Platform Knowledge without coupling marketplace-specific fields into Builder, Solution Intelligence, or Optimization.
+- Show a demo pipeline from Raw Listing to Normalized Listing to Detected Platform to Knowledge to Recommendation Path.
+- Do not implement live scraping, website automation, marketplace APIs, OCR, image recognition, AI extraction, checkout, or listing persistence.
+
+### Version 3.1 - Normalized Listing Persistence and Evidence Review
 
 - Recommended next.
-- Compare branches with solution-intelligence reports and Platform Potential deltas.
-- Show slot-level diffs, knowledge-backed warnings, and merge previews.
-- Persist intelligence snapshots so users can track why a branch improved or regressed.
-- Preserve project history before destructive changes.
+- Persist normalized marketplace listings with raw-source references and parsed-field confidence.
+- Add adapter fixture tests so each future source can be validated before it is connected.
+- Add evidence review, user correction, moderation state, and conflict handling for parsed facts.
+- Add source attribution and removal/takedown workflow before any live ingestion is considered.
+- Keep live scraping, AI extraction, and marketplace APIs deferred until review and compliance foundations are stable.
 
 ## Idea Parking Lot
 
@@ -281,6 +294,11 @@ Ideas below are valuable, but they are not current milestone scope.
 - Community-discovered upgrade evidence tracking
 - Persisted solution intelligence reports
 - Branch intelligence score deltas
+- Marketplace adapter fixture tests
+- Normalized listing moderation workflow
+- Parsed-field evidence links
+- User correction workflow for marketplace facts
+- Source-specific compliance review templates
 
 ## Product Principles
 
