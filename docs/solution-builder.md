@@ -1,13 +1,13 @@
 # JETS Solution Builder
 
-Version 2.0 was the first architectural redesign of JETS. Version 2.1 added persisted projects and component-aware slot inventory. Version 2.2 added the Optimization Engine Foundation. Version 2.3 added Project Branching & Optimization Workspace. Version 2.4 connected these layers into one continuous workflow. Version 2.5 adds the Platform Knowledge Engine.
+Version 2.0 was the first architectural redesign of JETS. Version 2.1 added persisted projects and component-aware slot inventory. Version 2.2 added the Optimization Engine Foundation. Version 2.3 added Project Branching & Optimization Workspace. Version 2.4 connected these layers into one continuous workflow. Version 2.5 added the Platform Knowledge Engine. Version 2.6 adds the Solution Intelligence Engine.
 
 The product center is no longer browsing listings. JETS is now organized around solving a hardware problem through two workflows:
 
 - Build My Own: a slot-based project workspace for composing hardware like a CAD-style build.
 - Let JETS Recommend: a recommendation workflow that synthesizes complete solution paths from budget, purpose, preferences, and owned hardware.
 
-Existing inventory, compatibility, platform knowledge, decision scoring, snapshots, audit, and source ingestion remain functional. They are now supporting services under the Solution Builder architecture. Optimization is the workflow layer that combines those services into suggested changes. Branching is the safety layer that lets users explore those changes without losing the original build.
+Existing inventory, compatibility, platform knowledge, solution intelligence, decision scoring, snapshots, audit, and source ingestion remain functional. They are now supporting services under the Solution Builder architecture. Optimization is the workflow layer that combines those services into suggested changes. Branching is the safety layer that lets users explore those changes without losing the original build.
 
 The intended journey is:
 
@@ -17,9 +17,10 @@ The intended journey is:
 4. Slot-by-slot Inventory selection fills components.
 5. Validation summarizes missing and risky areas.
 6. Platform knowledge explains quirks, constraints, and hidden paths.
-7. Optimization analyzes unlocked slots.
-8. Branching preserves alternatives.
-9. Compare and Finish review the solution.
+7. Solution intelligence reasons across CPU, GPU, RAM, PSU, platform, cooling, budget, and use case.
+8. Optimization analyzes unlocked slots.
+9. Branching preserves alternatives.
+10. Compare and Finish review the solution.
 
 ## Architecture Review
 
@@ -190,6 +191,36 @@ v2.5 data is curated representative demo knowledge. Future scraping or AI
 extraction should populate the same registry shape only after sourcing,
 moderation, conflict handling, and correction workflows exist.
 
+## v2.6 Solution Intelligence
+
+Solution intelligence lives in:
+
+- `types/solution-intelligence.ts`
+- `lib/solution-intelligence/engine.ts`
+- `components/solution-intelligence/solution-intelligence-panel.tsx`
+
+The reasoning engine consumes the shared `BuildWorkspaceModel`; it does not
+replace compatibility, optimization, inventory, or platform knowledge.
+
+The generated report includes:
+
+- why this works
+- why something was rejected
+- CPU, GPU, RAM, PCIe, VRAM, storage, cooling, and PSU bottlenecks
+- upgrade impact simulations
+- use-case reasoning for gaming, engineering, CAD, programming, virtualization, local AI, rendering, home server, streaming, and office work
+- cost efficiency and budget allocation
+- hidden opportunity detection
+- platform opportunity detection from the Platform Knowledge Engine
+- optimization advisor modes
+- confidence source and reason
+- engineering decision history
+- branch intelligence signals
+
+The report is deterministic and qualitative. It uses levels such as Very Low,
+Low, Moderate, High, and Critical instead of pretending to know exact benchmark
+deltas.
+
 ## v2.2 Optimization
 
 Optimization lives in:
@@ -292,6 +323,7 @@ Both workflows should continue to reuse:
 
 - Inventory as project slot support.
 - Platform knowledge for hidden upgrade paths, platform quirks, PCIe reasoning, and adapter recommendations.
+- Solution intelligence for complete-system explanations, bottlenecks, use-case fit, cost efficiency, and confidence.
 - Decision engine for deterministic scoring.
 - Compatibility engine for hardware constraints.
 - Build snapshots for saved decision state.
@@ -300,10 +332,10 @@ Both workflows should continue to reuse:
 
 No scoring or compatibility logic should be duplicated inside workflow components.
 
-## v2.6 Recommendation
+## v2.7 Recommendation
 
-The next milestone should make platform knowledge influence optimization and
-branch comparison without adding AI or live scraping.
+The next milestone should persist and compare solution intelligence across
+branches without adding AI or live scraping.
 
 Build:
 
@@ -313,6 +345,8 @@ Build:
 - score snapshots before and after optimization
 - Platform Potential deltas
 - knowledge-backed constraint and opportunity explanations
+- persisted solution intelligence snapshots
+- decision-history merge with persisted project audit events
 - merge-style apply into a selected branch
 - rollback and branch audit events
 

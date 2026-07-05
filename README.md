@@ -30,8 +30,9 @@ npm run lint
 - **2.2:** Optimization Engine Foundation. Complete.
 - **2.3:** Project Branching & Optimization Workspace. Complete.
 - **2.4:** Project-first workflow consolidation. Complete.
-- **2.5:** Platform Knowledge Engine. Current.
-- **2.6:** Knowledge-backed optimization and branch comparison. Recommended next.
+- **2.5:** Platform Knowledge Engine. Complete.
+- **2.6:** Solution Intelligence Engine. Current.
+- **2.7:** Knowledge-backed branch comparison and persisted intelligence reports. Recommended next.
 
 ## Primary Workflow
 
@@ -39,7 +40,7 @@ npm run lint
 2. The goal-first project wizard creates the project with a scoring preset and optimization direction.
 3. Builder opens as the project home.
 4. Slot inventory appears in context when the builder needs hardware.
-5. Validation and platform knowledge run continuously.
+5. Validation, platform knowledge, and solution intelligence run continuously.
 6. Optimization proposes deterministic improvements.
 7. Branching preserves alternatives without mutating the original.
 8. Compare and Finish remain optional review stages.
@@ -201,6 +202,16 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/platform-knowledge-engine.md`.
 - v2.5 does not implement AI, live scraping, marketplace APIs, checkout, or automatic knowledge verification.
 
+## Version 2.6 Notes
+
+- Solution intelligence types live in `types/solution-intelligence.ts`.
+- The deterministic reasoning engine lives in `lib/solution-intelligence/engine.ts`.
+- The project reasoning UI lives in `components/solution-intelligence/solution-intelligence-panel.tsx`.
+- Project detail pages now explain why the build works, why parts are rejected, bottlenecks, upgrade simulations, use-case fit, cost allocation, hidden opportunities, advisor recommendations, confidence, decision history, and branch-intelligence signals.
+- Solution intelligence reuses the existing Builder model, compatibility results, component inventory, and Platform Knowledge Engine.
+- Documentation lives in `docs/solution-intelligence-engine.md`.
+- v2.6 does not implement AI, live scraping, marketplace APIs, checkout, benchmark databases, or persisted intelligence reports.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -280,4 +291,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v2.5 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic optimization, branch-safe project variants, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. See `docs/ingestion.md` and `docs/platform-knowledge-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through v2.6 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. See `docs/ingestion.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.

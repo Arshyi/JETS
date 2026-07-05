@@ -41,6 +41,11 @@ export const solutionBuilderServiceDependencies: SolutionBuilderServiceDependenc
     role: "Adds platform quirks, hidden upgrade paths, adapter options, PCIe reasoning, and community-discovered tradeoffs."
   },
   {
+    href: "/solution-builder/projects",
+    name: "Solution intelligence",
+    role: "Combines CPU, GPU, RAM, PSU, platform, cooling, budget, bottlenecks, and use-case tradeoffs into one reasoning report."
+  },
+  {
     href: "/build-generator",
     name: "Decision engine",
     role: "Scores value, performance, reliability, risk, upgrade potential, and use-case fit."

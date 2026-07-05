@@ -22,6 +22,8 @@ Optimization is the differentiator. The long-term workflow should become Build -
 
 Platform knowledge is the moat. JETS should know the quirks, hidden upgrade paths, adapter tricks, PCIe tradeoffs, and community discoveries that make one used platform much more useful than another similarly priced machine.
 
+Solution intelligence is the product becoming active. JETS should combine CPU, GPU, RAM, PSU, platform, cooling, budget, and use-case context into a complete-system explanation so users do not do that reasoning manually.
+
 The near-term user journey should feel continuous:
 
 Home -> Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
@@ -226,19 +228,28 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 2.5 - Platform Knowledge Engine
 
-- Current.
+- Complete.
 - Add structured platform profiles for workstations, office bases, and enthusiast platforms.
 - Separate specifications, platform knowledge, community discoveries, upgrade opportunities, adapter intelligence, and PCIe reasoning.
 - Add Platform Potential as a score separate from the decision score.
 - Surface platform knowledge inside projects and inventory.
 - Keep all knowledge curated/demo only until sourcing, moderation, and correction workflows exist.
 
-### Version 2.6 - Knowledge-Backed Optimization and Branch Comparison
+### Version 2.6 - Solution Intelligence Engine
+
+- Current.
+- Add a deterministic reasoning layer above compatibility, decision scoring, and platform knowledge.
+- Explain why builds work and why parts are rejected.
+- Add CPU, GPU, RAM, PCIe, VRAM, storage, cooling, and PSU bottleneck analysis.
+- Add upgrade impact simulation, use-case analysis, cost efficiency, hidden opportunities, optimization advisor modes, confidence signals, decision history, and branch intelligence scaffolding.
+- Do not add AI, live scraping, marketplace APIs, or checkout.
+
+### Version 2.7 - Knowledge-Backed Branch Comparison and Persisted Intelligence
 
 - Recommended next.
-- Feed platform opportunities and constraints into optimizer explanations.
-- Compare branches with platform-potential deltas.
+- Compare branches with solution-intelligence reports and Platform Potential deltas.
 - Show slot-level diffs, knowledge-backed warnings, and merge previews.
+- Persist intelligence snapshots so users can track why a branch improved or regressed.
 - Preserve project history before destructive changes.
 
 ## Idea Parking Lot
@@ -268,6 +279,8 @@ Ideas below are valuable, but they are not current milestone scope.
 - Merge preview for hardware slot changes
 - Platform knowledge sourcing and moderation
 - Community-discovered upgrade evidence tracking
+- Persisted solution intelligence reports
+- Branch intelligence score deltas
 
 ## Product Principles
 

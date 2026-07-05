@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BuildValidationSummary } from "@/components/solution-builder/build-validation-summary";
 import { CompareAgainstJets } from "@/components/solution-builder/compare-against-jets";
 import { PlatformKnowledgePanel } from "@/components/platform-knowledge/platform-knowledge-panel";
+import { SolutionIntelligencePanel } from "@/components/solution-intelligence/solution-intelligence-panel";
 import { ProjectBranchWorkspace } from "@/components/solution-builder/project-branch-workspace";
 import { ProjectWorkflowProgress } from "@/components/solution-builder/project-workflow-progress";
 import { ProjectAuditTimeline } from "@/components/solution-builder/project-audit-timeline";
@@ -16,6 +17,7 @@ import {
   restoreBuildProjectAction
 } from "@/lib/supabase/project-actions";
 import { getPlatformKnowledgeById } from "@/lib/platform-knowledge";
+import { analyzeBuildSolution } from "@/lib/solution-intelligence/engine";
 import type { BuildProjectDetailData } from "@/lib/solution-builder/projects";
 import type { BuildSlotRequirement } from "@/types/solution-builder";
 
@@ -35,6 +37,7 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
   const platformProfile = getPlatformKnowledgeById(
     model.platformInsight?.platformId
   );
+  const solutionIntelligence = analyzeBuildSolution(model);
   const warningCount = model.evaluation.warningCount + model.evaluation.blockingCount;
   const branchCount = data.branches.filter((branch) => branch.id !== projectRow.id).length;
   const slotGroups = (["required", "optional", "solution"] as const).map(
@@ -195,6 +198,11 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
           ))}
 
           <PlatformKnowledgePanel profile={platformProfile} />
+
+          <SolutionIntelligencePanel
+            branchCount={branchCount}
+            report={solutionIntelligence}
+          />
 
           <CompareAgainstJets preview={model.comparePreview} />
 

@@ -14,6 +14,7 @@ flowchart LR
   Inventory["Contextual inventory picker"]
   Validate["Continuous validation"]
   Knowledge["Platform knowledge"]
+  Intelligence["Solution intelligence"]
   Optimize["Optimize build"]
   Branch["Branch scenario"]
   Compare["Compare alternatives"]
@@ -26,7 +27,8 @@ flowchart LR
   Inventory --> Builder
   Builder --> Validate
   Validate --> Knowledge
-  Knowledge --> Optimize
+  Knowledge --> Intelligence
+  Intelligence --> Optimize
   Optimize --> Branch
   Branch --> Compare
   Compare --> Finish
@@ -80,9 +82,10 @@ The project builder uses one progress spine:
 2. Components
 3. Validate
 4. Platform Knowledge
-5. Optimize
-6. Compare
-7. Finish
+5. Solution Intelligence
+6. Optimize
+7. Compare
+8. Finish
 
 Stages unlock naturally:
 
@@ -90,6 +93,8 @@ Stages unlock naturally:
 - Validate becomes meaningful once required slots are filled.
 - Platform Knowledge becomes meaningful when a known base system, chassis, or
   motherboard is selected.
+- Solution Intelligence becomes useful as soon as multiple core components can
+  be reasoned about together.
 - Optimize becomes meaningful after the build has enough hardware context.
 - Compare becomes useful after branches or alternatives exist.
 - Finish requires required slots, validation review, and at least one optimization pass.
@@ -120,6 +125,7 @@ Every empty state should answer the next action:
 - No projects yet: create a project.
 - No components yet: add the first missing slot.
 - No optimization runs yet: optimize this build.
+- No solution reasoning yet: add core components so JETS can explain the build.
 - No branches yet: try another scenario.
 - No activity yet: add a component or note.
 - No saved research yet: open the builder or contextual inventory.
