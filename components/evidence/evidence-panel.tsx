@@ -1,4 +1,5 @@
 import { BookOpenCheck, GitCompare, History, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 
 import { StatusPill } from "@/components/ui/status-pill";
 import {
@@ -148,9 +149,17 @@ export function EvidencePanel({
                 <p className="mt-2 text-sm leading-6 text-muted">
                   {record.supportingText}
                 </p>
-                <p className="mt-2 text-xs text-muted">
-                  {record.sourceTitle} - Added {record.dateAdded} - v{record.version}
-                </p>
+                <div className="mt-2 flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+                  <p>
+                    {record.sourceTitle} - Added {record.dateAdded} - v{record.version}
+                  </p>
+                  <Link
+                    href={`/evidence/${record.id}`}
+                    className="font-semibold text-accent-strong dark:text-accent"
+                  >
+                    Open evidence
+                  </Link>
+                </div>
               </article>
             ))}
           </div>

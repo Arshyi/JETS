@@ -44,6 +44,10 @@ Version 3.1 adds Evidence as the trust boundary after normalization. Parsed
 fields can carry evidence IDs, extraction method, and verification status when
 future providers are connected.
 
+Version 3.2 persists the review infrastructure behind that boundary. Parsed
+marketplace facts can now be linked through `parsed_field_evidence_links` before
+they are allowed to strengthen platform knowledge or recommendation reasoning.
+
 ## Source Adapters
 
 Every future source should become an adapter that produces raw listing input.
@@ -158,6 +162,13 @@ extraction, and manual moderation, but those sources must feed the same shape.
 The Evidence Engine answers a different question from parser confidence. Parser
 confidence says "the text looks like a GPU." Evidence says "where did this claim
 come from, how was it extracted, and has it been verified?"
+
+v3.2 persists that distinction:
+
+- `evidence_records` stores the claim and provenance.
+- `evidence_sources` stores source metadata and trust weight.
+- `parsed_field_evidence_links` connects a normalized listing field path to a reviewable evidence record.
+- `evidence_review_notes` records review actions and reasons.
 
 ## Marketplace Health
 

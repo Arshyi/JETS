@@ -260,7 +260,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 3.1 - Evidence Engine and Knowledge Provenance
 
-- Current.
+- Complete.
 - Add a reusable Evidence model for source type, confidence, extraction method, supporting text, date added, version, and verification status.
 - Support source categories including official documentation, manufacturer specs, service manuals, community discoveries, forums, videos, benchmarks, moderator verification, user submissions, manual research, future AI extraction, future OCR, and future scraper output.
 - Add verification states for unverified, pending review, verified, deprecated, disputed, superseded, and archived.
@@ -270,16 +270,25 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Add Knowledge Quality as a score separate from hardware quality and recommendation score.
 - Do not implement live scraping, marketplace APIs, OCR, image recognition, AI extraction, checkout, moderation queues, or persisted evidence tables.
 
-### Version 3.2 - Persisted Evidence Review and Moderation Foundation
+### Version 3.2 - Persisted Evidence Review
+
+- Current.
+- Persist evidence records, conflicts, community discoveries, and knowledge timeline events.
+- Add SQL tables for evidence records, evidence sources, conflicts, timeline events, review notes, and parsed-field evidence links.
+- Add RLS policies so public verified evidence can be read, signed-in users can submit pending evidence, and moderators can update verification state.
+- Add Evidence Review UI for dashboard, pending queue, detail view, conflict view, and platform evidence history.
+- Add audit trail fields for who submitted, who reviewed, what changed, when, and why.
+- Keep live scraping, AI extraction, OCR, image recognition, checkout, and marketplace APIs deferred.
+
+### Version 3.3 - Evidence-Backed Normalized Listing Persistence
 
 - Recommended next.
-- Persist evidence records, conflicts, community discoveries, and knowledge timeline events.
-- Add moderation and reviewer states before allowing user-submitted or extracted claims to influence recommendations.
-- Add evidence audit views for platforms, parsed fields, and project recommendations.
-- Add parsed-field evidence links from normalized marketplace listings.
-- Add adapter fixture tests so each future source can be validated before it is connected.
-- Add source attribution and removal/takedown workflow before any live ingestion is considered.
-- Keep live scraping, AI extraction, OCR, image recognition, and marketplace APIs deferred until evidence review is stable.
+- Persist normalized marketplace listing candidates with parsed-field evidence links.
+- Add adapter fixture tests for each planned source family.
+- Add source attribution, correction, conflict, and takedown workflows for normalized listing facts.
+- Add a seeded evidence import workflow so representative demo evidence can be loaded into Supabase review tables.
+- Add moderation views for parsed listing facts before any live ingestion is enabled.
+- Keep live scraping, AI extraction, OCR, image recognition, and marketplace APIs deferred until evidence-backed listing persistence is stable.
 
 ## Idea Parking Lot
 

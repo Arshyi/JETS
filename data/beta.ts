@@ -20,7 +20,7 @@ export const betaSetupChecklist = [
   {
     title: "Apply migrations in order",
     description:
-      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, and production hardening SQL migrations in Supabase before testing persistence."
+      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, and v3.2 evidence review SQL migrations in Supabase before testing persistence."
   },
   {
     title: "Create a beta account",
@@ -63,6 +63,11 @@ export const betaDemoWorkflow = [
     title: "Admin dry-run check",
     description:
       "If JETS_ADMIN_EMAILS and SUPABASE_SERVICE_ROLE_KEY are configured, open /admin/ingestion and persist a mock dry-run log."
+  },
+  {
+    title: "Evidence review check",
+    description:
+      "Open /evidence, submit a pending evidence record, then use /evidence/review with admin/service-role setup to change its verification state."
   }
 ] as const;
 
@@ -80,5 +85,6 @@ export const betaSmokeTests = [
   "Vercel production and preview deployments use the expected NEXT_PUBLIC_SITE_URL or NEXT_PUBLIC_VERCEL_URL metadata base.",
   "Supabase Site URL and redirect URLs are configured for local, production, and Vercel preview beta testing.",
   "Sources and admin ingestion remain dry-run only.",
+  "Evidence review shows setup, public records, pending submissions, conflicts, and service-role moderation states.",
   "npm run build and npm run lint -- --max-warnings=0 pass."
 ] as const;

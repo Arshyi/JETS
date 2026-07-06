@@ -1,10 +1,11 @@
 # JETS Evidence Engine
 
-Version 3.1 adds the Evidence Engine foundation.
+Version 3.1 added the Evidence Engine foundation. Version 3.2 moves that
+architecture into database-backed review infrastructure.
 
 This is not live scraping, marketplace APIs, AI extraction, OCR, image
-recognition, checkout, or moderation. It is the trust architecture future
-providers must feed.
+recognition, checkout, or automated moderation. It is the persistence and review
+foundation future providers must feed.
 
 ## Product Rule
 
@@ -26,6 +27,10 @@ Evidence lives in:
 - `data/evidence.ts`
 - `lib/evidence-engine.ts`
 - `components/evidence/evidence-panel.tsx`
+- `lib/supabase/evidence-queries.ts`
+- `lib/supabase/evidence-actions.ts`
+- `components/evidence/evidence-review-ui.tsx`
+- `supabase/migrations/202607060001_v3_2_evidence_review.sql`
 
 Existing systems remain the core of JETS:
 
@@ -40,6 +45,36 @@ Existing systems remain the core of JETS:
 
 The Evidence Engine does not replace them. It attaches provenance, confidence,
 verification state, conflicts, and knowledge quality to the facts they use.
+
+## Persisted Review Schema
+
+v3.2 adds these Supabase tables:
+
+- `evidence_sources`
+- `evidence_records`
+- `evidence_conflicts`
+- `evidence_timeline_events`
+- `evidence_review_notes`
+- `parsed_field_evidence_links`
+
+The schema records:
+
+- who submitted evidence
+- who reviewed evidence
+- what changed
+- when it changed
+- why it changed
+- source type
+- confidence
+- extraction method
+- supporting text
+- verification status
+- parsed field links
+- conflict state
+- platform timeline events
+
+The static demo evidence still exists as a fallback. Persisted rows take
+priority, and demo rows remain visible until equivalent database rows exist.
 
 ## Evidence Model
 
@@ -112,6 +147,28 @@ Every evidence record supports:
 The UI displays status beside confidence. This prevents JETS from treating a
 verified service-manual claim and a future scraper candidate as equal.
 
+## RLS And Review Rules
+
+The v3.2 migration adds RLS policies:
+
+- anyone can read public reviewed evidence
+- signed-in users can submit pending evidence records and sources
+- signed-in users can read their own pending submissions
+- moderators can update sources, records, conflicts, timeline events, and parsed-field links
+- review notes preserve the audit trail
+
+Supabase RLS can recognize moderators through JWT metadata roles:
+
+```text
+app_metadata.role = admin | moderator
+user_metadata.role = admin | moderator
+app_metadata.roles contains admin | moderator
+```
+
+The app also supports the existing server-side `JETS_ADMIN_EMAILS` allowlist.
+When that allowlist is used, moderation writes require
+`SUPABASE_SERVICE_ROLE_KEY` and are gated by server actions.
+
 ## Provenance
 
 Platform Knowledge now exposes evidence summaries and expandable Evidence
@@ -135,6 +192,14 @@ Source type: community discovery / manual research
 Every displayed platform knowledge card, constraint, upgrade opportunity, and
 adapter recommendation can show its evidence state. Items without dedicated
 records fall back to "pending review" instead of pretending to be verified.
+
+Evidence review UI now lives at:
+
+- `/evidence`
+- `/evidence/review`
+- `/evidence/conflicts`
+- `/evidence/[recordId]`
+- `/evidence/platforms/[platformId]`
 
 ## Conflict Model
 
@@ -223,7 +288,7 @@ Bad:
 
 ## Current Boundaries
 
-v3.1 does not implement:
+v3.2 does not implement:
 
 - live scraping
 - marketplace APIs
@@ -231,28 +296,28 @@ v3.1 does not implement:
 - OCR
 - image recognition
 - checkout
-- moderation queues
-- persisted evidence tables
-- source documents
-- user-submitted evidence
+- automated moderation
+- source document storage
+- bulk evidence import
+- persisted normalized marketplace listings
+- automatic promotion of evidence into platform knowledge
 
-The current value is architectural. JETS now has a trust layer that can answer
-"why do we believe this?" before the system starts ingesting noisier real-world
+The current value is review infrastructure. JETS can now persist, inspect, and
+moderate evidence records before the system starts ingesting noisier real-world
 data.
 
-## Recommended v3.2
+## Recommended v3.3
 
-Build persisted evidence review:
+Build evidence-backed normalized listing persistence:
 
-- SQL tables for evidence records
-- SQL tables for conflicts
-- SQL tables for community discoveries
-- SQL tables for knowledge timeline
-- RLS policies
-- moderator review states
-- evidence edit history
-- parsed-field evidence links from normalized listings
-- project and platform evidence audit views
+- persisted normalized marketplace listing candidates
+- adapter fixture tests
+- parsed-field evidence link generation
+- evidence seeding workflow for demo records
+- source attribution and correction workflow
+- conflict review for listing facts
+- removal/takedown workflow
+- moderation queue for parsed marketplace facts
 
-Still do not add AI or live scraping until evidence persistence and review are
-stable.
+Still do not add AI or live scraping until evidence-backed listing persistence
+and review are stable.

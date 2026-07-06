@@ -84,6 +84,12 @@ export const workspaceNav: NavItem[] = [
     status: "v0.9"
   },
   {
+    title: "Evidence Review",
+    href: "/evidence",
+    description: "Provenance, verification, conflicts, and moderation state for JETS knowledge claims.",
+    status: "v3.2"
+  },
+  {
     title: "Post-Auth Onboarding",
     href: "/onboarding",
     description: "Signed-in first-run page for creating the first hardware project and testing persistence.",

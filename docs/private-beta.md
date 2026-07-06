@@ -37,8 +37,8 @@ Before a beta session:
 3. Add `NEXT_PUBLIC_VERCEL_URL` only if using it as an explicit preview URL fallback.
 4. Add `NEXT_PUBLIC_SUPABASE_URL` to `.env.local` or Vercel Project Settings.
 5. Add `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local` or Vercel Project Settings.
-6. Add `SUPABASE_SERVICE_ROLE_KEY` only if testing admin ingestion persistence.
-7. Add `JETS_ADMIN_EMAILS` only if testing `/admin/ingestion`.
+6. Add `SUPABASE_SERVICE_ROLE_KEY` only if testing admin ingestion persistence or evidence moderation.
+7. Add `JETS_ADMIN_EMAILS` only if testing `/admin/ingestion` or `/evidence/review`.
 8. Configure Supabase Auth URL settings:
    - Site URL: production Vercel or custom-domain URL.
    - Local redirect allow-list: `http://localhost:3000/**`.
@@ -55,6 +55,7 @@ Before a beta session:
    - `202607030012_v2_2_optimization_engine.sql`
    - `202607030013_v2_3_project_branching.sql`
    - `202607030014_production_schema_hardening.sql`
+   - `202607060001_v3_2_evidence_review.sql`
 10. Run `npm run build`.
 11. Run `npm run lint -- --max-warnings=0`.
 
@@ -116,6 +117,7 @@ Run this checklist before sharing a beta build:
 - Activity shows a project-first empty state before data exists.
 - Sources page shows local dry-run data without live requests.
 - Admin ingestion handles signed-out, unauthorized, missing service role, and empty run-log states.
+- Evidence review handles setup, signed-out, public verified reads, pending submissions, conflicts, and missing service role states.
 - Vercel production and preview deployments show the expected metadata origin.
 - Supabase Site URL and redirect URL allow-list entries match the beta deployment URLs.
 - Build Generator saves a snapshot when signed in.

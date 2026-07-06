@@ -26,34 +26,40 @@ export const evidenceVerificationStatuses = [
   "archived"
 ] as const;
 
+export const evidenceConfidenceLevels = ["low", "medium", "high", "very-high"] as const;
+
+export const evidenceExtractionMethods = [
+  "manual-curation",
+  "deterministic-parser",
+  "structured-spec-entry",
+  "community-report",
+  "moderator-review",
+  "csv-import",
+  "api-import",
+  "future-ai-extraction",
+  "future-ocr",
+  "future-scraper"
+] as const;
+
+export const evidenceSubjectTypes = [
+  "platform-profile",
+  "platform-specification",
+  "platform-constraint",
+  "platform-knowledge-card",
+  "upgrade-opportunity",
+  "adapter-intelligence",
+  "marketplace-parsed-field",
+  "solution-intelligence-finding",
+  "compatibility-rule",
+  "community-discovery"
+] as const;
+
 export type EvidenceSourceType = (typeof evidenceSourceTypes)[number];
 export type EvidenceVerificationStatus =
   (typeof evidenceVerificationStatuses)[number];
-export type EvidenceConfidence = "low" | "medium" | "high" | "very-high";
-
-export type EvidenceExtractionMethod =
-  | "manual-curation"
-  | "deterministic-parser"
-  | "structured-spec-entry"
-  | "community-report"
-  | "moderator-review"
-  | "csv-import"
-  | "api-import"
-  | "future-ai-extraction"
-  | "future-ocr"
-  | "future-scraper";
-
-export type EvidenceSubjectType =
-  | "platform-profile"
-  | "platform-specification"
-  | "platform-constraint"
-  | "platform-knowledge-card"
-  | "upgrade-opportunity"
-  | "adapter-intelligence"
-  | "marketplace-parsed-field"
-  | "solution-intelligence-finding"
-  | "compatibility-rule"
-  | "community-discovery";
+export type EvidenceConfidence = (typeof evidenceConfidenceLevels)[number];
+export type EvidenceExtractionMethod = (typeof evidenceExtractionMethods)[number];
+export type EvidenceSubjectType = (typeof evidenceSubjectTypes)[number];
 
 export type EvidenceSourceTrust = {
   description: string;

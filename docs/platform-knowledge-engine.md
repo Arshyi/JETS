@@ -60,6 +60,10 @@ now show provenance, confidence, verification status, conflicting claims,
 community discoveries, Knowledge Quality, and knowledge history without changing
 the underlying platform model.
 
+Version 3.2 persists evidence review state. Platform records can now link to
+database-backed evidence records, review notes, conflicts, and timeline events
+through the `/evidence` workspace.
+
 ## Separation Of Concerns
 
 Specifications are stable-ish facts:

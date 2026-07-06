@@ -27,7 +27,8 @@ const migrations = [
   "202607030011_v2_1_build_projects.sql",
   "202607030012_v2_2_optimization_engine.sql",
   "202607030013_v2_3_project_branching.sql",
-  "202607030014_production_schema_hardening.sql"
+  "202607030014_production_schema_hardening.sql",
+  "202607060001_v3_2_evidence_review.sql"
 ];
 
 const envRows = [
@@ -54,12 +55,12 @@ const envRows = [
   {
     name: "SUPABASE_SERVICE_ROLE_KEY",
     status: isSupabaseServiceRoleConfigured ? "Set" : "Optional",
-    description: "Required only for admin ingestion persistence."
+    description: "Required for admin ingestion persistence and evidence review moderation."
   },
   {
     name: "JETS_ADMIN_EMAILS",
     status: process.env.JETS_ADMIN_EMAILS ? "Set" : "Optional",
-    description: "Comma-separated admin allowlist for /admin/ingestion."
+    description: "Comma-separated admin allowlist for /admin/ingestion and /evidence/review."
   }
 ];
 

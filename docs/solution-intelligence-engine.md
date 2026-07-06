@@ -54,6 +54,10 @@ Intelligence findings can reference evidence IDs through their confidence
 signals, and the panel can show why the deterministic reasoning should be
 trusted.
 
+Version 3.2 adds persisted evidence review. Solution Intelligence claims can now
+point users from an explanation to `/evidence/[recordId]` for provenance,
+verification status, review notes, and conflicts.
+
 ## Reasoning Engine
 
 The report includes:

@@ -33,8 +33,9 @@ npm run lint
 - **2.5:** Platform Knowledge Engine. Complete.
 - **2.6:** Solution Intelligence Engine. Complete.
 - **3.0:** Marketplace Intelligence Layer. Complete.
-- **3.1:** Evidence Engine and knowledge provenance. Current.
-- **3.2:** Persisted evidence review, conflicts, and moderation workflow. Recommended next.
+- **3.1:** Evidence Engine and knowledge provenance. Complete.
+- **3.2:** Persisted evidence review, conflicts, and moderation workflow. Current.
+- **3.3:** Evidence-backed normalized listing persistence and adapter fixtures. Recommended next.
 
 ## Primary Workflow
 
@@ -242,6 +243,16 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/evidence-engine.md`.
 - v3.1 does not implement live scraping, marketplace APIs, AI extraction, OCR, image recognition, checkout, moderation queues, or persisted evidence tables.
 
+## Version 3.2 Notes
+
+- SQL migration lives in `supabase/migrations/202607060001_v3_2_evidence_review.sql`.
+- Evidence review database tables include `evidence_records`, `evidence_sources`, `evidence_conflicts`, `evidence_timeline_events`, `evidence_review_notes`, and `parsed_field_evidence_links`.
+- Evidence review queries live in `lib/supabase/evidence-queries.ts`.
+- Evidence submission and moderation actions live in `lib/supabase/evidence-actions.ts`.
+- Evidence dashboard routes are available at `/evidence`, `/evidence/review`, `/evidence/conflicts`, `/evidence/[recordId]`, and `/evidence/platforms/[platformId]`.
+- Signed-in users can submit pending evidence records. Admin-allowed reviewers can update verification state when `SUPABASE_SERVICE_ROLE_KEY` is configured.
+- v3.2 does not implement live scraping, marketplace APIs, AI extraction, OCR, image recognition, checkout, or automated source ingestion.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -272,8 +283,8 @@ Copy `.env.example` to `.env.local` and configure these values for local or Verc
 | `NEXT_PUBLIC_VERCEL_URL` | Optional preview host fallback when `NEXT_PUBLIC_SITE_URL` is not set. | No | Public | `jets-git-main-your-team.vercel.app` | `config/site.ts`, `lib/supabase/auth-redirect.ts` |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL for auth and persistence clients. | Yes for Supabase features | Public | `https://your-project-ref.supabase.co` | `lib/supabase/config.ts`, Supabase clients, `/beta/setup` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key for user-scoped auth and RLS-protected database access. | Yes for Supabase features | Public | `eyJ...` | `lib/supabase/config.ts`, Supabase clients, `/beta/setup` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only key for admin ingestion dry-run persistence. | Only for admin ingestion persistence | Secret | `eyJ...` | `lib/supabase/service-role.ts`, `/admin/ingestion`, `/beta/setup` |
-| `JETS_ADMIN_EMAILS` | Comma-separated allowlist for admin ingestion access. | Only for admin ingestion access | Secret/server-only | `admin@example.com` | `lib/supabase/admin.ts`, `/admin/ingestion`, `/beta/setup` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only key for admin ingestion dry-run persistence and evidence moderation actions. | Only for admin ingestion/evidence moderation | Secret | `eyJ...` | `lib/supabase/service-role.ts`, `/admin/ingestion`, `/evidence/review`, `/beta/setup` |
+| `JETS_ADMIN_EMAILS` | Comma-separated allowlist for admin ingestion and evidence review access. | Only for admin ingestion/evidence moderation | Secret/server-only | `admin@example.com` | `lib/supabase/admin.ts`, `/admin/ingestion`, `/evidence/review`, `/beta/setup` |
 
 Then run the SQL migrations in Supabase before using persistence features. If Supabase variables are missing, static mock workflows still build and show setup guidance instead of failing.
 
@@ -287,6 +298,7 @@ Apply these Supabase migrations in order:
 6. `202607030012_v2_2_optimization_engine.sql`
 7. `202607030013_v2_3_project_branching.sql`
 8. `202607030014_production_schema_hardening.sql`
+9. `202607060001_v3_2_evidence_review.sql`
 
 ## Vercel Deployment
 
@@ -303,8 +315,8 @@ Configure these environment variables in Vercel Project Settings before promotin
 - `NEXT_PUBLIC_VERCEL_URL`: optional preview origin fallback if explicitly configured.
 - `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL.
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anon key.
-- `SUPABASE_SERVICE_ROLE_KEY`: optional server-only key for admin ingestion dry-run persistence.
-- `JETS_ADMIN_EMAILS`: optional comma-separated allowlist for `/admin/ingestion`.
+- `SUPABASE_SERVICE_ROLE_KEY`: optional server-only key for admin ingestion dry-run persistence and evidence moderation.
+- `JETS_ADMIN_EMAILS`: optional comma-separated allowlist for `/admin/ingestion` and `/evidence/review`.
 
 In Supabase Auth URL Configuration, set the Site URL to the production Vercel or custom-domain URL. Add redirect URL allow-list entries for local development, the production domain, and Vercel preview deployments, for example:
 
@@ -321,4 +333,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v3.1 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, and Supabase-backed user persistence only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, and user-submitted data should feed Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through v3.2 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, and user-submitted data should feed Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.

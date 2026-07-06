@@ -385,27 +385,25 @@ knowledge. It attaches source type, confidence, extraction method, supporting
 text, date added, version, verification status, conflicts, community
 discoveries, knowledge timeline, and Knowledge Quality to important facts.
 
+v3.2 persists evidence review through Supabase tables, RLS policies, review
+notes, parsed-field evidence links, and `/evidence` review routes.
+
 Future AI, OCR, scraper, CSV, API, and user-submitted claims should become
 evidence candidates. They should not mutate Platform Knowledge, Solution
 Intelligence, Optimization, or Recommendations directly.
 
-## v3.2 Recommendation
+## v3.3 Recommendation
 
-The next milestone should make Marketplace Intelligence durable and reviewable
-before adding live sources, AI extraction, or scraping.
+The next milestone should make normalized marketplace listings durable and
+evidence-backed before adding live sources, AI extraction, or scraping.
 
 Build:
 
-- persisted evidence records
-- persisted conflicts
-- persisted community discoveries
-- persisted knowledge timeline
-- moderator review state
-- evidence edit history
 - normalized listing persistence
 - raw source references and source attribution
-- parsed-field evidence records
+- parsed-field evidence link generation
 - adapter fixture tests
+- seeded evidence import workflow
 - moderation and correction workflow
 - conflict handling when sources disagree
 - source-specific compliance reviews
