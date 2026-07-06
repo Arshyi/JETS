@@ -30,6 +30,8 @@ Evidence is the trust layer. Every important conclusion should be able to answer
 
 Listing Intelligence is the bridge between raw marketplace input and trusted evidence. JETS should understand an individual listing as an engineering object: raw text, parsed fields, human corrections, duplicate risk, health, recommendation readiness, and future ingestion hooks.
 
+Validation is the quality layer. Before real marketplace data arrives, every deterministic engine should be regression-testable against golden hardware scenarios so JETS does not become overconfident or drift away from known hardware truths.
+
 The near-term user journey should feel continuous:
 
 Home -> Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
@@ -295,7 +297,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 3.4 - Importer Fixture and Listing Seeding Layer
 
-- Current.
+- Complete.
 - Add deterministic importer fixture system with fixture source type, validation, parsing, import result, and error reporting.
 - Add admin-only dry-run and seed-import action for representative demo/manual listings.
 - Persist importer fixture run summaries and item-level results.
@@ -304,14 +306,24 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Validate missing title, missing price, unsupported marketplace, invalid currency, low-confidence platform detection, and duplicate external ID.
 - Keep live scraping, browser automation, marketplace APIs, AI extraction, OCR, and checkout deferred.
 
-### Version 3.5 - Source Fixture Coverage and Listing Governance
+### Version 3.5 - Hardware Knowledge Validation Framework
+
+- Current.
+- Add golden hardware scenario packs for ThinkStation P510, OptiPlex 7060, Precision 5820, HP Z440, gaming build, AI workstation, engineering workstation, budget office PC, broken listing, unknown listing, low-confidence listing, and duplicate listing.
+- Run Marketplace Intelligence, Listing Intelligence, Evidence linkage, Platform Knowledge, Solution Intelligence, Optimization, Compatibility, and Builder validation through one repeatable suite.
+- Generate Markdown and HTML validation reports.
+- Track rule coverage and confidence regression.
+- Warn when platform knowledge is incomplete instead of hiding evidence gaps.
+- Keep live scraping, browser automation, marketplace APIs, AI extraction, OCR, and checkout deferred.
+
+### Version 3.6 - Manual Capture and Browser Extension Foundation
 
 - Recommended next.
-- Add source-specific fixture suites for Dubizzle, Facebook Marketplace, eBay, Kijiji, Craigslist, local store CSV, and manual entry.
-- Add takedown/removal workflow for listing records and evidence.
-- Add conflict review for listing facts across sources.
-- Add importer regression tests for parser aliases, confidence, duplicate detection, and evidence generation.
-- Keep live ingestion deferred until source-specific fixtures prove stable.
+- Let users manually capture or paste a listing into JETS.
+- Feed user-provided title, description, price, URL, source, and notes into Marketplace Intelligence.
+- Require Listing Intelligence and Evidence review before captured listings affect projects.
+- Consider a browser extension only as user-initiated capture, not scraping.
+- Continue deferring marketplace APIs, AI extraction, OCR, checkout, and autonomous scraping.
 
 ## Idea Parking Lot
 
@@ -343,6 +355,10 @@ Ideas below are valuable, but they are not current milestone scope.
 - Persisted solution intelligence reports
 - Branch intelligence score deltas
 - Marketplace adapter fixture tests
+- Hardware validation scenario packs
+- Golden output regression reports
+- Manual listing capture
+- Browser extension for user-initiated capture
 - Normalized listing moderation workflow
 - Parsed-field evidence links
 - User correction workflow for marketplace facts

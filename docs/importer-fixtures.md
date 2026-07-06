@@ -199,16 +199,30 @@ v3.4 does not implement:
 - automatic project creation
 - automatic duplicate merging
 
-## Recommended v3.5
+## v3.5 Validation Framework
 
-Add source-specific fixture coverage and listing governance:
+v3.5 promotes importer fixtures into a broader Hardware Knowledge Validation
+Framework. The validation suite checks importer validation error coverage
+alongside Marketplace Intelligence, Listing Intelligence, Evidence, Platform
+Knowledge, Solution Intelligence, Optimization, Compatibility, and Builder
+behavior.
 
-- fixture suites per planned source family
-- importer regression tests
-- takedown/removal workflow
-- conflict review for listing facts across sources
-- duplicate merge preview without automatic merge
-- seeded source attribution checks
+Run:
+
+```bash
+npm run validate:hardware
+```
+
+## Recommended v3.6
+
+Add user-initiated manual capture before live scraping:
+
+- manual capture form for title, description, price, source, URL, and notes
+- fixture-backed validation before saving captured rows
+- Listing Intelligence review for every captured listing
+- source attribution and user-submitted evidence
+- duplicate review before project use
+- optional browser extension foundation later
 
 Live ingestion should wait until fixture coverage proves the review pipeline is
 stable.

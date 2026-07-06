@@ -11,6 +11,7 @@ npm install
 npm run dev
 npm run build
 npm run lint
+npm run validate:hardware
 ```
 
 ## Version Plan
@@ -36,8 +37,9 @@ npm run lint
 - **3.1:** Evidence Engine and knowledge provenance. Complete.
 - **3.2:** Persisted evidence review, conflicts, and moderation workflow. Complete.
 - **3.3:** Listing Intelligence and human review. Complete.
-- **3.4:** Importer fixtures and listing seeding. Current.
-- **3.5:** Source-specific importer fixtures and takedown/conflict workflow. Recommended next.
+- **3.4:** Importer fixtures and listing seeding. Complete.
+- **3.5:** Hardware Knowledge Validation Framework. Current.
+- **3.6:** User-initiated manual capture and browser-extension foundation. Recommended next.
 
 ## Primary Workflow
 
@@ -277,6 +279,18 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Seed imports create/update Listing Intelligence records, parsed fields, evidence records, parsed-field evidence links, duplicate candidates, and importer run logs.
 - v3.4 does not implement live scraping, browser automation, marketplace APIs, AI extraction, OCR, checkout, or automatic project creation.
 
+## Version 3.5 Notes
+
+- Hardware validation types live in `types/validation-framework.ts`.
+- Golden hardware scenarios live in `data/validation/hardware-scenarios.ts`.
+- The validation engine and report renderers live in `lib/validation-framework/engine.ts`.
+- The validation command is `npm run validate:hardware`.
+- Reports are generated at `docs/generated/hardware-validation-report.md` and `docs/generated/hardware-validation-report.html`.
+- The suite exercises Marketplace Intelligence, Listing Intelligence, Evidence linkage, Platform Knowledge, Solution Intelligence, Optimization, Compatibility fixtures, and Builder validation.
+- The first scenario pack covers ThinkStation P510, OptiPlex 7060, Precision 5820, HP Z440, gaming build, AI workstation, engineering workstation, budget office PC, broken listing, unknown listing, low-confidence listing, and duplicate listing.
+- Documentation lives in `docs/validation-framework.md`.
+- v3.5 does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, or production ingestion.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -359,4 +373,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v3.4 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through v3.5 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.

@@ -58,6 +58,11 @@ snapshots used to validate parser behavior, seed Listing Intelligence into
 Supabase, generate parsed-field evidence, and record duplicate decisions without
 building live ingestion.
 
+Version 3.5 adds the Hardware Knowledge Validation Framework. Marketplace
+normalization, platform detection, listing readiness, parsed-field evidence,
+platform knowledge, solution intelligence, optimization, compatibility, and
+builder validation now run against golden hardware scenarios.
+
 ## Source Adapters
 
 Every future source should become an adapter that produces raw listing input.
@@ -309,17 +314,39 @@ Fixture Row
 -> Listing Review
 ```
 
+The validation suite shows:
+
+```text
+Golden Scenario
+-> Marketplace Normalization
+-> Listing Intelligence
+-> Evidence Linkage
+-> Platform Knowledge
+-> Solution Intelligence
+-> Optimization
+-> Validation Report
+```
+
+Run it with:
+
+```bash
+npm run validate:hardware
+```
+
 ## Future Work
 
 Before live ingestion:
 
+- add user-initiated manual capture
 - add source-specific policy reviews
-- add adapter fixture tests
+- add adapter and source fixture tests
 - add source attribution and takedown workflow
 - add conflict handling between sources
 - add evidence links for platform claims
 - add source-specific importer regression tests
 - add duplicate merge preview
 
-Only after those foundations should JETS consider APIs, browser extension
-capture, OCR, image recognition, LLM extraction, or carefully approved scraping.
+Only after those foundations should JETS consider marketplace APIs, OCR, image
+recognition, LLM extraction, or carefully approved scraping. A browser extension
+should start as user-initiated capture that feeds the same Listing Intelligence
+and Evidence pipeline.

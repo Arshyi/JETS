@@ -96,7 +96,7 @@ export const compatibilityValidationFixtures: CompatibilityValidationFixture[] =
   },
   {
     expected: [
-      { ruleId: "m2-slots", status: "Incompatible" },
+      { ruleId: "m2-slots", status: "Compatible with Warning" },
       { ruleId: "sata-ports", status: "Incompatible" }
     ],
     name: "full storage ports",

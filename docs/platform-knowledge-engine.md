@@ -64,6 +64,11 @@ Version 3.2 persists evidence review state. Platform records can now link to
 database-backed evidence records, review notes, conflicts, and timeline events
 through the `/evidence` workspace.
 
+Version 3.5 adds platform knowledge validation. Every platform profile is now
+checked by the hardware validation suite for constraints, opportunities,
+timeline, adapter paths, community knowledge cards, Platform Potential,
+evidence coverage, and Knowledge Quality warnings.
+
 ## Separation Of Concerns
 
 Specifications are stable-ish facts:
@@ -219,6 +224,23 @@ The v2.5 registry includes representative demo knowledge for:
 This data is intentionally representative, not authoritative. Before live use,
 knowledge records need sourcing, review, confidence history, and correction
 workflow.
+
+## Validation
+
+Run:
+
+```bash
+npm run validate:hardware
+```
+
+The validation framework checks that known scenarios still resolve to expected
+platform IDs and platform constraints. For example, ThinkStation P510 should
+continue surfacing the PCIe NVMe adapter opportunity, while OptiPlex 7060 SFF
+should continue warning about low-profile expansion and proprietary PSU limits.
+
+Incomplete platform evidence is reported as a warning, not hidden. This is
+intentional: Platform Potential answers how useful the hardware can be, while
+Knowledge Quality answers how well JETS has proven its claims.
 
 ## Future Scraping And AI Hooks
 

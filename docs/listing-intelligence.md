@@ -296,16 +296,28 @@ The value of v3.3 was the review contract. The value of v3.4 is controlled
 seeding into that contract. Once real producers arrive, they should behave like
 fixture producers first.
 
-## Recommended v3.5
+## v3.5 Validation Framework
 
-Build source-specific fixture coverage and listing governance:
+v3.5 adds a Hardware Knowledge Validation Framework around Listing
+Intelligence and the surrounding deterministic engines.
 
-- deterministic fixture tests for each planned source family
-- parser regression coverage
-- source attribution and takedown workflow
-- conflict review for listing facts
-- duplicate merge preview without automatic merge
-- seeded source evidence checks
+The validation suite verifies that known listing scenarios still produce the
+expected:
 
-Still do not add live scraping or AI until source-specific fixtures prove the
-review, correction, evidence, and duplicate flows are stable.
+- platform detection
+- parsed fields
+- evidence linkage
+- duplicate candidates
+- Recommendation Readiness
+- confidence levels
+- solution paths
+
+Run:
+
+```bash
+npm run validate:hardware
+```
+
+The next ingestion milestone should be user-initiated manual capture, not live
+scraping. Captured listings should enter Listing Intelligence as reviewable
+records before they influence projects or recommendations.

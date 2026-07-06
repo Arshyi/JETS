@@ -443,6 +443,19 @@ function buildPossibleFutures(
   const text = `${raw.title} ${raw.description} ${raw.categoryLabel}`;
   const futures: MarketplaceUpgradePathway[] = [];
 
+  if (["for parts", "no boot", "water damage", "broken", "fault"].some((term) => textIncludes(text, term))) {
+    return [
+      {
+        confidence: "low",
+        description:
+          "Repair-risk listings must be reviewed for fault scope, replacement parts, and negotiation upside before they become a recommendation.",
+        linksInto: "solution-intelligence",
+        targetUseCase: "general",
+        title: "Repair-risk Listing Review"
+      }
+    ];
+  }
+
   if (platformId) {
     futures.push({
       confidence: "high",

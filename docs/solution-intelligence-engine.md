@@ -58,6 +58,11 @@ Version 3.2 adds persisted evidence review. Solution Intelligence claims can now
 point users from an explanation to `/evidence/[recordId]` for provenance,
 verification status, review notes, and conflicts.
 
+Version 3.5 adds regression validation around Solution Intelligence. Known
+hardware scenarios now verify that expected reasoning findings, bottlenecks,
+solution paths, optimization behavior, and confidence levels do not change
+silently.
+
 ## Reasoning Engine
 
 The report includes:
@@ -292,3 +297,27 @@ v2.6 is intentionally conservative:
 
 The value is the new reasoning architecture. JETS can now explain complete
 systems instead of only displaying hardware facts.
+
+## Validation
+
+Run:
+
+```bash
+npm run validate:hardware
+```
+
+The validation suite exercises Solution Intelligence through project-backed
+scenarios such as gaming builds, AI workstations, engineering workstations,
+budget office PCs, and OptiPlex SFF constraint cases.
+
+Golden outputs include expected reasoning signals such as:
+
+- platform context is active
+- GPU and PSU are reasoned together
+- missing cooler or power path is visible
+- repair-risk listings do not become recommendation-ready
+- optimization suggestions remain routed through the deterministic pipeline
+
+If a reasoning rule changes intentionally, update the scenario expectation with
+the rule change. If it changes accidentally, treat the validation failure as a
+product-quality bug.
