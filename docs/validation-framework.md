@@ -243,9 +243,9 @@ v3.5 does not implement:
 - automated marketplace capture
 - production benchmark databases
 
-## Recommended v3.6
+## v4.0 Acquisition Follow-Up
 
-Build user-initiated manual capture before scraping.
+v4.0 builds user-initiated manual capture before scraping.
 
 The next useful milestone should let a user capture or paste a listing into
 JETS and run it through the validated pipeline:
@@ -265,3 +265,8 @@ can be a manual capture page: title, description, price, URL, source, and notes.
 
 That keeps JETS legally and architecturally conservative while moving closer to
 real use.
+
+## Recommended v4.1
+
+Persist acquisition records and project links after the manual capture workflow
+is tested by real users. Keep scraping, AI, OCR, and marketplace APIs deferred.

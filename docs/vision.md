@@ -2,7 +2,7 @@
 
 JETS means Just Enough Tech Solutions.
 
-The product is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths. It is not an e-commerce store. It should help people solve a hardware problem by weighing price, performance, reliability, compatibility, upgrade path, seller risk, repairability, difficulty, owned hardware, and practical constraints.
+The product is a Hardware Solution Builder and Acquisition Advisor for used PCs, laptops, workstations, servers, components, and adapter-based solution paths. It is not an e-commerce store. It should help people solve a hardware problem by weighing price, performance, reliability, compatibility, upgrade path, seller risk, repairability, difficulty, owned hardware, and practical constraints.
 
 ## Product Shape
 
@@ -18,6 +18,8 @@ Inventory must not look like a flat marketplace where GPUs, laptops, sleeper bas
 
 JETS currently uses mock/demo inventory. Live ingestion and scraping are planned but not active.
 
+Acquisition is the Phase 4 front door. Users should be able to capture hardware they found in the real world, manually enter listing facts, review what JETS can infer, correct missing fields as evidence, compare purchase candidates, and then create a project only when the hardware is worth pursuing.
+
 Optimization is the differentiator. The long-term workflow should become Build -> Analyze -> Optimize -> Branch -> Compare, where JETS searches solution paths people would not normally consider while still explaining every tradeoff.
 
 Platform knowledge is the moat. JETS should know the quirks, hidden upgrade paths, adapter tricks, PCIe tradeoffs, and community discoveries that make one used platform much more useful than another similarly priced machine.
@@ -32,9 +34,13 @@ Listing Intelligence is the bridge between raw marketplace input and trusted evi
 
 Validation is the quality layer. Before real marketplace data arrives, every deterministic engine should be regression-testable against golden hardware scenarios so JETS does not become overconfident or drift away from known hardware truths.
 
-The near-term user journey should feel continuous:
+The near-term acquisition journey should feel continuous:
 
-Home -> Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
+Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Create Project.
+
+The project journey remains:
+
+Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
 
 Inventory should usually appear from inside a builder slot, not as a place users manually browse first.
 
@@ -308,7 +314,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 3.5 - Hardware Knowledge Validation Framework
 
-- Current.
+- Complete.
 - Add golden hardware scenario packs for ThinkStation P510, OptiPlex 7060, Precision 5820, HP Z440, gaming build, AI workstation, engineering workstation, budget office PC, broken listing, unknown listing, low-confidence listing, and duplicate listing.
 - Run Marketplace Intelligence, Listing Intelligence, Evidence linkage, Platform Knowledge, Solution Intelligence, Optimization, Compatibility, and Builder validation through one repeatable suite.
 - Generate Markdown and HTML validation reports.
@@ -316,14 +322,26 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Warn when platform knowledge is incomplete instead of hiding evidence gaps.
 - Keep live scraping, browser automation, marketplace APIs, AI extraction, OCR, and checkout deferred.
 
-### Version 3.6 - Manual Capture and Browser Extension Foundation
+### Version 4.0 - Manual Acquisition Workflow
+
+- Current.
+- Add `/acquire` as the first-class manual listing capture workspace.
+- Let users enter marketplace, URL, title, description, price, currency, location, condition, seller notes, placeholder image count, and personal notes.
+- Show raw listing, parsed fields, detected platform, confidence, evidence, missing information, Recommendation Readiness, and recommendation preview before saving.
+- Let users correct CPU, GPU, RAM, platform, price, and storage; corrections become user-submitted evidence.
+- Add decisions: Analyze only, Save Listing, Create Build Project, Ignore Listing, Archive, Purchased, and Rejected.
+- Compare saved acquisitions as purchase candidates before they become build projects.
+- Offer project handoff paths for Engineering, Gaming, AI Workstation, Home Server, and existing projects.
+- Store acquisitions locally for v4.0 while preserving a clean path toward Supabase persistence.
+- Keep live scraping, browser automation, marketplace APIs, AI extraction, OCR, and checkout deferred.
+
+### Version 4.1 - Persisted Acquisition Records
 
 - Recommended next.
-- Let users manually capture or paste a listing into JETS.
-- Feed user-provided title, description, price, URL, source, and notes into Marketplace Intelligence.
-- Require Listing Intelligence and Evidence review before captured listings affect projects.
-- Consider a browser extension only as user-initiated capture, not scraping.
-- Continue deferring marketplace APIs, AI extraction, OCR, checkout, and autonomous scraping.
+- Persist acquisition records, corrections, personal notes, decisions, comparison state, and project links in Supabase.
+- Add acquisition history to Account.
+- Add cross-device access for saved purchase candidates.
+- Keep browser extension and live ingestion deferred until persisted manual acquisition is stable.
 
 ## Idea Parking Lot
 
@@ -359,6 +377,8 @@ Ideas below are valuable, but they are not current milestone scope.
 - Golden output regression reports
 - Manual listing capture
 - Browser extension for user-initiated capture
+- Acquisition records and purchase comparison
+- Acquisition-to-project handoff history
 - Normalized listing moderation workflow
 - Parsed-field evidence links
 - User correction workflow for marketplace facts

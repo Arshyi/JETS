@@ -4,9 +4,9 @@ import { HomeGoalGrid } from "@/components/marketing/home-goal-grid";
 import { getBuildProjects } from "@/lib/supabase/queries";
 
 export const metadata: Metadata = {
-  title: "What Are You Trying To Build?",
+  title: "What Hardware Are You Evaluating?",
   description:
-    "JETS starts with a hardware goal, creates a project, and guides users through builder, inventory, validation, optimization, branches, and final review."
+    "JETS helps users capture hardware listings, normalize facts, review evidence, and turn promising acquisitions into project-centered builds."
 };
 
 export default async function HomePage() {
@@ -29,15 +29,16 @@ export default async function HomePage() {
               Workflow discipline
             </p>
             <h2 className="mt-3 text-3xl font-bold">
-              Inventory appears when the builder needs hardware.
+              Acquisition is now the front door.
             </h2>
           </div>
           <div className="rounded-lg border border-border bg-panel p-6">
             <p className="text-base leading-8 text-muted">
-              JETS currently uses mock/demo inventory. Live ingestion and
-              scraping are planned but not active. The primary workflow is:
-              project, components, validation, optimization, branches,
-              comparison, and finished solution.
+              JETS currently uses manual capture, mock/demo inventory, and
+              deterministic validation. Live ingestion and scraping are not
+              active. The practical loop is: capture a listing, normalize it,
+              verify evidence, reason about the platform, then create or update
+              a project only when the hardware is worth pursuing.
             </p>
           </div>
         </div>

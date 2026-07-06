@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths.
 
-JETS is now project-centered. The primary experience is: choose a goal, create a project, fill slots through contextual inventory, validate the build, optimize, branch or compare scenarios, then review a finished solution. Phase 3 adds Marketplace Intelligence and Evidence as the feeder architecture that will eventually transform real-world listings into trustworthy normalized hardware evidence for those workflows.
+JETS is now acquisition-centered and project-backed. The practical experience is: capture a hardware listing manually, normalize it, review evidence and missing information, decide whether it is worth pursuing, then create or reuse a project for build-level validation and optimization. Phase 4 uses the existing engine instead of adding another subsystem.
 
 ## Commands
 
@@ -38,19 +38,18 @@ npm run validate:hardware
 - **3.2:** Persisted evidence review, conflicts, and moderation workflow. Complete.
 - **3.3:** Listing Intelligence and human review. Complete.
 - **3.4:** Importer fixtures and listing seeding. Complete.
-- **3.5:** Hardware Knowledge Validation Framework. Current.
-- **3.6:** User-initiated manual capture and browser-extension foundation. Recommended next.
+- **3.5:** Hardware Knowledge Validation Framework. Complete.
+- **4.0:** Manual Acquisition Workflow. Current.
+- **4.1:** Persisted acquisition records and project links. Recommended next.
 
 ## Primary Workflow
 
-1. Home asks what the user is trying to build.
-2. The goal-first project wizard creates the project with a scoring preset and optimization direction.
-3. Builder opens as the project home.
-4. Slot inventory appears in context when the builder needs hardware.
-5. Validation, platform knowledge, and solution intelligence run continuously.
-6. Optimization proposes deterministic improvements.
-7. Branching preserves alternatives without mutating the original.
-8. Compare and Finish remain optional review stages.
+1. A user finds hardware and captures the listing manually at `/acquire`.
+2. JETS normalizes the raw listing into parsed fields, platform detection, confidence, evidence, missing information, and Recommendation Readiness.
+3. The user can correct CPU, GPU, RAM, platform, price, and storage before saving; corrections are treated as evidence.
+4. The user decides whether to analyze only, save, archive, reject, mark purchased, compare acquisitions, or create a project.
+5. Promising acquisitions become Solution Builder projects.
+6. Builder, Inventory, Validation, Platform Knowledge, Solution Intelligence, Optimization, Branching, and Compare handle the build-level decision.
 
 Marketplace Intelligence sits below the workflow as input plumbing:
 
@@ -291,6 +290,20 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/validation-framework.md`.
 - v3.5 does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, or production ingestion.
 
+## Version 4.0 Notes
+
+- Manual acquisition workspace is available at `/acquire`.
+- Acquisition types live in `types/acquisition.ts`.
+- Capture-to-preview orchestration lives in `lib/acquisition/workflow.ts`.
+- Acquisition UI lives in `components/acquisition/acquisition-workspace.tsx`.
+- Users can enter marketplace, listing URL, title, description, price, currency, location, condition, seller notes, placeholder image count, and personal notes.
+- Preview runs the existing Marketplace Intelligence, Listing Intelligence, Evidence, Platform Knowledge, and Recommendation Preview path.
+- Users can correct CPU, GPU, RAM, platform, price, and storage before saving. Corrections appear as user-submitted evidence instead of overwriting parser output.
+- Saved acquisitions are stored in browser local storage for v4.0 and can be compared side by side as purchase candidates.
+- Project handoff links create Engineering, Gaming, AI Workstation, Home Server, or reused project paths.
+- Documentation lives in `docs/acquisition-workflow.md`.
+- v4.0 does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, Supabase acquisition persistence, or automatic project slot population.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -373,4 +386,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v3.5 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through v4.0 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.

@@ -318,6 +318,30 @@ Run:
 npm run validate:hardware
 ```
 
-The next ingestion milestone should be user-initiated manual capture, not live
-scraping. Captured listings should enter Listing Intelligence as reviewable
-records before they influence projects or recommendations.
+That validation work set up the next product move: user-initiated manual
+capture before live scraping. Captured listings should enter Listing
+Intelligence as reviewable records before they influence projects or
+recommendations.
+
+## v4.0 Manual Acquisition
+
+v4.0 adds `/acquire`, a manual workflow for evaluating hardware the user found
+outside JETS.
+
+Acquisition uses Listing Intelligence this way:
+
+```text
+User-provided listing facts
+-> Raw listing contract
+-> Normalized fields
+-> Parsed-field evidence
+-> Recommendation Readiness
+-> Save, reject, archive, purchase, or create project
+```
+
+The user can correct CPU, GPU, RAM, platform, price, and storage before saving.
+Those corrections are represented as user-submitted evidence in the acquisition
+preview. They do not silently replace parser output.
+
+The current acquisition records are browser-local. Persisted acquisition tables
+should come after the manual workflow proves useful.

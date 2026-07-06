@@ -114,6 +114,11 @@ v3.3 connects Listing Intelligence corrections to this contract. A corrected
 listing field creates a moderator-verified `evidence_records` row and a
 `parsed_field_evidence_links` row instead of silently mutating parser output.
 
+v4.0 extends the same idea into Manual Acquisition. Before a captured listing is
+saved, the user can correct CPU, GPU, RAM, platform, price, and storage. Those
+corrections appear as user-submitted evidence in the acquisition preview rather
+than overwriting deterministic parser output.
+
 ## Source Types
 
 Supported source categories:
@@ -309,9 +314,25 @@ Raw listing
 The Evidence Engine remains the trust layer. Listing Intelligence owns listing
 state, field review state, duplicate signals, and recommendation readiness.
 
+## Acquisition Integration
+
+The `/acquire` workflow uses Evidence before persistence.
+
+```text
+Manual listing capture
+-> deterministic parser evidence
+-> user correction evidence
+-> Recommendation Readiness
+-> saved acquisition or project handoff
+```
+
+In v4.0 these acquisition evidence records are local preview records. They show
+the correct product behavior before adding a Supabase persistence layer for
+acquisitions.
+
 ## Current Boundaries
 
-v3.3 does not implement:
+v4.0 does not implement:
 
 - live scraping
 - marketplace APIs
@@ -323,21 +344,22 @@ v3.3 does not implement:
 - source document storage
 - bulk evidence import
 - automatic promotion of evidence into platform knowledge
+- persisted acquisition evidence
 
-The current value is review infrastructure. JETS can now persist, inspect,
-moderate, and correct listing-derived claims before the system starts ingesting
-noisier real-world data.
+The current value is review infrastructure plus manual acquisition behavior.
+JETS can inspect and correct listing-derived claims before the system starts
+ingesting noisier real-world data.
 
-## Recommended v3.4
+## Recommended v4.1
 
-Build importer fixture and seeding infrastructure:
+Persist acquisition evidence and decisions:
 
-- adapter fixture tests for each source family
-- seeded listing import into Supabase
-- bulk parsed-field evidence link generation
-- importer validation errors
-- source attribution and takedown workflow
-- duplicate review actions
+- acquisition records
+- acquisition corrections
+- acquisition notes
+- acquisition decisions
+- acquisition project links
+- parsed-field evidence links for accepted acquisition corrections
 
-Still do not add AI or live scraping until listing review, correction, and
-evidence linking are stable.
+Still do not add AI or live scraping until manual acquisition persistence,
+correction review, and evidence linking are stable.

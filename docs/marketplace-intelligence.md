@@ -63,6 +63,10 @@ normalization, platform detection, listing readiness, parsed-field evidence,
 platform knowledge, solution intelligence, optimization, compatibility, and
 builder validation now run against golden hardware scenarios.
 
+Version 4.0 adds Manual Acquisition. Users can manually capture a listing from
+any source and feed the same Marketplace Intelligence pipeline without scraping,
+browser automation, APIs, OCR, or AI.
+
 ## Source Adapters
 
 Every future source should become an adapter that produces raw listing input.
@@ -333,11 +337,29 @@ Run it with:
 npm run validate:hardware
 ```
 
+The `/acquire` workspace shows:
+
+```text
+Manual Listing
+-> Raw Marketplace Shape
+-> Normalized Listing
+-> Parsed Fields
+-> Evidence
+-> Listing Intelligence
+-> Recommendation Preview
+-> Project Handoff
+```
+
+Manual acquisition is not a separate marketplace system. It is one capture
+method that produces the same raw listing contract as future fixtures, CSV,
+browser extension payloads, APIs, OCR, or approved ingestion.
+
 ## Future Work
 
 Before live ingestion:
 
-- add user-initiated manual capture
+- prove manual acquisition is useful with real users
+- persist acquisition records and project links
 - add source-specific policy reviews
 - add adapter and source fixture tests
 - add source attribution and takedown workflow

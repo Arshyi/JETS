@@ -2,6 +2,7 @@ import {
   Boxes,
   BrainCircuit,
   BriefcaseBusiness,
+  ClipboardCheck,
   Gamepad2,
   History,
   Server,
@@ -43,6 +44,13 @@ export function HomeGoalGrid({ recentProjectHref }: HomeGoalGridProps) {
   const supportCards = [
     {
       description:
+        "Paste a real listing by hand, preview parsed fields, correct missing facts, compare purchase candidates, and decide whether to create a project.",
+      href: "/acquire",
+      icon: ClipboardCheck,
+      title: "Acquire Hardware"
+    },
+    {
+      description:
         "Use category-grouped mock/demo inventory when you need a component, base system, adapter, or complete system.",
       href: "/inventory",
       icon: Boxes,
@@ -65,12 +73,13 @@ export function HomeGoalGrid({ recentProjectHref }: HomeGoalGridProps) {
           Hardware Solution Builder
         </p>
         <h1 className="mt-4 max-w-4xl text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
-          What are you trying to build today?
+          What hardware are you evaluating today?
         </h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-muted">
-          Choose the hardware problem first. JETS creates the project, opens the
-          builder, guides slot-by-slot inventory selection, validates the build,
-          and then helps optimize or branch alternatives.
+          Capture a listing, review what JETS can infer, then turn promising
+          hardware into a project. The builder, inventory, validation,
+          optimization, and branching systems now support the acquisition
+          decision instead of asking you to reason alone.
         </p>
 
         <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
