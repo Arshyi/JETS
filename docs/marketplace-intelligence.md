@@ -15,7 +15,7 @@ The intended pipeline is:
 
 ```text
 Raw Marketplace Data
--> Normalized Hardware
+-> Listing Intelligence
 -> Evidence
 -> Platform Knowledge
 -> Solution Intelligence
@@ -47,6 +47,11 @@ future providers are connected.
 Version 3.2 persists the review infrastructure behind that boundary. Parsed
 marketplace facts can now be linked through `parsed_field_evidence_links` before
 they are allowed to strengthen platform knowledge or recommendation reasoning.
+
+Version 3.3 adds Listing Intelligence as the review layer for a specific
+listing. Normalized listings can now be persisted, parsed fields can be reviewed
+or corrected, duplicate candidates can be inspected, and recommendation
+readiness can be previewed before any listing becomes project input.
 
 ## Source Adapters
 
@@ -170,6 +175,14 @@ v3.2 persists that distinction:
 - `parsed_field_evidence_links` connects a normalized listing field path to a reviewable evidence record.
 - `evidence_review_notes` records review actions and reasons.
 
+v3.3 connects that evidence model to persisted listings:
+
+- `normalized_marketplace_listings` stores the raw and normalized listing snapshot.
+- `listing_parsed_fields` stores reviewable parser output by field path.
+- `listing_field_corrections` records manual before/after corrections.
+- `listing_duplicate_candidates` stores deterministic duplicate signals.
+- `listing_review_events` records listing-level audit events.
+
 ## Marketplace Health
 
 Every normalized listing exposes:
@@ -247,6 +260,7 @@ Good:
 - parser attaches evidence candidates when available
 - platform detection links to platform knowledge
 - evidence review decides whether parsed facts can strengthen trusted knowledge
+- listing intelligence decides whether this specific listing is ready for recommendation preview
 - solution intelligence explains tradeoffs
 - optimizer uses normalized, reasoned project data
 - recommendation explains the final choice
@@ -279,13 +293,11 @@ Before live ingestion:
 
 - add source-specific policy reviews
 - add adapter fixture tests
+- add seeded listing import into Supabase
 - add source attribution and takedown workflow
-- add normalized listing persistence
-- add persisted evidence records for parsed fields
-- add moderation state for parsed facts
 - add conflict handling between sources
 - add evidence links for platform claims
-- add user correction workflow
+- add duplicate review actions
 
 Only after those foundations should JETS consider APIs, browser extension
 capture, OCR, image recognition, LLM extraction, or carefully approved scraping.

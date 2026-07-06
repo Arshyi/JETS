@@ -28,6 +28,8 @@ Marketplace intelligence is the Phase 3 feeder layer. Marketplace listings are n
 
 Evidence is the trust layer. Every important conclusion should be able to answer why JETS believes it, where the claim came from, how it was extracted, whether it has been verified, and whether conflicting evidence exists.
 
+Listing Intelligence is the bridge between raw marketplace input and trusted evidence. JETS should understand an individual listing as an engineering object: raw text, parsed fields, human corrections, duplicate risk, health, recommendation readiness, and future ingestion hooks.
+
 The near-term user journey should feel continuous:
 
 Home -> Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
@@ -272,7 +274,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 3.2 - Persisted Evidence Review
 
-- Current.
+- Complete.
 - Persist evidence records, conflicts, community discoveries, and knowledge timeline events.
 - Add SQL tables for evidence records, evidence sources, conflicts, timeline events, review notes, and parsed-field evidence links.
 - Add RLS policies so public verified evidence can be read, signed-in users can submit pending evidence, and moderators can update verification state.
@@ -280,15 +282,25 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Add audit trail fields for who submitted, who reviewed, what changed, when, and why.
 - Keep live scraping, AI extraction, OCR, image recognition, checkout, and marketplace APIs deferred.
 
-### Version 3.3 - Evidence-Backed Normalized Listing Persistence
+### Version 3.3 - Listing Intelligence and Human Review
+
+- Current.
+- Persist normalized marketplace listing candidates, parsed fields, human corrections, duplicate candidates, and review events.
+- Treat every listing as an engineering object before it can influence recommendation previews.
+- Add parsed-field review actions: accept, reject, correct, and mark unknown.
+- Make corrections create evidence records and parsed-field evidence links.
+- Add Listing Health, duplicate detection, and Recommendation Readiness.
+- Add review routes for listing dashboard, pending fields, duplicate candidates, and one-listing review workspace.
+- Keep live scraping, browser automation, AI extraction, OCR, marketplace APIs, and checkout deferred.
+
+### Version 3.4 - Importer Fixture and Listing Seeding Layer
 
 - Recommended next.
-- Persist normalized marketplace listing candidates with parsed-field evidence links.
-- Add adapter fixture tests for each planned source family.
-- Add source attribution, correction, conflict, and takedown workflows for normalized listing facts.
-- Add a seeded evidence import workflow so representative demo evidence can be loaded into Supabase review tables.
-- Add moderation views for parsed listing facts before any live ingestion is enabled.
-- Keep live scraping, AI extraction, OCR, image recognition, and marketplace APIs deferred until evidence-backed listing persistence is stable.
+- Add deterministic importer fixture tests for each planned source family.
+- Add seeded listing import workflow for demo/manual data into Supabase.
+- Add bulk parsed-field evidence link generation.
+- Add conflict/takedown workflow for listing facts.
+- Add CSV/manual import validation without scraping or marketplace API access.
 
 ## Idea Parking Lot
 

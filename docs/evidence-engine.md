@@ -110,6 +110,10 @@ The subject ID is the bridge. A platform knowledge card, constraint, upgrade
 opportunity, adapter, parsed field, or reasoning finding can all point to the
 same evidence contract.
 
+v3.3 connects Listing Intelligence corrections to this contract. A corrected
+listing field creates a moderator-verified `evidence_records` row and a
+`parsed_field_evidence_links` row instead of silently mutating parser output.
+
 ## Source Types
 
 Supported source categories:
@@ -286,9 +290,28 @@ Bad:
 - conflicting claims overwrite each other
 - UI hides source and verification state
 
+## Listing Intelligence Integration
+
+Listing Intelligence uses Evidence to prevent parsed marketplace fields from
+becoming trusted facts too early.
+
+The v3.3 listing review flow is:
+
+```text
+Raw listing
+-> Parsed field
+-> Human review
+-> Correction evidence
+-> Parsed field evidence link
+-> Recommendation readiness
+```
+
+The Evidence Engine remains the trust layer. Listing Intelligence owns listing
+state, field review state, duplicate signals, and recommendation readiness.
+
 ## Current Boundaries
 
-v3.2 does not implement:
+v3.3 does not implement:
 
 - live scraping
 - marketplace APIs
@@ -299,25 +322,22 @@ v3.2 does not implement:
 - automated moderation
 - source document storage
 - bulk evidence import
-- persisted normalized marketplace listings
 - automatic promotion of evidence into platform knowledge
 
-The current value is review infrastructure. JETS can now persist, inspect, and
-moderate evidence records before the system starts ingesting noisier real-world
-data.
+The current value is review infrastructure. JETS can now persist, inspect,
+moderate, and correct listing-derived claims before the system starts ingesting
+noisier real-world data.
 
-## Recommended v3.3
+## Recommended v3.4
 
-Build evidence-backed normalized listing persistence:
+Build importer fixture and seeding infrastructure:
 
-- persisted normalized marketplace listing candidates
-- adapter fixture tests
-- parsed-field evidence link generation
-- evidence seeding workflow for demo records
-- source attribution and correction workflow
-- conflict review for listing facts
-- removal/takedown workflow
-- moderation queue for parsed marketplace facts
+- adapter fixture tests for each source family
+- seeded listing import into Supabase
+- bulk parsed-field evidence link generation
+- importer validation errors
+- source attribution and takedown workflow
+- duplicate review actions
 
-Still do not add AI or live scraping until evidence-backed listing persistence
-and review are stable.
+Still do not add AI or live scraping until listing review, correction, and
+evidence linking are stable.

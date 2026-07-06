@@ -48,6 +48,24 @@ export default async function SourcesPage() {
 
         <MarketplaceIntelligenceDemo report={marketplaceIntelligenceReport} />
 
+        <article className="rounded-lg border border-border bg-panel p-5">
+          <p className="text-sm font-semibold uppercase text-accent-strong dark:text-accent">
+            Listing Intelligence
+          </p>
+          <h2 className="mt-2 text-xl font-bold">Review normalized listings before recommendation</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
+            Source adapters produce raw listing snapshots. Listing Intelligence
+            turns each snapshot into reviewable fields, correction evidence,
+            duplicate signals, and recommendation readiness.
+          </p>
+          <Link
+            href="/listing-intelligence"
+            className="mt-4 inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold transition hover:bg-subtle"
+          >
+            Open Listing Intelligence
+          </Link>
+        </article>
+
         <div className="grid gap-4">
           {state.report.health.map((health) => (
             <SourceHealthCard key={health.source.id} health={health} />

@@ -20,7 +20,7 @@ export const betaSetupChecklist = [
   {
     title: "Apply migrations in order",
     description:
-      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, and v3.2 evidence review SQL migrations in Supabase before testing persistence."
+      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, v3.2 evidence review, and v3.3 listing intelligence SQL migrations in Supabase before testing persistence."
   },
   {
     title: "Create a beta account",
@@ -68,6 +68,11 @@ export const betaDemoWorkflow = [
     title: "Evidence review check",
     description:
       "Open /evidence, submit a pending evidence record, then use /evidence/review with admin/service-role setup to change its verification state."
+  },
+  {
+    title: "Listing Intelligence check",
+    description:
+      "Open /listing-intelligence, submit a manual listing, then use /listing-intelligence/review with admin/service-role setup to review parsed fields."
   }
 ] as const;
 
@@ -86,5 +91,6 @@ export const betaSmokeTests = [
   "Supabase Site URL and redirect URLs are configured for local, production, and Vercel preview beta testing.",
   "Sources and admin ingestion remain dry-run only.",
   "Evidence review shows setup, public records, pending submissions, conflicts, and service-role moderation states.",
+  "Listing Intelligence shows setup, demo fallback, manual listing submission, field review, duplicate signals, and service-role moderation states.",
   "npm run build and npm run lint -- --max-warnings=0 pass."
 ] as const;

@@ -112,6 +112,12 @@ export default async function AccountPage() {
               >
                 Evidence review
               </Link>
+              <Link
+                href="/listing-intelligence"
+                className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                Listing review
+              </Link>
             </div>
           </article>
 

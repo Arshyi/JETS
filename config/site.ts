@@ -90,6 +90,12 @@ export const workspaceNav: NavItem[] = [
     status: "v3.2"
   },
   {
+    title: "Listing Intelligence",
+    href: "/listing-intelligence",
+    description: "Normalized listing review, parsed field corrections, duplicate signals, and recommendation readiness.",
+    status: "v3.3"
+  },
+  {
     title: "Post-Auth Onboarding",
     href: "/onboarding",
     description: "Signed-in first-run page for creating the first hardware project and testing persistence.",
