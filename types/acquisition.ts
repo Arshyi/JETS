@@ -20,8 +20,7 @@ export const acquisitionMarketplaceIds = [
 ] as const;
 
 export const acquisitionDecisionStatuses = [
-  "recently-captured",
-  "needs-review",
+  "reviewing",
   "ready",
   "archived",
   "purchased",
@@ -136,4 +135,11 @@ export type AcquisitionRecord = {
   snapshot: AcquisitionRecordSnapshot;
   status: AcquisitionDecisionStatus;
   updatedAt: string;
+};
+
+export type AcquisitionPersistenceState = {
+  data: AcquisitionRecord[];
+  isConfigured: boolean;
+  isSignedIn: boolean;
+  message?: string;
 };

@@ -354,12 +354,18 @@ Manual acquisition is not a separate marketplace system. It is one capture
 method that produces the same raw listing contract as future fixtures, CSV,
 browser extension payloads, APIs, OCR, or approved ingestion.
 
+Phase 4.1 persists manual acquisition records after that normalization step.
+The persisted record stores raw payload, normalized payload, analysis snapshot,
+readiness, confidence, preview score, corrections, notes, decisions, compare
+sets, and optional project links. This keeps acquisition as a user-owned review
+workflow while Marketplace Intelligence remains the source-normalization layer.
+
 ## Future Work
 
 Before live ingestion:
 
-- prove manual acquisition is useful with real users
-- persist acquisition records and project links
+- prove persisted manual acquisition is useful with real users
+- harden project handoff from saved acquisitions into slot-level builder context
 - add source-specific policy reviews
 - add adapter and source fixture tests
 - add source attribution and takedown workflow

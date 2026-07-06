@@ -26,15 +26,25 @@ import {
   getAcquisitionGoalOptions,
   getDecisionStatusFromReadiness
 } from "@/lib/acquisition/workflow";
+import {
+  archiveAcquisitionAction,
+  compareSavedAcquisitionsAction,
+  markPurchasedAcquisitionAction,
+  markReadyAcquisitionAction,
+  markRejectedAcquisitionAction,
+  saveAcquisitionAction
+} from "@/lib/supabase/acquisition-actions";
 import { cn } from "@/lib/utils";
 import type {
   AcquisitionCorrection,
   AcquisitionCorrectionFieldId,
   AcquisitionDecisionStatus,
   AcquisitionDraft,
+  AcquisitionPersistenceState,
   AcquisitionMarketplaceId,
   AcquisitionRecord
 } from "@/types/acquisition";
+import type { AcquisitionCompareSetRow } from "@/types/database";
 import { conditionLabels, hardwareConditions } from "@/types/hardware";
 
 const storageKey = "jets-acquisition-records-v1";
@@ -73,7 +83,7 @@ function formatMoney(currency: AcquisitionDraft["currency"], value: number | nul
 
 function statusTone(status: AcquisitionDecisionStatus) {
   if (status === "ready" || status === "purchased") return "accent";
-  if (status === "needs-review") return "warning";
+  if (status === "reviewing") return "warning";
   return "neutral";
 }
 
@@ -131,6 +141,20 @@ function Field({
   );
 }
 
+function normalizeLocalStatus(value: string | undefined): AcquisitionDecisionStatus {
+  if (
+    value === "ready" ||
+    value === "archived" ||
+    value === "purchased" ||
+    value === "rejected" ||
+    value === "reviewing"
+  ) {
+    return value;
+  }
+
+  return "reviewing";
+}
+
 function loadRecords() {
   if (typeof window === "undefined") {
     return [] as AcquisitionRecord[];
@@ -139,21 +163,37 @@ function loadRecords() {
   try {
     const raw = window.localStorage.getItem(storageKey);
 
-    return raw ? (JSON.parse(raw) as AcquisitionRecord[]) : [];
+    return raw
+      ? (JSON.parse(raw) as Array<AcquisitionRecord & { status?: string }>).map(
+          (record) => ({
+            ...record,
+            status: normalizeLocalStatus(record.status)
+          })
+        )
+      : [];
   } catch {
     return [];
   }
 }
 
-export function AcquisitionWorkspace() {
+type AcquisitionWorkspaceProps = {
+  persistence?: AcquisitionPersistenceState & {
+    compareSets?: AcquisitionCompareSetRow[];
+  };
+};
+
+export function AcquisitionWorkspace({ persistence }: AcquisitionWorkspaceProps) {
   const [draft, setDraft] = useState<AcquisitionDraft>(defaultAcquisitionDraft);
   const [corrections, setCorrections] = useState<AcquisitionCorrection[]>(
     defaultAcquisitionCorrections
   );
-  const [records, setRecords] = useState<AcquisitionRecord[]>([]);
+  const [localRecords, setLocalRecords] = useState<AcquisitionRecord[]>([]);
   const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
   const [lastAction, setLastAction] = useState("Ready to analyze this listing.");
+  const isPersistedMode = Boolean(persistence?.isConfigured && persistence.isSignedIn);
+  const records = isPersistedMode ? persistence?.data ?? [] : localRecords;
+  const compareSets = isPersistedMode ? persistence?.compareSets ?? [] : [];
   const analysis = useMemo(
     () => analyzeAcquisitionDraft(draft, corrections),
     [draft, corrections]
@@ -163,26 +203,26 @@ export function AcquisitionWorkspace() {
     selectedCompareIds.includes(record.id)
   );
   const groupedRecords = {
-    archived: records.filter((record) => record.status === "archived"),
-    purchased: records.filter((record) => record.status === "purchased"),
+    reviewing: records.filter((record) => record.status === "reviewing"),
     ready: records.filter((record) => record.status === "ready"),
-    "needs-review": records.filter((record) => record.status === "needs-review"),
-    "recently-captured": records.filter(
-      (record) => record.status === "recently-captured"
-    ),
-    rejected: records.filter((record) => record.status === "rejected")
+    purchased: records.filter((record) => record.status === "purchased"),
+    rejected: records.filter((record) => record.status === "rejected"),
+    archived: records.filter((record) => record.status === "archived")
   } satisfies Record<AcquisitionDecisionStatus, AcquisitionRecord[]>;
 
   useEffect(() => {
-    setRecords(loadRecords());
+    if (!isPersistedMode) {
+      setLocalRecords(loadRecords());
+    }
+
     setIsHydrated(true);
-  }, []);
+  }, [isPersistedMode]);
 
   useEffect(() => {
-    if (isHydrated) {
-      window.localStorage.setItem(storageKey, JSON.stringify(records));
+    if (isHydrated && !isPersistedMode) {
+      window.localStorage.setItem(storageKey, JSON.stringify(localRecords));
     }
-  }, [isHydrated, records]);
+  }, [isHydrated, isPersistedMode, localRecords]);
 
   function updateDraft<K extends keyof AcquisitionDraft>(
     key: K,
@@ -236,7 +276,7 @@ export function AcquisitionWorkspace() {
       updatedAt: now
     };
 
-    setRecords((current) => [record, ...current]);
+    setLocalRecords((current) => [record, ...current]);
     setLastAction(`${draft.title || "Listing"} saved as ${acquisitionStatusLabels[status]}.`);
   }
 
@@ -246,7 +286,7 @@ export function AcquisitionWorkspace() {
   ) {
     const now = new Date().toISOString();
 
-    setRecords((current) =>
+    setLocalRecords((current) =>
       current.map((record) =>
         record.id === recordId ? { ...record, status, updatedAt: now } : record
       )
@@ -266,6 +306,72 @@ export function AcquisitionWorkspace() {
       return [...current, recordId];
     });
   }
+
+  function SaveDecisionControl({
+    children,
+    className,
+    status
+  }: {
+    children: React.ReactNode;
+    className: string;
+    status: AcquisitionDecisionStatus;
+  }) {
+    if (isPersistedMode) {
+      return (
+        <form action={saveAcquisitionAction}>
+          <input type="hidden" name="returnTo" value="/acquire" />
+          <input type="hidden" name="draftJson" value={JSON.stringify(draft)} />
+          <input
+            type="hidden"
+            name="correctionsJson"
+            value={JSON.stringify(corrections)}
+          />
+          <input type="hidden" name="status" value={status} />
+          <button type="submit" className={className}>
+            {children}
+          </button>
+        </form>
+      );
+    }
+
+    return (
+      <button type="button" onClick={() => saveRecord(status)} className={className}>
+        {children}
+      </button>
+    );
+  }
+
+  function RecordStatusControl({
+    action,
+    children,
+    record
+  }: {
+    action: (formData: FormData) => Promise<void>;
+    children: React.ReactNode;
+    record: AcquisitionRecord;
+  }) {
+    const className =
+      "inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground";
+
+    if (isPersistedMode) {
+      return (
+        <form action={action}>
+          <input type="hidden" name="returnTo" value="/acquire" />
+          <input type="hidden" name="acquisitionId" value={record.id} />
+          <button type="submit" className={className}>
+            {children}
+          </button>
+        </form>
+      );
+    }
+
+    return null;
+  }
+
+  const secondaryActionClass =
+    "inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground";
+  const primaryActionClass =
+    "inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong";
 
   return (
     <div className="grid gap-10">
@@ -760,38 +866,25 @@ export function AcquisitionWorkspace() {
         />
 
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-          <button
-            type="button"
-            onClick={() => saveRecord("recently-captured")}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground"
-          >
+          <SaveDecisionControl status="reviewing" className={secondaryActionClass}>
             <FileSearch className="h-4 w-4" aria-hidden="true" />
             Analyze only
-          </button>
-          <button
-            type="button"
-            onClick={() => saveRecord(getDecisionStatusFromReadiness(analysis.readiness))}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong"
+          </SaveDecisionControl>
+          <SaveDecisionControl
+            status={getDecisionStatusFromReadiness(analysis.readiness)}
+            className={primaryActionClass}
           >
             <Save className="h-4 w-4" aria-hidden="true" />
             Save Listing
-          </button>
-          <button
-            type="button"
-            onClick={() => saveRecord("rejected")}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground"
-          >
+          </SaveDecisionControl>
+          <SaveDecisionControl status="rejected" className={secondaryActionClass}>
             <X className="h-4 w-4" aria-hidden="true" />
             Ignore Listing
-          </button>
-          <button
-            type="button"
-            onClick={() => saveRecord("archived")}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground"
-          >
+          </SaveDecisionControl>
+          <SaveDecisionControl status="archived" className={secondaryActionClass}>
             <Archive className="h-4 w-4" aria-hidden="true" />
             Archive
-          </button>
+          </SaveDecisionControl>
           <Link
             href={analysis.recommendedProjectGoals[0]?.href ?? "/solution-builder/projects/new"}
             className="inline-flex items-center justify-center gap-2 rounded-lg border border-accent bg-accent/10 px-3 py-2 text-sm font-semibold text-accent-strong transition hover:bg-accent/20 dark:text-accent"
@@ -834,8 +927,33 @@ export function AcquisitionWorkspace() {
           <SectionTitle
             eyebrow="Acquisition dashboard"
             title="Saved purchase candidates"
-            description="Saved acquisitions are stored locally in this browser for now. Supabase persistence can be added after the workflow proves useful."
+            description={
+              isPersistedMode
+                ? "Saved acquisitions are persisted to Supabase for this account. Use history for full detail, notes, corrections, decisions, and project links."
+                : "Saved acquisitions are stored locally in this browser until Supabase is configured and you are signed in."
+            }
           />
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <StatusPill tone={isPersistedMode ? "accent" : "warning"}>
+              {isPersistedMode ? "Supabase persistence" : "Local fallback"}
+            </StatusPill>
+            {persistence?.message ? <StatusPill tone="warning">{persistence.message}</StatusPill> : null}
+            {isPersistedMode ? (
+              <Link
+                href="/acquire/history"
+                className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
+              >
+                Open history
+              </Link>
+            ) : (
+              <Link
+                href="/login?next=/acquire"
+                className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
+              >
+                Sign in to persist
+              </Link>
+            )}
+          </div>
           <div className="mt-5 grid gap-4">
             {records.length === 0 ? (
               <div className="rounded-lg border border-dashed border-border bg-background p-6 text-sm text-muted">
@@ -904,30 +1022,74 @@ export function AcquisitionWorkspace() {
                                   ? "Remove compare"
                                   : "Compare"}
                               </button>
-                              <button
-                                type="button"
-                                onClick={() => updateRecordStatus(record.id, "purchased")}
-                                className="inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
-                              >
-                                <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
-                                Purchased
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => updateRecordStatus(record.id, "ready")}
-                                className="inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
-                              >
-                                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-                                Ready
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => updateRecordStatus(record.id, "rejected")}
-                                className="inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
-                              >
-                                <X className="h-3.5 w-3.5" aria-hidden="true" />
-                                Rejected
-                              </button>
+                              {isPersistedMode ? (
+                                <Link
+                                  href={`/acquire/history/${record.id}`}
+                                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
+                                >
+                                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                                  Detail
+                                </Link>
+                              ) : null}
+                              {isPersistedMode ? (
+                                <>
+                                  <RecordStatusControl
+                                    action={markPurchasedAcquisitionAction}
+                                    record={record}
+                                  >
+                                    <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Purchased
+                                  </RecordStatusControl>
+                                  <RecordStatusControl
+                                    action={markReadyAcquisitionAction}
+                                    record={record}
+                                  >
+                                    <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Ready
+                                  </RecordStatusControl>
+                                  <RecordStatusControl
+                                    action={markRejectedAcquisitionAction}
+                                    record={record}
+                                  >
+                                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Rejected
+                                  </RecordStatusControl>
+                                  <RecordStatusControl
+                                    action={archiveAcquisitionAction}
+                                    record={record}
+                                  >
+                                    <Archive className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Archive
+                                  </RecordStatusControl>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={() => updateRecordStatus(record.id, "purchased")}
+                                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
+                                  >
+                                    <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Purchased
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => updateRecordStatus(record.id, "ready")}
+                                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
+                                  >
+                                    <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Ready
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => updateRecordStatus(record.id, "rejected")}
+                                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-xs font-semibold text-muted transition hover:text-foreground"
+                                  >
+                                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                                    Rejected
+                                  </button>
+                                </>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -946,6 +1108,36 @@ export function AcquisitionWorkspace() {
           title="Compare acquisitions, not builds"
           description="This side-by-side view compares purchase candidates before they become projects."
         />
+        {isPersistedMode && compareRecords.length > 1 ? (
+          <form
+            action={compareSavedAcquisitionsAction}
+            className="mt-5 flex flex-wrap items-end gap-3 rounded-lg border border-border bg-background p-4"
+          >
+            <input type="hidden" name="returnTo" value="/acquire" />
+            <input
+              type="hidden"
+              name="acquisitionIds"
+              value={JSON.stringify(compareRecords.map((record) => record.id))}
+            />
+            <Field label="Compare set title">
+              <input
+                className={inputClass}
+                name="title"
+                defaultValue={`Compare ${compareRecords
+                  .map((record) => record.snapshot.title)
+                  .join(" vs ")
+                  .slice(0, 90)}`}
+              />
+            </Field>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong"
+            >
+              <GitCompare className="h-4 w-4" aria-hidden="true" />
+              Save compare set
+            </button>
+          </form>
+        ) : null}
         <div className="mt-5 grid gap-4 lg:grid-cols-3">
           {compareRecords.length > 0 ? (
             compareRecords.map((record) => (
@@ -1000,6 +1192,22 @@ export function AcquisitionWorkspace() {
             </div>
           )}
         </div>
+        {isPersistedMode && compareSets.length > 0 ? (
+          <div className="mt-5 grid gap-3">
+            <p className="text-sm font-semibold">Saved compare sets</p>
+            {compareSets.slice(0, 3).map((set) => (
+              <div
+                key={set.id}
+                className="rounded-lg border border-border bg-background p-3 text-sm"
+              >
+                <p className="font-semibold">{set.title}</p>
+                <p className="mt-1 text-muted">
+                  {set.acquisition_ids.length} acquisitions saved for review
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </section>
 
       <section className="rounded-lg border border-border bg-panel p-5">

@@ -1,6 +1,6 @@
 # JETS Acquisition Workflow
 
-Version: 4.0
+Version: 4.1
 
 Phase 4 changes the development philosophy.
 
@@ -51,7 +51,9 @@ Paste listing
 
 The workflow is intentionally manual first. The user provides title,
 description, price, URL, location, condition, seller notes, placeholder image
-count, and personal notes.
+count, and personal notes. In Phase 4.1, signed-in users persist the result to
+Supabase; missing Supabase config or signed-out usage continues to fall back to
+browser local storage so the workflow remains usable in demo environments.
 
 ## Manual Capture
 
@@ -132,16 +134,43 @@ After review, the user can choose:
 
 Saved acquisition statuses are:
 
-- Recently captured
-- Needs review
+- Reviewing
 - Ready
 - Archived
 - Purchased
 - Rejected
 
-The current implementation stores saved acquisitions in browser local storage.
-That is intentional for v4.0. It proves the workflow before adding another
-database layer.
+Phase 4.1 persists saved acquisitions in Supabase when the user is signed in.
+The local browser store remains a fallback only, not the preferred path.
+
+## Supabase Persistence
+
+The Phase 4.1 migration creates:
+
+- `acquisition_records`
+- `acquisition_corrections`
+- `acquisition_notes`
+- `acquisition_decisions`
+- `acquisition_project_links`
+- `acquisition_compare_sets`
+
+`acquisition_records` stores the user-owned acquisition decision plus the raw
+listing payload, normalized listing payload, analysis snapshot, status,
+readiness, confidence, platform detection, preview score, and app version.
+
+Corrections, notes, decisions, project links, and compare sets remain separate
+tables because they evolve after the original capture. This keeps the raw
+listing immutable enough for review while still allowing a user to add context,
+change status, link the acquisition to a project, and compare purchase
+candidates.
+
+RLS is deliberately simple:
+
+- users can read, insert, update, and delete only their own acquisition records
+- users can read and create only child rows attached to their own acquisitions
+- users can link an acquisition only to one of their own projects
+- admin review, if needed later, should use service-role gated server actions
+  rather than widening default user policies
 
 ## Compare Acquisitions
 
@@ -158,6 +187,31 @@ The comparison view weighs saved listings side by side by:
 
 Once a listing becomes a project, Project Branching and Optimization handle
 build-level comparison.
+
+Phase 4.1 also lets a signed-in user save a compare set of two or three
+acquisitions. Compare sets are purchase review artifacts, not final build
+branches.
+
+## Acquisition History
+
+`/acquire/history` is the persisted acquisition dashboard. It supports filters
+for:
+
+- status
+- marketplace
+- source ID
+
+`/acquire/history/[acquisitionId]` is the review detail page. It shows:
+
+- raw listing
+- normalized listing
+- parser and correction evidence
+- persisted corrections
+- review notes
+- recommendation preview
+- decision history
+- compare-set context
+- project handoff links
 
 ## Project Transition
 
@@ -202,9 +256,8 @@ methods only. They should not become separate reasoning pipelines.
 
 ## Current Limitations
 
-v4.0 does not include:
+Phase 4.1 does not include:
 
-- Supabase acquisition persistence
 - image upload or OCR
 - live marketplace access
 - browser extension packaging
@@ -212,16 +265,7 @@ v4.0 does not include:
 - marketplace APIs
 - checkout
 - automatic project slot population
-- cross-device acquisition history
-
-## Recommended Phase 4.1
-
-Add persisted acquisition records after the manual workflow proves useful:
-
-- `acquisition_records`
-- `acquisition_corrections`
-- `acquisition_notes`
-- `acquisition_decisions`
-- `acquisition_project_links`
+- automatic promotion of acquisition corrections into public platform knowledge
+- moderator-facing acquisition review queues
 
 Keep the same capture pipeline. Do not add scraping yet.

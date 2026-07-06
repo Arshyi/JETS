@@ -117,7 +117,9 @@ listing field creates a moderator-verified `evidence_records` row and a
 v4.0 extends the same idea into Manual Acquisition. Before a captured listing is
 saved, the user can correct CPU, GPU, RAM, platform, price, and storage. Those
 corrections appear as user-submitted evidence in the acquisition preview rather
-than overwriting deterministic parser output.
+than overwriting deterministic parser output. Phase 4.1 persists those
+corrections and the acquisition analysis snapshot so review evidence survives
+across sessions.
 
 ## Source Types
 
@@ -326,13 +328,15 @@ Manual listing capture
 -> saved acquisition or project handoff
 ```
 
-In v4.0 these acquisition evidence records are local preview records. They show
-the correct product behavior before adding a Supabase persistence layer for
-acquisitions.
+In Phase 4.1 these acquisition evidence records are persisted as part of the
+acquisition analysis snapshot, while user corrections are also written to
+`acquisition_corrections` with evidence payloads. The acquisition evidence is
+still user-owned review context; it is not automatically promoted into public
+platform knowledge.
 
 ## Current Boundaries
 
-v4.0 does not implement:
+Phase 4.1 does not implement:
 
 - live scraping
 - marketplace APIs
@@ -344,22 +348,22 @@ v4.0 does not implement:
 - source document storage
 - bulk evidence import
 - automatic promotion of evidence into platform knowledge
-- persisted acquisition evidence
 
 The current value is review infrastructure plus manual acquisition behavior.
 JETS can inspect and correct listing-derived claims before the system starts
 ingesting noisier real-world data.
 
-## Recommended v4.1
-
-Persist acquisition evidence and decisions:
+## Phase 4.1 Acquisition Persistence
 
 - acquisition records
 - acquisition corrections
 - acquisition notes
 - acquisition decisions
 - acquisition project links
-- parsed-field evidence links for accepted acquisition corrections
+- acquisition compare sets
+- evidence payloads for acquisition corrections
 
 Still do not add AI or live scraping until manual acquisition persistence,
-correction review, and evidence linking are stable.
+correction review, and evidence linking are stable. A later moderator workflow
+can decide whether accepted acquisition corrections should create
+`parsed_field_evidence_links` or public evidence records.

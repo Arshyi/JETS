@@ -36,7 +36,7 @@ Validation is the quality layer. Before real marketplace data arrives, every det
 
 The near-term acquisition journey should feel continuous:
 
-Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Create Project.
+Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Save Acquisition -> Review History -> Create Project.
 
 The project journey remains:
 
@@ -337,10 +337,11 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 4.1 - Persisted Acquisition Records
 
-- Recommended next.
+- Complete.
 - Persist acquisition records, corrections, personal notes, decisions, comparison state, and project links in Supabase.
-- Add acquisition history to Account.
+- Add acquisition history at `/acquire/history`.
 - Add cross-device access for saved purchase candidates.
+- Keep local storage as a graceful fallback when Supabase is missing or the visitor is signed out.
 - Keep browser extension and live ingestion deferred until persisted manual acquisition is stable.
 
 ## Idea Parking Lot

@@ -39,8 +39,8 @@ npm run validate:hardware
 - **3.3:** Listing Intelligence and human review. Complete.
 - **3.4:** Importer fixtures and listing seeding. Complete.
 - **3.5:** Hardware Knowledge Validation Framework. Complete.
-- **4.0:** Manual Acquisition Workflow. Current.
-- **4.1:** Persisted acquisition records and project links. Recommended next.
+- **4.0:** Manual Acquisition Workflow. Complete.
+- **4.1:** Persisted acquisition records and project links. Current.
 
 ## Primary Workflow
 
@@ -304,6 +304,17 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/acquisition-workflow.md`.
 - v4.0 does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, Supabase acquisition persistence, or automatic project slot population.
 
+## Phase 4.1 Notes
+
+- Acquisition persistence migration lives in `supabase/migrations/202607060004_v4_1_acquisition_persistence.sql`.
+- `/acquire` now prefers Supabase-backed persistence for signed-in users and keeps browser local storage as a graceful fallback when Supabase is missing or the visitor is signed out.
+- `/acquire/history` lists saved acquisitions with status, marketplace, and source filters.
+- `/acquire/history/[acquisitionId]` shows raw listing payload, normalized listing payload, evidence, corrections, notes, recommendation preview, decision history, compare-set membership, and project handoff links.
+- Server actions live in `lib/supabase/acquisition-actions.ts`; read models live in `lib/supabase/acquisition-queries.ts`.
+- Persistence mapping lives in `lib/acquisition/persistence.ts` so capture UI, history, and detail pages share the same row contract.
+- Saved acquisition statuses are Reviewing, Ready, Archived, Purchased, and Rejected.
+- Phase 4.1 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic project slot population.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -352,6 +363,7 @@ Apply these Supabase migrations in order:
 9. `202607060001_v3_2_evidence_review.sql`
 10. `202607060002_v3_3_listing_intelligence.sql`
 11. `202607060003_v3_4_importer_fixtures.sql`
+12. `202607060004_v4_1_acquisition_persistence.sql`
 
 ## Vercel Deployment
 
@@ -386,4 +398,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through v4.0 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through Phase 4.1 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.

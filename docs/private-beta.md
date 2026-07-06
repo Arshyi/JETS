@@ -58,6 +58,7 @@ Before a beta session:
    - `202607060001_v3_2_evidence_review.sql`
    - `202607060002_v3_3_listing_intelligence.sql`
    - `202607060003_v3_4_importer_fixtures.sql`
+   - `202607060004_v4_1_acquisition_persistence.sql`
 10. Run `npm run build`.
 11. Run `npm run lint -- --max-warnings=0`.
 

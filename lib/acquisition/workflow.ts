@@ -30,7 +30,7 @@ import type {
   ConfidenceSourceType
 } from "@/types/solution-intelligence";
 
-const acquisitionVersion = "v4.0";
+const acquisitionVersion = "v4.1";
 
 export const acquisitionMarketplaceOptions: AcquisitionMarketplaceOption[] = [
   {
@@ -111,10 +111,9 @@ export const defaultAcquisitionCorrections: AcquisitionCorrection[] = [
 
 export const acquisitionStatusLabels: Record<AcquisitionRecord["status"], string> = {
   archived: "Archived",
-  "needs-review": "Needs review",
   purchased: "Purchased",
   ready: "Ready",
-  "recently-captured": "Recently captured",
+  reviewing: "Reviewing",
   rejected: "Rejected"
 };
 
@@ -493,8 +492,7 @@ export function getDecisionStatusFromReadiness(
   readiness: AcquisitionAnalysis["readiness"]
 ): AcquisitionRecord["status"] {
   if (readiness === "ready") return "ready";
-  if (readiness === "not-ready") return "needs-review";
-  return "needs-review";
+  return "reviewing";
 }
 
 export function getAcquisitionGoalOptions() {

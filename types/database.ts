@@ -9,6 +9,243 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      acquisition_compare_sets: {
+        Row: {
+          acquisition_ids: string[];
+          created_at: string;
+          id: string;
+          title: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          acquisition_ids?: string[];
+          created_at?: string;
+          id?: string;
+          title: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          acquisition_ids?: string[];
+          created_at?: string;
+          id?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      acquisition_corrections: {
+        Row: {
+          acquisition_id: string;
+          before_value: string | null;
+          corrected_value: string | null;
+          created_at: string;
+          evidence_payload: Json;
+          field_id: string;
+          id: string;
+          is_unknown: boolean;
+          user_id: string;
+        };
+        Insert: {
+          acquisition_id: string;
+          before_value?: string | null;
+          corrected_value?: string | null;
+          created_at?: string;
+          evidence_payload?: Json;
+          field_id: string;
+          id?: string;
+          is_unknown?: boolean;
+          user_id: string;
+        };
+        Update: {
+          acquisition_id?: string;
+          before_value?: string | null;
+          corrected_value?: string | null;
+          created_at?: string;
+          evidence_payload?: Json;
+          field_id?: string;
+          id?: string;
+          is_unknown?: boolean;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      acquisition_decisions: {
+        Row: {
+          acquisition_id: string;
+          created_at: string;
+          decision: string;
+          id: string;
+          metadata: Json;
+          reason: string | null;
+          user_id: string;
+        };
+        Insert: {
+          acquisition_id: string;
+          created_at?: string;
+          decision: string;
+          id?: string;
+          metadata?: Json;
+          reason?: string | null;
+          user_id: string;
+        };
+        Update: {
+          acquisition_id?: string;
+          created_at?: string;
+          decision?: string;
+          id?: string;
+          metadata?: Json;
+          reason?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      acquisition_notes: {
+        Row: {
+          acquisition_id: string;
+          body: string;
+          created_at: string;
+          id: string;
+          note_type: string;
+          user_id: string;
+        };
+        Insert: {
+          acquisition_id: string;
+          body: string;
+          created_at?: string;
+          id?: string;
+          note_type?: string;
+          user_id: string;
+        };
+        Update: {
+          acquisition_id?: string;
+          body?: string;
+          created_at?: string;
+          id?: string;
+          note_type?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      acquisition_project_links: {
+        Row: {
+          acquisition_id: string;
+          created_at: string;
+          id: string;
+          link_type: string;
+          project_id: string | null;
+          user_id: string;
+        };
+        Insert: {
+          acquisition_id: string;
+          created_at?: string;
+          id?: string;
+          link_type?: string;
+          project_id?: string | null;
+          user_id: string;
+        };
+        Update: {
+          acquisition_id?: string;
+          created_at?: string;
+          id?: string;
+          link_type?: string;
+          project_id?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      acquisition_records: {
+        Row: {
+          analysis_snapshot: Json;
+          app_version: string;
+          condition: string;
+          confidence: string;
+          created_at: string;
+          currency: string;
+          description: string;
+          detected_platform_id: string | null;
+          detected_platform_name: string | null;
+          id: string;
+          image_count: number;
+          listing_url: string | null;
+          location: string;
+          marketplace: string;
+          normalized_payload: Json;
+          personal_notes: Json;
+          price_amount: number | null;
+          price_text: string;
+          raw_payload: Json;
+          readiness: string;
+          recommendation_preview_score: number;
+          seller_notes: string | null;
+          source_id: string;
+          status: string;
+          title: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          analysis_snapshot?: Json;
+          app_version?: string;
+          condition: string;
+          confidence: string;
+          created_at?: string;
+          currency: string;
+          description: string;
+          detected_platform_id?: string | null;
+          detected_platform_name?: string | null;
+          id?: string;
+          image_count?: number;
+          listing_url?: string | null;
+          location: string;
+          marketplace: string;
+          normalized_payload?: Json;
+          personal_notes?: Json;
+          price_amount?: number | null;
+          price_text: string;
+          raw_payload?: Json;
+          readiness: string;
+          recommendation_preview_score?: number;
+          seller_notes?: string | null;
+          source_id: string;
+          status?: string;
+          title: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          analysis_snapshot?: Json;
+          app_version?: string;
+          condition?: string;
+          confidence?: string;
+          created_at?: string;
+          currency?: string;
+          description?: string;
+          detected_platform_id?: string | null;
+          detected_platform_name?: string | null;
+          id?: string;
+          image_count?: number;
+          listing_url?: string | null;
+          location?: string;
+          marketplace?: string;
+          normalized_payload?: Json;
+          personal_notes?: Json;
+          price_amount?: number | null;
+          price_text?: string;
+          raw_payload?: Json;
+          readiness?: string;
+          recommendation_preview_score?: number;
+          seller_notes?: string | null;
+          source_id?: string;
+          status?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       build_project_audit_events: {
         Row: {
           after_state: Json | null;
@@ -1491,6 +1728,18 @@ export type Database = {
 };
 
 export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+export type AcquisitionCompareSetRow =
+  Database["public"]["Tables"]["acquisition_compare_sets"]["Row"];
+export type AcquisitionCorrectionRow =
+  Database["public"]["Tables"]["acquisition_corrections"]["Row"];
+export type AcquisitionDecisionRow =
+  Database["public"]["Tables"]["acquisition_decisions"]["Row"];
+export type AcquisitionNoteRow =
+  Database["public"]["Tables"]["acquisition_notes"]["Row"];
+export type AcquisitionProjectLinkRow =
+  Database["public"]["Tables"]["acquisition_project_links"]["Row"];
+export type AcquisitionRecordRow =
+  Database["public"]["Tables"]["acquisition_records"]["Row"];
 export type BuildProjectRow =
   Database["public"]["Tables"]["build_projects"]["Row"];
 export type BuildProjectSlotRow =
