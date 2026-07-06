@@ -53,6 +53,11 @@ listing. Normalized listings can now be persisted, parsed fields can be reviewed
 or corrected, duplicate candidates can be inspected, and recommendation
 readiness can be previewed before any listing becomes project input.
 
+Version 3.4 adds importer fixtures. Fixture rows are controlled raw listing
+snapshots used to validate parser behavior, seed Listing Intelligence into
+Supabase, generate parsed-field evidence, and record duplicate decisions without
+building live ingestion.
+
 ## Source Adapters
 
 Every future source should become an adapter that produces raw listing input.
@@ -183,6 +188,11 @@ v3.3 connects that evidence model to persisted listings:
 - `listing_duplicate_candidates` stores deterministic duplicate signals.
 - `listing_review_events` records listing-level audit events.
 
+v3.4 adds importer run logs:
+
+- `importer_fixture_runs` stores dry-run/import summaries.
+- `importer_fixture_run_items` stores per-fixture created, updated, skipped, or error results.
+
 ## Marketplace Health
 
 Every normalized listing exposes:
@@ -256,6 +266,7 @@ Bad:
 Good:
 
 - source adapter produces raw listing input
+- importer fixture produces controlled raw listing input before live source access exists
 - parser normalizes fields with confidence
 - parser attaches evidence candidates when available
 - platform detection links to platform knowledge
@@ -287,17 +298,28 @@ Raw Listing
 -> Recommendation Path
 ```
 
+The `/admin/importer-fixtures` workspace shows:
+
+```text
+Fixture Row
+-> Validation
+-> Dry Run
+-> Seed Listing
+-> Parsed Field Evidence
+-> Listing Review
+```
+
 ## Future Work
 
 Before live ingestion:
 
 - add source-specific policy reviews
 - add adapter fixture tests
-- add seeded listing import into Supabase
 - add source attribution and takedown workflow
 - add conflict handling between sources
 - add evidence links for platform claims
-- add duplicate review actions
+- add source-specific importer regression tests
+- add duplicate merge preview
 
 Only after those foundations should JETS consider APIs, browser extension
 capture, OCR, image recognition, LLM extraction, or carefully approved scraping.

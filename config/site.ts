@@ -174,6 +174,12 @@ export const workspaceNav: NavItem[] = [
     status: "v0.4"
   },
   {
+    title: "Importer Fixtures",
+    href: "/admin/importer-fixtures",
+    description: "Admin-only fixture validation, dry-run preview, and demo listing seeding for Listing Intelligence.",
+    status: "v3.4"
+  },
+  {
     title: "Settings",
     href: "/settings",
     description: "Supabase-backed user, theme, and preference controls.",

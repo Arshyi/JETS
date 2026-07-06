@@ -1245,6 +1245,105 @@ export type Database = {
         };
         Relationships: [];
       };
+      importer_fixture_runs: {
+        Row: {
+          app_version: string;
+          created_at: string;
+          created_by: string | null;
+          created_count: number;
+          error_count: number;
+          finished_at: string | null;
+          fixture_count: number;
+          fixture_set_id: string;
+          id: string;
+          mode: string;
+          skipped_count: number;
+          started_at: string;
+          status: string;
+          summary: Json;
+          updated_count: number;
+        };
+        Insert: {
+          app_version?: string;
+          created_at?: string;
+          created_by?: string | null;
+          created_count?: number;
+          error_count?: number;
+          finished_at?: string | null;
+          fixture_count?: number;
+          fixture_set_id: string;
+          id?: string;
+          mode?: string;
+          skipped_count?: number;
+          started_at?: string;
+          status?: string;
+          summary?: Json;
+          updated_count?: number;
+        };
+        Update: {
+          app_version?: string;
+          created_at?: string;
+          created_by?: string | null;
+          created_count?: number;
+          error_count?: number;
+          finished_at?: string | null;
+          fixture_count?: number;
+          fixture_set_id?: string;
+          id?: string;
+          mode?: string;
+          skipped_count?: number;
+          started_at?: string;
+          status?: string;
+          summary?: Json;
+          updated_count?: number;
+        };
+        Relationships: [];
+      };
+      importer_fixture_run_items: {
+        Row: {
+          created_at: string;
+          error_codes: string[];
+          external_id: string;
+          fixture_key: string;
+          id: string;
+          listing_key: string | null;
+          marketplace: string;
+          message: string;
+          metadata: Json;
+          normalized_listing_id: string | null;
+          run_id: string;
+          status: string;
+        };
+        Insert: {
+          created_at?: string;
+          error_codes?: string[];
+          external_id: string;
+          fixture_key: string;
+          id?: string;
+          listing_key?: string | null;
+          marketplace: string;
+          message: string;
+          metadata?: Json;
+          normalized_listing_id?: string | null;
+          run_id: string;
+          status: string;
+        };
+        Update: {
+          created_at?: string;
+          error_codes?: string[];
+          external_id?: string;
+          fixture_key?: string;
+          id?: string;
+          listing_key?: string | null;
+          marketplace?: string;
+          message?: string;
+          metadata?: Json;
+          normalized_listing_id?: string | null;
+          run_id?: string;
+          status?: string;
+        };
+        Relationships: [];
+      };
       listing_sources: {
         Row: {
           adapter_mode: string;
@@ -1431,6 +1530,10 @@ export type ListingDuplicateCandidateRow =
   Database["public"]["Tables"]["listing_duplicate_candidates"]["Row"];
 export type ListingReviewEventRow =
   Database["public"]["Tables"]["listing_review_events"]["Row"];
+export type ImporterFixtureRunRow =
+  Database["public"]["Tables"]["importer_fixture_runs"]["Row"];
+export type ImporterFixtureRunItemRow =
+  Database["public"]["Tables"]["importer_fixture_run_items"]["Row"];
 export type EvidenceSourceRow =
   Database["public"]["Tables"]["evidence_sources"]["Row"];
 export type EvidenceRecordRow =

@@ -17,6 +17,7 @@ import {
   reviewListingFieldAction,
   reviewListingStatusAction
 } from "@/lib/supabase/listing-intelligence-actions";
+import { reviewDuplicateCandidateAction } from "@/lib/supabase/importer-fixture-actions";
 import { formatEvidenceLabel } from "@/lib/evidence-engine";
 import { getListingReadinessLabel } from "@/lib/listing-intelligence/engine";
 import {
@@ -444,6 +445,50 @@ function ListingStatusForm({ listing }: { listing: ListingIntelligenceRecord }) 
   );
 }
 
+function DuplicateReviewForm({
+  duplicateId,
+  listing
+}: {
+  duplicateId: string;
+  listing: ListingIntelligenceRecord;
+}) {
+  return (
+    <form action={reviewDuplicateCandidateAction} className="mt-4 grid gap-3">
+      <input type="hidden" name="duplicateId" value={duplicateId} />
+      <input type="hidden" name="listingKey" value={listing.id} />
+      <input type="hidden" name="returnTo" value="/listing-intelligence/duplicates" />
+      <label className="grid gap-2 text-sm font-semibold">
+        Duplicate decision
+        <select
+          name="duplicateAction"
+          className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal"
+          defaultValue="merge-later"
+        >
+          <option value="mark-duplicate">Mark duplicate</option>
+          <option value="mark-distinct">Mark distinct</option>
+          <option value="merge-later">Merge candidate later</option>
+        </select>
+      </label>
+      <label className="grid gap-2 text-sm font-semibold">
+        Reason
+        <textarea
+          name="reason"
+          rows={2}
+          maxLength={1200}
+          className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-normal"
+          placeholder="Explain the duplicate decision."
+        />
+      </label>
+      <button
+        type="submit"
+        className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+      >
+        Save duplicate decision
+      </button>
+    </form>
+  );
+}
+
 function FieldTable({
   canModerate,
   listing
@@ -718,6 +763,17 @@ export function ListingDuplicateReview({
                     </li>
                   ))}
                 </ul>
+                {state.canModerate && candidate.id ? (
+                  <DuplicateReviewForm
+                    duplicateId={candidate.id}
+                    listing={listing}
+                  />
+                ) : (
+                  <p className="mt-4 text-sm leading-6 text-muted">
+                    Persisted duplicate decisions are available after fixture
+                    import creates reviewable duplicate candidates.
+                  </p>
+                )}
               </div>
             ))}
           </div>

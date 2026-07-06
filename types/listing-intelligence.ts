@@ -138,6 +138,11 @@ export type ListingDuplicateCandidate = {
   candidateListingId: string;
   candidateTitle: string;
   confidence: EvidenceConfidence;
+  id?: string;
+  reviewReason?: string | null;
+  reviewStatus?: ListingFieldReviewStatus;
+  reviewedAt?: string | null;
+  reviewedBy?: string | null;
   signals: ListingDuplicateSignal[];
   status: ListingDuplicateStatus;
 };

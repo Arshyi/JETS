@@ -66,6 +66,14 @@ These tables preserve:
 - duplicate signals
 - review event history
 
+Version 3.4 adds importer fixture run logs:
+
+- `importer_fixture_runs`
+- `importer_fixture_run_items`
+
+Those tables preserve dry-run and seed-import summaries before any live source
+connectors exist.
+
 ## Review States
 
 Listings use the shared moderation language:
@@ -211,6 +219,32 @@ The listing detail view previews:
 This is not project creation. It is a pre-project review surface that helps JETS
 decide whether the listing is worth using as an input.
 
+## Importer Fixture Seeding
+
+v3.4 adds an admin-only fixture importer at `/admin/importer-fixtures`.
+
+The importer can:
+
+- validate fixture rows
+- dry-run fixture results
+- seed demo/manual listings into Supabase
+- create or update Listing Intelligence records
+- create parsed fields
+- create or link evidence for every parsed field
+- create duplicate candidates
+- record importer run summaries
+
+Fixture validation catches:
+
+- missing title
+- missing price
+- unsupported marketplace
+- invalid currency
+- low-confidence platform detection
+- duplicate external ID
+
+This is still not live ingestion. Fixtures are local representative rows.
+
 ## Future Ingestion Hooks
 
 v3.3 prepares interfaces for future producers:
@@ -246,7 +280,7 @@ SUPABASE_SERVICE_ROLE_KEY
 
 ## Current Boundaries
 
-v3.3 does not implement:
+v3.4 does not implement:
 
 - live scraping
 - browser automation
@@ -258,19 +292,20 @@ v3.3 does not implement:
 - automatic duplicate merging
 - bulk import
 
-The value of this milestone is the review contract. Once real producers arrive,
-they can all feed the same normalized listing and evidence pipeline.
+The value of v3.3 was the review contract. The value of v3.4 is controlled
+seeding into that contract. Once real producers arrive, they should behave like
+fixture producers first.
 
-## Recommended v3.4
+## Recommended v3.5
 
-Build importer fixtures and seeding:
+Build source-specific fixture coverage and listing governance:
 
 - deterministic fixture tests for each planned source family
-- seeded demo listing import into Supabase
-- bulk parsed-field evidence link generation
-- importer validation errors
-- source attribution and takedown notes
-- duplicate review actions
+- parser regression coverage
+- source attribution and takedown workflow
+- conflict review for listing facts
+- duplicate merge preview without automatic merge
+- seeded source evidence checks
 
-Still do not add live scraping or AI until listing review, correction, and
-evidence linking are stable.
+Still do not add live scraping or AI until source-specific fixtures prove the
+review, correction, evidence, and duplicate flows are stable.

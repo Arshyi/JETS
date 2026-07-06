@@ -29,7 +29,8 @@ const migrations = [
   "202607030013_v2_3_project_branching.sql",
   "202607030014_production_schema_hardening.sql",
   "202607060001_v3_2_evidence_review.sql",
-  "202607060002_v3_3_listing_intelligence.sql"
+  "202607060002_v3_3_listing_intelligence.sql",
+  "202607060003_v3_4_importer_fixtures.sql"
 ];
 
 const envRows = [
@@ -57,13 +58,13 @@ const envRows = [
     name: "SUPABASE_SERVICE_ROLE_KEY",
     status: isSupabaseServiceRoleConfigured ? "Set" : "Optional",
     description:
-      "Required for admin ingestion persistence, evidence review moderation, and listing field review."
+      "Required for admin ingestion persistence, evidence review moderation, listing field review, and importer fixture seeding."
   },
   {
     name: "JETS_ADMIN_EMAILS",
     status: process.env.JETS_ADMIN_EMAILS ? "Set" : "Optional",
     description:
-      "Comma-separated admin allowlist for /admin/ingestion, /evidence/review, and /listing-intelligence/review."
+      "Comma-separated admin allowlist for /admin/ingestion, /admin/importer-fixtures, /evidence/review, and /listing-intelligence/review."
   }
 ];
 

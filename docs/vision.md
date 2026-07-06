@@ -284,7 +284,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 3.3 - Listing Intelligence and Human Review
 
-- Current.
+- Complete.
 - Persist normalized marketplace listing candidates, parsed fields, human corrections, duplicate candidates, and review events.
 - Treat every listing as an engineering object before it can influence recommendation previews.
 - Add parsed-field review actions: accept, reject, correct, and mark unknown.
@@ -295,12 +295,23 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 3.4 - Importer Fixture and Listing Seeding Layer
 
+- Current.
+- Add deterministic importer fixture system with fixture source type, validation, parsing, import result, and error reporting.
+- Add admin-only dry-run and seed-import action for representative demo/manual listings.
+- Persist importer fixture run summaries and item-level results.
+- Generate or link evidence records and parsed-field evidence links for every parsed field.
+- Add duplicate review actions: mark duplicate, mark distinct, and merge-candidate-later placeholder.
+- Validate missing title, missing price, unsupported marketplace, invalid currency, low-confidence platform detection, and duplicate external ID.
+- Keep live scraping, browser automation, marketplace APIs, AI extraction, OCR, and checkout deferred.
+
+### Version 3.5 - Source Fixture Coverage and Listing Governance
+
 - Recommended next.
-- Add deterministic importer fixture tests for each planned source family.
-- Add seeded listing import workflow for demo/manual data into Supabase.
-- Add bulk parsed-field evidence link generation.
-- Add conflict/takedown workflow for listing facts.
-- Add CSV/manual import validation without scraping or marketplace API access.
+- Add source-specific fixture suites for Dubizzle, Facebook Marketplace, eBay, Kijiji, Craigslist, local store CSV, and manual entry.
+- Add takedown/removal workflow for listing records and evidence.
+- Add conflict review for listing facts across sources.
+- Add importer regression tests for parser aliases, confidence, duplicate detection, and evidence generation.
+- Keep live ingestion deferred until source-specific fixtures prove stable.
 
 ## Idea Parking Lot
 

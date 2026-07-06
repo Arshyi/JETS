@@ -197,6 +197,11 @@ function mapDuplicateRow(
     candidateListingId: key,
     candidateTitle: titleByKey.get(key) ?? key,
     confidence: toConfidence(row.confidence),
+    id: row.id,
+    reviewReason: row.review_reason,
+    reviewStatus: toFieldReviewStatus(row.review_status),
+    reviewedAt: row.reviewed_at,
+    reviewedBy: row.reviewed_by,
     signals: parseSignals(row.signals),
     status:
       row.status === "likely-duplicate" || row.status === "distinct"

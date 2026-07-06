@@ -20,7 +20,7 @@ export const betaSetupChecklist = [
   {
     title: "Apply migrations in order",
     description:
-      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, v3.2 evidence review, and v3.3 listing intelligence SQL migrations in Supabase before testing persistence."
+      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, v3.2 evidence review, v3.3 listing intelligence, and v3.4 importer fixture SQL migrations in Supabase before testing persistence."
   },
   {
     title: "Create a beta account",
@@ -73,6 +73,11 @@ export const betaDemoWorkflow = [
     title: "Listing Intelligence check",
     description:
       "Open /listing-intelligence, submit a manual listing, then use /listing-intelligence/review with admin/service-role setup to review parsed fields."
+  },
+  {
+    title: "Importer fixture check",
+    description:
+      "Open /admin/importer-fixtures, run a dry-run preview, then seed core demo listings with admin/service-role setup and open a created listing review page."
   }
 ] as const;
 
@@ -92,5 +97,6 @@ export const betaSmokeTests = [
   "Sources and admin ingestion remain dry-run only.",
   "Evidence review shows setup, public records, pending submissions, conflicts, and service-role moderation states.",
   "Listing Intelligence shows setup, demo fallback, manual listing submission, field review, duplicate signals, and service-role moderation states.",
+  "Importer fixtures show setup, dry-run preview, validation errors, seed result table, and created listing review links.",
   "npm run build and npm run lint -- --max-warnings=0 pass."
 ] as const;
