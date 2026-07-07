@@ -18,6 +18,8 @@ Raw Marketplace Data
 -> Listing Intelligence
 -> Evidence
 -> Platform Knowledge
+-> Strategy
+-> Builder
 -> Solution Intelligence
 -> Optimization
 -> Recommendation
@@ -66,6 +68,11 @@ builder validation now run against golden hardware scenarios.
 Version 4.0 adds Manual Acquisition. Users can manually capture a listing from
 any source and feed the same Marketplace Intelligence pipeline without scraping,
 browser automation, APIs, OCR, or AI.
+
+Phase 4.2 connects saved acquisitions into Solution Builder through reviewed
+handoff. Phase 4.3 adds Strategy before that handoff so a captured listing can
+become a project, feed a hybrid path, remain evidence only, or become a
+walk-away decision.
 
 ## Source Adapters
 
@@ -231,7 +238,7 @@ For example, a ThinkStation P520 listing can surface:
 - Platform Potential
 
 Marketplace Intelligence does not decide the best build. It prepares normalized
-evidence for the layers that do.
+evidence for Strategy, Builder, Solution Intelligence, and Optimization.
 
 ## Upgrade Preview
 
@@ -258,6 +265,8 @@ Marketplace
 -> Normalization
 -> Evidence
 -> Knowledge
+-> Strategy
+-> Builder
 -> Reasoning
 -> Optimization
 -> Recommendation
@@ -281,6 +290,7 @@ Good:
 - platform detection links to platform knowledge
 - evidence review decides whether parsed facts can strengthen trusted knowledge
 - listing intelligence decides whether this specific listing is ready for recommendation preview
+- strategy decides whether a listing deserves a project or should be deferred
 - solution intelligence explains tradeoffs
 - optimizer uses normalized, reasoned project data
 - recommendation explains the final choice
@@ -347,6 +357,7 @@ Manual Listing
 -> Evidence
 -> Listing Intelligence
 -> Recommendation Preview
+-> Strategy
 -> Project Handoff
 ```
 
@@ -360,12 +371,18 @@ readiness, confidence, preview score, corrections, notes, decisions, compare
 sets, and optional project links. This keeps acquisition as a user-owned review
 workflow while Marketplace Intelligence remains the source-normalization layer.
 
+Phase 4.3 reads saved acquisitions as strategy inputs. The Strategy Engine does
+not scrape, parse, or mutate marketplace data. It compares hardware paths such
+as used workstation, repair candidate, mini PC, laptop plus eGPU, hybrid, build
+from scratch, upgrade existing machine, and wait for better value before the
+user creates or updates a project.
+
 ## Future Work
 
 Before live ingestion:
 
 - prove persisted manual acquisition is useful with real users
-- harden project handoff from saved acquisitions into slot-level builder context
+- harden strategy-guided handoff from saved acquisitions into slot-level builder context
 - add source-specific policy reviews
 - add adapter and source fixture tests
 - add source attribution and takedown workflow

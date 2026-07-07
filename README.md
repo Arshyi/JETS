@@ -2,7 +2,7 @@
 
 JETS (Just Enough Tech Solutions) is a Hardware Solution Builder for used PCs, laptops, workstations, servers, components, and adapter-based solution paths.
 
-JETS is now acquisition-centered and project-backed. The practical experience is: capture a hardware listing manually, normalize it, review evidence and missing information, decide whether it is worth pursuing, then create or reuse a project for build-level validation and optimization. Phase 4 uses the existing engine instead of adding another subsystem.
+JETS is now acquisition-centered, strategy-aware, and project-backed. The practical experience is: capture a hardware listing manually, normalize it, review evidence and missing information, decide whether it is worth pursuing, compare hardware strategies, then create or reuse a project for build-level validation and optimization. Phase 4 uses the existing engine instead of adding another subsystem.
 
 ## Commands
 
@@ -41,21 +41,23 @@ npm run validate:hardware
 - **3.5:** Hardware Knowledge Validation Framework. Complete.
 - **4.0:** Manual Acquisition Workflow. Complete.
 - **4.1:** Persisted acquisition records and project links. Complete.
-- **4.2:** Acquisition to Project Handoff. Current.
+- **4.2:** Acquisition to Project Handoff. Complete.
+- **4.3:** Strategy Engine. Current.
 
 ## Primary Workflow
 
 1. A user finds hardware and captures the listing manually at `/acquire`.
 2. JETS normalizes the raw listing into parsed fields, platform detection, confidence, evidence, missing information, and Recommendation Readiness.
 3. The user can correct CPU, GPU, RAM, platform, price, and storage before saving; corrections are treated as evidence.
-4. The user decides whether to analyze only, save, archive, reject, mark purchased, compare acquisitions, or use the acquisition in a project.
-5. Promising acquisitions are classified, mapped to candidate slots, reviewed by the user, then applied to a new project, existing project, branch, or evidence-only link.
-6. Builder, Inventory, Validation, Platform Knowledge, Solution Intelligence, Optimization, Branching, and Compare handle the build-level decision.
+4. The user decides whether to analyze only, save, archive, reject, mark purchased, compare acquisitions, analyze strategy, or use the acquisition in a project.
+5. Strategy compares build, buy, upgrade, repair, laptop/eGPU, mini PC, server conversion, hybrid, and wait-for-better-value paths before a project is created.
+6. Promising acquisitions are classified, mapped to candidate slots, reviewed by the user, then applied to a new project, existing project, branch, or evidence-only link.
+7. Builder, Inventory, Validation, Platform Knowledge, Solution Intelligence, Optimization, Branching, and Compare handle the build-level decision.
 
 Marketplace Intelligence sits below the workflow as input plumbing:
 
 ```text
-Raw Marketplace Data -> Listing Intelligence -> Evidence -> Platform Knowledge -> Solution Intelligence -> Optimization -> Recommendation
+Raw Marketplace Data -> Listing Intelligence -> Evidence -> Platform Knowledge -> Strategy -> Builder -> Solution Intelligence -> Optimization -> Recommendation
 ```
 
 Ingestion and parsing do not make recommendations. Optimization and reasoning do not know how a listing was captured. Evidence records explain why JETS trusts a parsed field, knowledge item, or recommendation.
@@ -328,6 +330,21 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Project detail pages show linked acquisitions, source listing evidence, and acquisition-derived slots.
 - Phase 4.2 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic slot population without user review.
 
+## Phase 4.3 Notes
+
+- Strategy schema migration lives in `supabase/migrations/202607070002_v4_3_strategy_engine.sql`.
+- Strategy domain types live in `types/strategy.ts`.
+- The deterministic strategy engine lives in `lib/strategy-engine/engine.ts`.
+- Saved acquisition inputs are mapped through `lib/strategy-engine/acquisitions.ts`.
+- Strategy project creation lives in `lib/supabase/strategy-actions.ts`.
+- The Strategy workspace is available at `/strategy`.
+- Strategy compares upgrade, used workstation, build-from-scratch, laptop/eGPU, mini PC, server conversion, repair, wait, and hybrid paths before creating a project.
+- Strategy-created projects preserve `strategy_id`, `strategy_title`, and `strategy_snapshot` on `build_projects`.
+- Project dashboard and project detail pages show the strategy source.
+- Hardware validation now includes deterministic strategy fixtures for budget-too-small, overpriced workstation, amazing deal, bad platform, excellent platform, and repair-candidate scenarios.
+- Documentation lives in `docs/strategy-engine.md`.
+- Phase 4.3 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic project creation from acquisitions.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -378,6 +395,7 @@ Apply these Supabase migrations in order:
 11. `202607060003_v3_4_importer_fixtures.sql`
 12. `202607060004_v4_1_acquisition_persistence.sql`
 13. `202607070001_v4_2_acquisition_project_handoff.sql`
+14. `202607070002_v4_3_strategy_engine.sql`
 
 ## Vercel Deployment
 
@@ -412,4 +430,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through Phase 4.2 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, and `docs/solution-intelligence-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through Phase 4.3 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.

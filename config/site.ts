@@ -35,6 +35,7 @@ export const siteConfig = {
 export const mainNav: NavItem[] = [
   { title: "Home", href: "/" },
   { title: "Acquire", href: "/acquire" },
+  { title: "Strategy", href: "/strategy" },
   { title: "Projects", href: "/solution-builder/projects" },
   { title: "Builder", href: "/solution-builder" },
   { title: "Inventory", href: "/inventory" },
@@ -47,6 +48,12 @@ export const workspaceNav: NavItem[] = [
     href: "/acquire",
     description: "Manual listing capture workflow for evaluating hardware before it becomes a project.",
     status: "v4.0"
+  },
+  {
+    title: "Strategy Engine",
+    href: "/strategy",
+    description: "Deterministic pre-project strategy comparison for build, buy, repair, upgrade, or walk-away decisions.",
+    status: "v4.3"
   },
   {
     title: "Solution Builder",

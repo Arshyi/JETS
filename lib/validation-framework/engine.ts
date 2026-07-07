@@ -1,6 +1,7 @@
 import { compatibilityValidationFixtures } from "@/data/compatibility/validation-fixtures";
 import { adapterIntelligenceProfiles, platformKnowledgeProfiles } from "@/data/platform-knowledge";
 import { buildWorkspaceSlotDefinitions, starterEngineeringWorkspaceProject } from "@/data/solution-builder";
+import { strategyValidationFixtures } from "@/data/strategy-validation-fixtures";
 import { hardwareValidationScenarios } from "@/data/validation/hardware-scenarios";
 import { getCompatibilityValidationResults } from "@/data/compatibility/validation-fixtures";
 import { getKnowledgeQualityForPlatform, getEvidenceSummaryForPlatform } from "@/lib/evidence-engine";
@@ -8,6 +9,7 @@ import { buildImporterFixtureResult } from "@/lib/importer-fixtures/engine";
 import { buildListingIntelligenceRecord } from "@/lib/listing-intelligence/engine";
 import { normalizeMarketplaceListing } from "@/lib/marketplace-intelligence/normalize";
 import { optimizeBuildProject } from "@/lib/optimization-engine/pipeline";
+import { generateHardwareStrategies } from "@/lib/strategy-engine/engine";
 import { analyzeBuildSolution } from "@/lib/solution-intelligence/engine";
 import { createBuildWorkspaceModel } from "@/lib/solution-builder/workspace";
 import { getComponentById, toWorkspaceSelection } from "@/lib/component-inventory";
@@ -39,6 +41,7 @@ const validationCoverageAreas: ValidationCoverageArea[] = [
   "evidence",
   "platform",
   "solution",
+  "strategy",
   "optimization",
   "compatibility",
   "builder"
@@ -234,6 +237,16 @@ function getRuleInventory(): Record<ValidationCoverageArea, string[]> {
       "solution:general-purpose-fallback",
       "solution:missing-gpu",
       "solution:risk-rejection"
+    ],
+    strategy: [
+      "strategy:budget-too-small",
+      "strategy:overpriced-workstation",
+      "strategy:amazing-deal",
+      "strategy:bad-platform",
+      "strategy:excellent-platform",
+      "strategy:repair-candidate",
+      "strategy:walk-away",
+      "strategy:project-seed"
     ]
   };
 }
@@ -458,6 +471,46 @@ function getCompatibilityFixtureFailures() {
     .map((result) => result.name);
 }
 
+function validateStrategies() {
+  return strategyValidationFixtures.map((fixture) => {
+    const result = generateHardwareStrategies(fixture.input);
+    const top = result.recommendations[0];
+    const topThreeTypes = result.recommendations
+      .slice(0, 3)
+      .map((recommendation) => recommendation.type);
+    const assertions = [
+      createAssertion(
+        "Expected top strategy remains deterministic.",
+        top.type === fixture.expectedTopStrategy,
+        fixture.expectedTopStrategy,
+        top.type
+      )
+    ];
+
+    if (fixture.expectedTopThree) {
+      assertions.push(
+        createAssertion(
+          "Expected strategy family remains in the top three.",
+          fixture.expectedTopThree.some((strategyType) =>
+            topThreeTypes.includes(strategyType)
+          ),
+          fixture.expectedTopThree.join(", "),
+          topThreeTypes.join(", ")
+        )
+      );
+    }
+
+    return {
+      actualTopStrategy: top.type,
+      assertions,
+      expectedTopStrategy: fixture.expectedTopStrategy,
+      fixtureId: fixture.id,
+      passed: assertions.every((assertion) => assertion.passed),
+      title: fixture.title
+    };
+  });
+}
+
 export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   const importerErrorCodes = getExpectedImporterErrorCodes();
   const scenarioResults = hardwareValidationScenarios.map((scenario) =>
@@ -465,6 +518,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   );
   const compatibilityFixtureFailures = getCompatibilityFixtureFailures();
   const platformKnowledge = validatePlatformKnowledge();
+  const strategyResults = validateStrategies();
   const coveredMarkers = createCoverageBuckets();
 
   for (const scenarioResult of scenarioResults) {
@@ -482,6 +536,13 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   addCoverage(coveredMarkers, {
     evidence: ["evidence:importer-validation-errors", "evidence:knowledge-quality"]
   });
+  addCoverage(coveredMarkers, {
+    strategy: [
+      ...strategyValidationFixtures.map((fixture) => `strategy:${fixture.id}`),
+      "strategy:walk-away",
+      "strategy:project-seed"
+    ]
+  });
 
   const inventory = getRuleInventory();
   const ruleCoverage = validationCoverageAreas.reduce((coverage, area) => {
@@ -490,8 +551,12 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   }, {} as Record<ValidationCoverageArea, RuleCoverageResult>);
   const passedScenarios = scenarioResults.filter((result) => result.passed).length;
   const failedScenarios = scenarioResults.length - passedScenarios;
+  const strategyFailures = strategyResults.filter((result) => !result.passed).length;
   const platformWarnings = platformKnowledge.filter((result) => !result.passed).length;
-  const passed = failedScenarios === 0 && compatibilityFixtureFailures.length === 0;
+  const passed =
+    failedScenarios === 0 &&
+    compatibilityFixtureFailures.length === 0 &&
+    strategyFailures === 0;
 
   return {
     compatibilityFixtureFailures,
@@ -501,11 +566,13 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     platformKnowledge,
     ruleCoverage,
     scenarioResults,
+    strategyResults,
     summary: {
       failedScenarios,
       passedScenarios,
       platformWarnings,
-      scenarios: scenarioResults.length
+      scenarios: scenarioResults.length,
+      strategyFailures
     }
   };
 }
@@ -566,6 +633,7 @@ Overall: ${statusLabel(suite.passed)}
 - Scenario pass rate: ${suite.overallPassRate}%
 - Passed scenarios: ${suite.summary.passedScenarios}
 - Failed scenarios: ${suite.summary.failedScenarios}
+- Strategy fixture failures: ${suite.summary.strategyFailures}
 - Platform knowledge warnings: ${suite.summary.platformWarnings}
 - Compatibility fixture failures: ${suite.compatibilityFixtureFailures.length}
 
@@ -584,6 +652,17 @@ ${coverageSections}
 | Status | Platform | Knowledge quality | Evidence records | Issues |
 | --- | --- | ---: | ---: | --- |
 ${platformRows}
+
+## Strategy Validation
+
+| Status | Fixture | Expected top strategy | Actual top strategy |
+| --- | --- | --- | --- |
+${suite.strategyResults
+  .map(
+    (result) =>
+      `| ${statusLabel(result.passed)} | ${result.title} | ${result.expectedTopStrategy} | ${result.actualTopStrategy} |`
+  )
+  .join("\n")}
 
 ## Compatibility Fixture Failures
 
@@ -608,6 +687,12 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
     .map(
       (result) =>
         `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.scenario.title)}</td><td>${escapeHtml(result.observed.platformId ?? "unknown")}</td><td>${escapeHtml(result.observed.readiness)}</td><td>${escapeHtml(result.observed.confidence)}</td></tr>`
+    )
+    .join("");
+  const strategyRows = suite.strategyResults
+    .map(
+      (result) =>
+        `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.title)}</td><td>${escapeHtml(result.expectedTopStrategy)}</td><td>${escapeHtml(result.actualTopStrategy)}</td></tr>`
     )
     .join("");
   const coverage = validationCoverageAreas
@@ -639,12 +724,18 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
       <li>Scenario pass rate: ${suite.overallPassRate}%</li>
       <li>Passed scenarios: ${suite.summary.passedScenarios}</li>
       <li>Failed scenarios: ${suite.summary.failedScenarios}</li>
+      <li>Strategy fixture failures: ${suite.summary.strategyFailures}</li>
       <li>Platform knowledge warnings: ${suite.summary.platformWarnings}</li>
     </ul>
     <h2>Scenario Results</h2>
     <table>
       <thead><tr><th>Status</th><th>Scenario</th><th>Platform</th><th>Readiness</th><th>Confidence</th></tr></thead>
       <tbody>${rows}</tbody>
+    </table>
+    <h2>Strategy Validation</h2>
+    <table>
+      <thead><tr><th>Status</th><th>Fixture</th><th>Expected top strategy</th><th>Actual top strategy</th></tr></thead>
+      <tbody>${strategyRows}</tbody>
     </table>
     <h2>Rule Coverage</h2>
     ${coverage}

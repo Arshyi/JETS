@@ -20,6 +20,8 @@ JETS currently uses mock/demo inventory. Live ingestion and scraping are planned
 
 Acquisition is the Phase 4 front door. Users should be able to capture hardware they found in the real world, manually enter listing facts, review what JETS can infer, correct missing fields as evidence, compare purchase candidates, and then create a project only when the hardware is worth pursuing.
 
+Strategy is the decision gate before Builder. It should answer whether the user should buy a used workstation, upgrade an existing machine, build from scratch, repair a candidate, use a laptop plus eGPU path, choose a mini PC, convert a server, use a hybrid path, or wait for better value. Not every acquisition deserves a project.
+
 Optimization is the differentiator. The long-term workflow should become Build -> Analyze -> Optimize -> Branch -> Compare, where JETS searches solution paths people would not normally consider while still explaining every tradeoff.
 
 Platform knowledge is the moat. JETS should know the quirks, hidden upgrade paths, adapter tricks, PCIe tradeoffs, and community discoveries that make one used platform much more useful than another similarly priced machine.
@@ -36,7 +38,7 @@ Validation is the quality layer. Before real marketplace data arrives, every det
 
 The near-term acquisition journey should feel continuous:
 
-Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Save Acquisition -> Review History -> Use in Project -> Builder Validation.
+Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Save Acquisition -> Review History -> Strategy -> Use in Project -> Builder Validation.
 
 The project journey remains:
 
@@ -346,13 +348,24 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 4.2 - Acquisition to Project Handoff
 
-- Current.
+- Complete.
 - Classify saved acquisitions as base systems, full systems, components, adapter paths, parts donors, or review-later records.
 - Map parsed acquisition facts into candidate project slots with confidence and source evidence.
 - Let the user accept, reject, correct, or leave proposed slots empty before applying anything.
 - Support new project creation, existing project insertion, acquisition branches, and evidence-only linking.
 - Show linked acquisitions and acquisition-derived slots on project detail pages.
 - Keep live ingestion, AI extraction, OCR, checkout, image uploads, and unreviewed slot population deferred.
+
+### Version 4.3 - Strategy Engine
+
+- Current.
+- Add deterministic strategy reasoning before project creation.
+- Compare upgrade existing machine, buy used workstation, build from scratch, laptop plus eGPU, mini PC, server conversion, repair existing hardware, wait for better value, and hybrid strategy paths.
+- Show tradeoff matrices for cost, performance, upgradeability, reliability, power draw, noise, difficulty, repairability, platform potential, future expansion, and confidence.
+- Let strategies create projects while preserving `strategy_id`, `strategy_title`, and `strategy_snapshot`.
+- Let saved acquisitions influence strategy without forcing every acquisition into Builder.
+- Add validation fixtures for budget-too-small, overpriced-workstation, amazing-deal, bad-platform, excellent-platform, and repair-candidate cases.
+- Keep live scraping, AI extraction, OCR, checkout, image uploads, and automated acquisition-to-project creation deferred.
 
 ## Idea Parking Lot
 
@@ -398,6 +411,7 @@ Ideas below are valuable, but they are not current milestone scope.
 - Conflict review queue
 - Moderator verification workflow
 - Knowledge Quality history
+- Strategy timing and walk-away reasoning
 
 ## Product Principles
 

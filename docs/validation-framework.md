@@ -20,6 +20,7 @@ Projects
 -> Listing Intelligence
 -> Evidence
 -> Platform Knowledge
+-> Strategy
 -> Solution Intelligence
 -> Optimization
 -> Branching
@@ -52,6 +53,7 @@ Golden scenarios should cover:
 - duplicate listings
 - adapter and hidden-opportunity paths
 - incomplete projects
+- strategy decisions before project creation
 - optimization behavior
 
 If a rule changes, the validation suite should fail until the golden output is
@@ -117,6 +119,7 @@ Each scenario defines:
 - expected builder issues
 - expected solution intelligence findings
 - expected importer validation coverage
+- expected strategy outcome for budget, platform quality, repair, and walk-away cases
 
 ## Regression Engine
 
@@ -129,6 +132,7 @@ The runner exercises the real deterministic systems:
 - duplicate candidate detection
 - Platform Knowledge lookup
 - Knowledge Quality scoring
+- Strategy ranking fixtures
 - Solution Builder evaluation
 - Solution Intelligence
 - Optimization
@@ -150,6 +154,7 @@ Golden outputs are stored inside each scenario. They currently validate:
 - expected builder issue IDs
 - expected solution intelligence finding IDs
 - expected importer validation error codes
+- expected top strategy for deterministic strategy fixtures
 - evidence linkage for parsed fields
 - duplicate candidate behavior
 
@@ -164,6 +169,7 @@ The report tracks coverage across:
 - Listing rules
 - Evidence rules
 - Platform rules
+- Strategy rules
 - Solution Intelligence rules
 - Optimization rules
 - Compatibility rules
@@ -256,6 +262,8 @@ User-provided listing
 -> Listing Intelligence
 -> Evidence candidates
 -> Platform Knowledge
+-> Strategy
+-> Builder
 -> Solution Intelligence
 -> Optimization
 ```

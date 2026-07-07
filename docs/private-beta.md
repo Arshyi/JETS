@@ -60,6 +60,7 @@ Before a beta session:
    - `202607060003_v3_4_importer_fixtures.sql`
    - `202607060004_v4_1_acquisition_persistence.sql`
    - `202607070001_v4_2_acquisition_project_handoff.sql`
+   - `202607070002_v4_3_strategy_engine.sql`
 10. Run `npm run build`.
 11. Run `npm run lint -- --max-warnings=0`.
 

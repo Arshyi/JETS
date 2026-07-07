@@ -1,6 +1,7 @@
 import {
   Archive,
   Check,
+  Compass,
   Link as LinkIcon,
   NotebookText,
   ShoppingBag,
@@ -34,7 +35,7 @@ import {
 } from "@/lib/supabase/acquisition-actions";
 import { getAcquisitionDetailState } from "@/lib/supabase/acquisition-queries";
 import { buildGeneratorCountries, buildGeneratorCurrencies } from "@/types/build-generator";
-import type { AcquisitionDecisionStatus } from "@/types/acquisition";
+import type { AcquisitionDecisionStatus, AcquisitionRecord } from "@/types/acquisition";
 import { hardwareUseCases } from "@/types/hardware";
 
 export const dynamic = "force-dynamic";
@@ -55,6 +56,17 @@ function statusTone(status: AcquisitionDecisionStatus) {
   if (status === "ready" || status === "purchased") return "accent";
   if (status === "reviewing") return "warning";
   return "neutral";
+}
+
+function getStrategyHref(record: AcquisitionRecord) {
+  const params = new URLSearchParams({
+    budget: String(record.snapshot.priceAmount ?? 850),
+    country: record.draft.currency === "AED" ? "United Arab Emirates" : "United States",
+    currency: record.draft.currency,
+    goal: "engineering"
+  });
+
+  return `/strategy?${params.toString()}`;
 }
 
 function formatDate(value: string) {
@@ -290,6 +302,13 @@ export default async function AcquisitionDetailPage({
               <StatusPill>{handoffPlan.summary}</StatusPill>
               <StatusPill>{handoffPlan.classification}</StatusPill>
             </div>
+            <Link
+              href={getStrategyHref(record)}
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground"
+            >
+              <Compass className="h-4 w-4" aria-hidden="true" />
+              Analyze strategy before project
+            </Link>
             <form
               action={handoffAcquisitionToProjectAction}
               className="mt-5 grid gap-5 rounded-lg border border-border bg-background p-4"

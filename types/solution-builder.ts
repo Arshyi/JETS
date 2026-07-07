@@ -153,6 +153,8 @@ export type BuildWorkspaceProject = {
   rootProjectId?: string | null;
   slots: BuildWorkspaceSlot[];
   status?: BuildProjectStatus;
+  strategyId?: string | null;
+  strategyTitle?: string | null;
   title: string;
   updatedAt?: string;
 };

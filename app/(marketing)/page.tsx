@@ -6,7 +6,7 @@ import { getBuildProjects } from "@/lib/supabase/queries";
 export const metadata: Metadata = {
   title: "What Hardware Are You Evaluating?",
   description:
-    "JETS helps users capture hardware listings, normalize facts, review evidence, and turn promising acquisitions into project-centered builds."
+    "JETS helps users capture hardware listings, normalize facts, review evidence, compare strategies, and turn promising acquisitions into project-centered builds."
 };
 
 export default async function HomePage() {
@@ -37,8 +37,8 @@ export default async function HomePage() {
               JETS currently uses manual capture, mock/demo inventory, and
               deterministic validation. Live ingestion and scraping are not
               active. The practical loop is: capture a listing, normalize it,
-              verify evidence, reason about the platform, then create or update
-              a project only when the hardware is worth pursuing.
+              verify evidence, compare strategy paths, then create or update a
+              project only when the hardware is worth pursuing.
             </p>
           </div>
         </div>

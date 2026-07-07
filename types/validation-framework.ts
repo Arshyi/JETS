@@ -11,6 +11,7 @@ import type {
   BuildWorkspaceProject
 } from "@/types/solution-builder";
 import type { ConfidenceLevel } from "@/types/solution-intelligence";
+import type { HardwareStrategyTypeId } from "@/types/strategy";
 
 export const validationScenarioIds = [
   "thinkstation-p510",
@@ -35,6 +36,7 @@ export type ValidationCoverageArea =
   | "evidence"
   | "platform"
   | "solution"
+  | "strategy"
   | "optimization"
   | "compatibility"
   | "builder";
@@ -107,6 +109,15 @@ export type PlatformKnowledgeValidationResult = {
   qualityScore: number;
 };
 
+export type StrategyValidationResult = {
+  actualTopStrategy: HardwareStrategyTypeId;
+  assertions: ValidationAssertion[];
+  expectedTopStrategy: HardwareStrategyTypeId;
+  fixtureId: string;
+  passed: boolean;
+  title: string;
+};
+
 export type RuleCoverageResult = {
   covered: string[];
   percent: number;
@@ -122,10 +133,12 @@ export type HardwareValidationSuiteResult = {
   platformKnowledge: PlatformKnowledgeValidationResult[];
   ruleCoverage: Record<ValidationCoverageArea, RuleCoverageResult>;
   scenarioResults: ValidationScenarioResult[];
+  strategyResults: StrategyValidationResult[];
   summary: {
     failedScenarios: number;
     passedScenarios: number;
     platformWarnings: number;
     scenarios: number;
+    strategyFailures: number;
   };
 };

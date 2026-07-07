@@ -25,6 +25,20 @@ It does not implement:
 
 The optimizer works from the current Build My Own project, typed mock component inventory, persisted project notes, and deterministic scoring rules.
 
+## Strategy Boundary
+
+Phase 4.3 adds Strategy before Optimization.
+
+Strategy decides whether the user should start from a used workstation, upgrade
+an existing machine, build from scratch, repair a candidate, use laptop plus
+eGPU, choose a mini PC, convert a server, combine a hybrid path, or wait for
+better value.
+
+Optimization only runs after a project exists. It improves selected slots while
+respecting locks, validation, compatibility, budget pressure, and tradeoffs.
+Comparison is a view over optimized project branches; Strategy comparison is a
+pre-project decision view.
+
 ## Files
 
 - `types/optimization.ts`: goals, depths, suggestion contracts, metrics, and result types.

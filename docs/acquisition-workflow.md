@@ -1,6 +1,6 @@
 # JETS Acquisition Workflow
 
-Version: 4.2
+Version: 4.3
 
 Phase 4 changes the development philosophy.
 
@@ -267,6 +267,25 @@ Handoff actions support:
 
 Acquisition feeds Solution Builder. It does not replace it.
 
+## Strategy Before Handoff
+
+Phase 4.3 adds a Strategy Engine between saved acquisition review and Builder
+handoff.
+
+A saved acquisition can now be used as strategy input before any project is
+created. Strategy can recommend:
+
+- buy the acquisition as a used workstation or base system
+- use it as part of a hybrid path
+- repair it first
+- keep it as evidence only
+- wait for better value
+- walk away
+
+The acquisition detail page links to `/strategy` so users can compare those
+paths before applying slot mappings. The original acquisition record remains
+unchanged.
+
 ## Project Audit And Evidence
 
 Phase 4.2 records handoff activity in the normal project audit table:
@@ -322,7 +341,7 @@ methods only. They should not become separate reasoning pipelines.
 
 ## Current Limitations
 
-Phase 4.2 does not include:
+Phase 4.3 does not include:
 
 - image upload or OCR
 - live marketplace access

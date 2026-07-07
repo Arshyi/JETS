@@ -7,6 +7,7 @@ Overall: PASS
 - Scenario pass rate: 100%
 - Passed scenarios: 12
 - Failed scenarios: 0
+- Strategy fixture failures: 0
 - Platform knowledge warnings: 5
 - Compatibility fixture failures: 0
 
@@ -81,6 +82,13 @@ Uncovered:
 - solution:streaming
 - solution:virtualization
 
+### strategy
+
+Coverage: 8/8 (100%)
+
+Uncovered:
+- None
+
 ### optimization
 
 Coverage: 6/10 (60%)
@@ -130,6 +138,17 @@ Uncovered:
 | FAIL | HP Z440 | 29 | 0 | No linked evidence records; Knowledge quality score is low |
 | PASS | HP Z840 | 50 | 1 | None |
 | FAIL | Mac Pro 5,1 | 37 | 1 | Knowledge quality score is low |
+
+## Strategy Validation
+
+| Status | Fixture | Expected top strategy | Actual top strategy |
+| --- | --- | --- | --- |
+| PASS | Budget too small | wait-for-better-value | wait-for-better-value |
+| PASS | Overpriced workstation | wait-for-better-value | wait-for-better-value |
+| PASS | Amazing deal | buy-used-workstation | buy-used-workstation |
+| PASS | Bad platform | wait-for-better-value | wait-for-better-value |
+| PASS | Excellent platform | buy-used-workstation | buy-used-workstation |
+| PASS | Repair candidate | repair-existing-hardware | repair-existing-hardware |
 
 ## Compatibility Fixture Failures
 

@@ -174,6 +174,8 @@ export function buildWorkspaceProjectFromRows(
     rootProjectId: projectRow.root_project_id,
     slots,
     status: parseStatus(projectRow.status),
+    strategyId: projectRow.strategy_id,
+    strategyTitle: projectRow.strategy_title,
     title: projectRow.title,
     updatedAt: projectRow.updated_at
   };

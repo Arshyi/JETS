@@ -3,6 +3,7 @@ import {
   BrainCircuit,
   BriefcaseBusiness,
   ClipboardCheck,
+  Compass,
   Gamepad2,
   History,
   Server,
@@ -48,6 +49,13 @@ export function HomeGoalGrid({ recentProjectHref }: HomeGoalGridProps) {
       href: "/acquire",
       icon: ClipboardCheck,
       title: "Acquire Hardware"
+    },
+    {
+      description:
+        "Compare build, buy, repair, upgrade, hybrid, and wait paths before you create a project.",
+      href: "/strategy",
+      icon: Compass,
+      title: "Compare Strategies"
     },
     {
       description:

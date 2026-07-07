@@ -503,6 +503,9 @@ export type Database = {
           source_optimization_run_id: string | null;
           source_optimization_suggestion_ids: string[];
           status: string;
+          strategy_id: string | null;
+          strategy_snapshot: Json;
+          strategy_title: string | null;
           title: string;
           updated_at: string;
           user_id: string;
@@ -526,6 +529,9 @@ export type Database = {
           source_optimization_run_id?: string | null;
           source_optimization_suggestion_ids?: string[];
           status?: string;
+          strategy_id?: string | null;
+          strategy_snapshot?: Json;
+          strategy_title?: string | null;
           title: string;
           updated_at?: string;
           user_id: string;
@@ -549,6 +555,9 @@ export type Database = {
           source_optimization_run_id?: string | null;
           source_optimization_suggestion_ids?: string[];
           status?: string;
+          strategy_id?: string | null;
+          strategy_snapshot?: Json;
+          strategy_title?: string | null;
           title?: string;
           updated_at?: string;
           user_id?: string;

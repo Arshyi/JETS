@@ -63,6 +63,12 @@ hardware scenarios now verify that expected reasoning findings, bottlenecks,
 solution paths, optimization behavior, and confidence levels do not change
 silently.
 
+Phase 4.3 adds Strategy above Solution Intelligence. Strategy decides whether a
+user should buy, build, repair, upgrade, use a hybrid path, or wait before a
+project exists. Solution Intelligence continues to reason about the selected
+project after Builder has concrete slots, validation output, platform context,
+and component facts.
+
 ## Reasoning Engine
 
 The report includes:
@@ -79,6 +85,9 @@ The report includes:
 - confidence signals
 - decision timeline
 - branch intelligence foundation
+
+It deliberately does not decide whether the user should start the project. That
+is now Strategy Engine scope.
 
 The engine prefers qualitative reasoning over fake precision.
 

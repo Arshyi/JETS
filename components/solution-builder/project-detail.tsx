@@ -1,4 +1,4 @@
-import { Archive, FileText, Link2, RotateCcw, Save, Sparkles } from "lucide-react";
+import { Archive, Compass, FileText, Link2, RotateCcw, Save, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { BuildValidationSummary } from "@/components/solution-builder/build-validation-summary";
@@ -58,6 +58,14 @@ function getAcquisitionEvidence(slot: BuildProjectSlotRow) {
   };
 }
 
+function getStrategyScore(snapshot: Json) {
+  if (!isRecord(snapshot)) {
+    return null;
+  }
+
+  return typeof snapshot.overallScore === "number" ? snapshot.overallScore : null;
+}
+
 export function ProjectDetail({ data }: ProjectDetailProps) {
   const { model, projectRow } = data;
   const returnTo = `/solution-builder/projects/${projectRow.id}`;
@@ -101,6 +109,9 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
               <StatusPill>{model.project.purpose}</StatusPill>
               <StatusPill>{model.project.currency} {model.project.budget}</StatusPill>
               <StatusPill>{projectRow.branch_name}</StatusPill>
+              {projectRow.strategy_title ? (
+                <StatusPill tone="accent">{projectRow.strategy_title}</StatusPill>
+              ) : null}
             </div>
           </div>
 
@@ -160,6 +171,35 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
             branches={data.branches}
             currentProject={projectRow}
           />
+          {projectRow.strategy_title ? (
+            <div className="rounded-lg border border-border bg-panel p-5">
+              <div className="flex items-center gap-3">
+                <Compass className="h-5 w-5 text-accent-strong dark:text-accent" aria-hidden="true" />
+                <h2 className="text-lg font-semibold">Strategy source</h2>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-muted">
+                {projectRow.strategy_title} created this project before slot
+                selection. Strategy answers whether this path is worth pursuing;
+                Builder now validates the exact hardware.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <StatusPill>{projectRow.strategy_id ?? "strategy"}</StatusPill>
+                {getStrategyScore(projectRow.strategy_snapshot) ? (
+                  <StatusPill>
+                    Score {getStrategyScore(projectRow.strategy_snapshot)}
+                  </StatusPill>
+                ) : null}
+              </div>
+            </div>
+          ) : (
+            <Link
+              href="/strategy"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-panel px-3 py-2 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+            >
+              <Compass className="h-4 w-4" aria-hidden="true" />
+              Compare strategies
+            </Link>
+          )}
           <form action={addBuildProjectNoteAction} className="rounded-lg border border-border bg-panel p-5">
             <div className="flex items-center gap-3">
               <FileText className="h-5 w-5 text-accent-strong dark:text-accent" aria-hidden="true" />

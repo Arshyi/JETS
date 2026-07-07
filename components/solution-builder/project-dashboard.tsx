@@ -1,4 +1,4 @@
-import { Archive, FolderKanban, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { Archive, Compass, FolderKanban, Plus, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 import { EmptyState } from "@/components/states/empty-state";
@@ -53,13 +53,22 @@ export function ProjectDashboard({ projects }: ProjectDashboardProps) {
               optimization, branches, comparison, and final review.
             </p>
           </div>
-          <Link
-            href="/solution-builder/projects/new"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-          >
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            Create project
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/strategy"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold text-muted transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+            >
+              <Compass className="h-4 w-4" aria-hidden="true" />
+              Compare strategies
+            </Link>
+            <Link
+              href="/solution-builder/projects/new"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              Create project
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -100,6 +109,9 @@ export function ProjectDashboard({ projects }: ProjectDashboardProps) {
                           {row.currency} {row.budget}
                         </StatusPill>
                         <StatusPill>{row.branch_name}</StatusPill>
+                        {row.strategy_title ? (
+                          <StatusPill tone="accent">{row.strategy_title}</StatusPill>
+                        ) : null}
                         {row.parent_project_id ? (
                           <StatusPill>branch</StatusPill>
                         ) : (
@@ -178,7 +190,7 @@ export function ProjectDashboard({ projects }: ProjectDashboardProps) {
                     ))}
                   </div>
 
-                  <div className="mt-5 grid gap-4 lg:grid-cols-3">
+                  <div className="mt-5 grid gap-4 lg:grid-cols-4">
                     <div className="rounded-lg border border-border bg-background p-4">
                       <p className="text-sm font-semibold">Missing slots</p>
                       <p className="mt-2 text-sm leading-6 text-muted">
@@ -199,6 +211,14 @@ export function ProjectDashboard({ projects }: ProjectDashboardProps) {
                         {project.model.platformInsight
                           ? `${project.model.platformInsight.platformName}: ${project.model.platformInsight.opportunityCount} opportunities, ${project.model.platformInsight.constraintCount} constraints.`
                           : "Choose a recognized base system or motherboard to reveal platform knowledge."}
+                      </p>
+                    </div>
+                    <div className="rounded-lg border border-border bg-background p-4">
+                      <p className="text-sm font-semibold">Strategy source</p>
+                      <p className="mt-2 text-sm leading-6 text-muted">
+                        {row.strategy_title
+                          ? `${row.strategy_title} framed this project before slot selection.`
+                          : "No strategy source recorded. Use Strategy before the next project to decide whether build, buy, repair, or wait makes sense."}
                       </p>
                     </div>
                   </div>

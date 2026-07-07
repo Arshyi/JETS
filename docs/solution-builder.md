@@ -153,6 +153,21 @@ component snapshots that include source evidence metadata. Project detail pages
 show linked acquisitions and acquisition-derived slots alongside validation,
 platform knowledge, solution intelligence, optimization, and audit history.
 
+## Phase 4.3 Strategy Source
+
+Strategy now sits before project creation. A project can be created from a
+deterministic strategy recommendation at `/strategy`, and that provenance is
+stored directly on `build_projects`:
+
+- `strategy_id`
+- `strategy_title`
+- `strategy_snapshot`
+
+Project dashboard and project detail pages show this strategy source. Builder
+still owns slot selection, validation, platform knowledge, solution
+intelligence, optimization, branching, and acquisition-derived evidence. Strategy
+only answers whether the path is worth pursuing before Builder work begins.
+
 ## Goal-First Wizard
 
 The Create Project flow starts at `/solution-builder/projects/new`.

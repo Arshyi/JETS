@@ -20,7 +20,7 @@ export const betaSetupChecklist = [
   {
     title: "Apply migrations in order",
     description:
-      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, v3.2 evidence review, v3.3 listing intelligence, v3.4 importer fixture, v4.1 acquisition persistence, and v4.2 acquisition handoff SQL migrations in Supabase before testing persistence."
+      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, v3.2 evidence review, v3.3 listing intelligence, v3.4 importer fixture, v4.1 acquisition persistence, v4.2 acquisition handoff, and v4.3 strategy engine SQL migrations in Supabase before testing persistence."
   },
   {
     title: "Create a beta account",
@@ -98,5 +98,6 @@ export const betaSmokeTests = [
   "Evidence review shows setup, public records, pending submissions, conflicts, and service-role moderation states.",
   "Listing Intelligence shows setup, demo fallback, manual listing submission, field review, duplicate signals, and service-role moderation states.",
   "Importer fixtures show setup, dry-run preview, validation errors, seed result table, and created listing review links.",
+  "Strategy compares build, buy, repair, upgrade, hybrid, and wait paths before creating a project.",
   "npm run build and npm run lint -- --max-warnings=0 pass."
 ] as const;
