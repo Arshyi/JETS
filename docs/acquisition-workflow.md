@@ -1,6 +1,6 @@
 # JETS Acquisition Workflow
 
-Version: 4.1
+Version: 4.2
 
 Phase 4 changes the development philosophy.
 
@@ -46,7 +46,8 @@ Paste listing
 -> Platform Detection
 -> Listing Intelligence
 -> Recommendation Preview
--> Create Project
+-> Save Acquisition
+-> Use in Project
 ```
 
 The workflow is intentionally manual first. The user provides title,
@@ -215,15 +216,80 @@ for:
 
 ## Project Transition
 
-When a listing looks promising, the workspace offers project handoff links for:
+When a listing looks promising, the acquisition detail page offers a reviewed
+Use in Project workflow.
 
-- Engineering build
-- Gaming build
-- AI workstation
-- Home server
-- existing project reuse
+The user first classifies the acquisition as:
+
+- base system
+- full system
+- component
+- adapter path
+- parts donor
+- unknown / review later
+
+Then JETS proposes slot mappings for:
+
+- chassis/base system
+- motherboard
+- CPU
+- GPU
+- RAM
+- storage
+- PSU
+- cooling
+- OS
+- adapter/special path
+
+Each proposed mapping includes:
+
+- target slot
+- proposed label
+- confidence
+- source/evidence text
+- deterministic reason
+
+Before applying, the user can:
+
+- accept a slot
+- reject a slot
+- correct the slot label
+- leave a slot empty
+
+The original acquisition remains unchanged.
+
+Handoff actions support:
+
+- create new project from acquisition
+- add acquisition to existing project
+- create branch from an existing project using the acquisition
+- link acquisition as evidence only
 
 Acquisition feeds Solution Builder. It does not replace it.
+
+## Project Audit And Evidence
+
+Phase 4.2 records handoff activity in the normal project audit table:
+
+- `acquisition_linked`
+- `slot_proposed`
+- `slot_accepted`
+- `slot_rejected`
+- `handoff_completed`
+
+Accepted slots are written to `build_project_slots` as acquisition-derived
+component snapshots. Those snapshots include acquisition evidence metadata so
+the project can explain which source listing produced a slot.
+
+`acquisition_project_links` is extended with:
+
+- handoff classification
+- handoff status
+- proposed slot mappings
+- accepted slot IDs
+- rejected slot IDs
+- evidence links
+- completion timestamp
 
 ## Future Browser Extension Hook
 
@@ -256,7 +322,7 @@ methods only. They should not become separate reasoning pipelines.
 
 ## Current Limitations
 
-Phase 4.1 does not include:
+Phase 4.2 does not include:
 
 - image upload or OCR
 - live marketplace access
@@ -264,7 +330,7 @@ Phase 4.1 does not include:
 - AI extraction
 - marketplace APIs
 - checkout
-- automatic project slot population
+- automatic project slot population without user review
 - automatic promotion of acquisition corrections into public platform knowledge
 - moderator-facing acquisition review queues
 

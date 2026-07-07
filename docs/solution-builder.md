@@ -114,6 +114,45 @@ Users can:
 
 The app still handles missing Supabase environment variables gracefully.
 
+## Phase 4.2 Acquisition Handoff
+
+Saved acquisitions can now become builder input without bypassing user review.
+
+The handoff flow reuses normal project tables:
+
+- `build_projects`
+- `build_project_slots`
+- `build_project_audit_events`
+- `acquisition_project_links`
+
+An acquisition can be used to:
+
+- create a new project
+- add reviewed slots to an existing project
+- create a branch from an existing project
+- link the source listing as evidence only
+
+The slot mapper proposes candidate slots from deterministic acquisition facts:
+
+- platform -> chassis/base system and motherboard
+- CPU -> CPU
+- GPU -> GPU
+- RAM -> RAM
+- storage -> storage
+- PSU/power text -> PSU
+- cooler/fan text -> cooling
+- OS/license text -> operating system
+- adapter text -> eGPU, Thunderbolt, PCIe, laptop RAM adapter, or external PSU paths
+
+Each mapping carries confidence, source text, and a reason. The user accepts,
+rejects, or corrects each proposed slot before JETS writes anything to the
+project.
+
+Accepted mappings become acquisition-derived `build_project_slots` rows with
+component snapshots that include source evidence metadata. Project detail pages
+show linked acquisitions and acquisition-derived slots alongside validation,
+platform knowledge, solution intelligence, optimization, and audit history.
+
 ## Goal-First Wizard
 
 The Create Project flow starts at `/solution-builder/projects/new`.

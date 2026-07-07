@@ -36,7 +36,7 @@ Validation is the quality layer. Before real marketplace data arrives, every det
 
 The near-term acquisition journey should feel continuous:
 
-Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Save Acquisition -> Review History -> Create Project.
+Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Save Acquisition -> Review History -> Use in Project -> Builder Validation.
 
 The project journey remains:
 
@@ -343,6 +343,16 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Add cross-device access for saved purchase candidates.
 - Keep local storage as a graceful fallback when Supabase is missing or the visitor is signed out.
 - Keep browser extension and live ingestion deferred until persisted manual acquisition is stable.
+
+### Version 4.2 - Acquisition to Project Handoff
+
+- Current.
+- Classify saved acquisitions as base systems, full systems, components, adapter paths, parts donors, or review-later records.
+- Map parsed acquisition facts into candidate project slots with confidence and source evidence.
+- Let the user accept, reject, correct, or leave proposed slots empty before applying anything.
+- Support new project creation, existing project insertion, acquisition branches, and evidence-only linking.
+- Show linked acquisitions and acquisition-derived slots on project detail pages.
+- Keep live ingestion, AI extraction, OCR, checkout, image uploads, and unreviewed slot population deferred.
 
 ## Idea Parking Lot
 

@@ -8,6 +8,8 @@ import type {
 import type { ProjectGoalId } from "@/data/project-goals";
 import type { PlatformKnowledgeId } from "@/types/platform-knowledge";
 import type { ConfidenceLevel } from "@/types/solution-intelligence";
+import type { ComponentCategory } from "@/types/component-inventory";
+import type { BuildSlotId } from "@/types/solution-builder";
 
 export const acquisitionMarketplaceIds = [
   "dubizzle",
@@ -36,11 +38,22 @@ export const acquisitionCorrectionFieldIds = [
   "storage"
 ] as const;
 
+export const acquisitionHandoffClassificationIds = [
+  "base-system",
+  "full-system",
+  "component",
+  "adapter-path",
+  "parts-donor",
+  "unknown-review-later"
+] as const;
+
 export type AcquisitionMarketplaceId = (typeof acquisitionMarketplaceIds)[number];
 export type AcquisitionDecisionStatus =
   (typeof acquisitionDecisionStatuses)[number];
 export type AcquisitionCorrectionFieldId =
   (typeof acquisitionCorrectionFieldIds)[number];
+export type AcquisitionHandoffClassificationId =
+  (typeof acquisitionHandoffClassificationIds)[number];
 
 export type AcquisitionMarketplaceOption = {
   description: string;
@@ -142,4 +155,33 @@ export type AcquisitionPersistenceState = {
   isConfigured: boolean;
   isSignedIn: boolean;
   message?: string;
+};
+
+export type AcquisitionHandoffSlotMapping = {
+  componentCategory: ComponentCategory | null;
+  confidence: number;
+  evidenceId: string;
+  fieldId: AcquisitionCorrectionFieldId | "listing" | "adapter" | "os" | "cooling";
+  proposedLabel: string;
+  reason: string;
+  slotId: BuildSlotId;
+  slotLabel: string;
+  sourceText: string;
+};
+
+export type AcquisitionHandoffEvidenceLink = {
+  acquisitionId: string;
+  confidence: number;
+  evidenceId: string;
+  fieldId: AcquisitionHandoffSlotMapping["fieldId"];
+  projectId: string;
+  slotId: BuildSlotId;
+  sourceText: string;
+};
+
+export type AcquisitionHandoffPlan = {
+  classification: AcquisitionHandoffClassificationId;
+  evidenceLinks: AcquisitionHandoffEvidenceLink[];
+  mappings: AcquisitionHandoffSlotMapping[];
+  summary: string;
 };

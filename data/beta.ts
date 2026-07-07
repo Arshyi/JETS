@@ -20,7 +20,7 @@ export const betaSetupChecklist = [
   {
     title: "Apply migrations in order",
     description:
-      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, v3.2 evidence review, v3.3 listing intelligence, v3.4 importer fixture, and v4.1 acquisition persistence SQL migrations in Supabase before testing persistence."
+      "Run the v0.3, v0.4, v0.8, v0.9, v2.1, v2.2, v2.3, production hardening, v3.2 evidence review, v3.3 listing intelligence, v3.4 importer fixture, v4.1 acquisition persistence, and v4.2 acquisition handoff SQL migrations in Supabase before testing persistence."
   },
   {
     title: "Create a beta account",

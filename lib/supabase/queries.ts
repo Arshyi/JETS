@@ -5,6 +5,8 @@ import { createBuildWorkspaceModel } from "@/lib/solution-builder/workspace";
 import { isSupabaseConfigured, supabaseSetupMessage } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
+  AcquisitionProjectLinkRow,
+  AcquisitionRecordRow,
   BuildHistoryRow,
   BuildProjectAuditEventRow,
   BuildProjectNoteRow,
@@ -625,7 +627,8 @@ export async function getBuildProjectDetail(projectId: string) {
     notesResult,
     auditResult,
     branchesResult,
-    optimizationRunsResult
+    optimizationRunsResult,
+    acquisitionLinksResult
   ] = await Promise.all([
     client
       .from("build_project_slots")
@@ -659,15 +662,41 @@ export async function getBuildProjectDetail(projectId: string) {
       .eq("project_id", projectId)
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
-      .limit(8)
+      .limit(8),
+    client
+      .from("acquisition_project_links")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
   ]);
   const slotRows = (slotsResult.data ?? []) as BuildProjectSlotRow[];
   const workspaceProject = buildWorkspaceProjectFromRows(projectRow, slotRows);
+  const acquisitionLinks =
+    (acquisitionLinksResult.data ?? []) as AcquisitionProjectLinkRow[];
+  const acquisitionIds = acquisitionLinks.map((link) => link.acquisition_id);
+  const acquisitionRecordsResult =
+    acquisitionIds.length > 0
+      ? await client
+          .from("acquisition_records")
+          .select("*")
+          .eq("user_id", userId)
+          .in("id", acquisitionIds)
+      : { data: [] as AcquisitionRecordRow[], error: null };
+  const acquisitionRecordsById = new Map(
+    ((acquisitionRecordsResult.data ?? []) as AcquisitionRecordRow[]).map(
+      (record) => [record.id, record]
+    )
+  );
 
   return {
     data: {
       auditEvents: (auditResult.data ?? []) as BuildProjectAuditEventRow[],
       branches: (branchesResult.data ?? []) as BuildProjectRow[],
+      linkedAcquisitions: acquisitionLinks.map((link) => ({
+        acquisition: acquisitionRecordsById.get(link.acquisition_id) ?? null,
+        link
+      })),
       model: createBuildWorkspaceModel(workspaceProject),
       notes: (notesResult.data ?? []) as BuildProjectNoteRow[],
       optimizationRuns: (optimizationRunsResult.data ?? []) as BuildProjectOptimizationRunRow[],
@@ -681,7 +710,9 @@ export async function getBuildProjectDetail(projectId: string) {
       notesResult.error?.message ??
       auditResult.error?.message ??
       branchesResult.error?.message ??
-      optimizationRunsResult.error?.message
+      optimizationRunsResult.error?.message ??
+      acquisitionLinksResult.error?.message ??
+      acquisitionRecordsResult.error?.message
   };
 }
 

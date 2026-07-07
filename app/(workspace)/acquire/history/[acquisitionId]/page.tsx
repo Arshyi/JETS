@@ -15,24 +15,27 @@ import { ContentPage } from "@/components/pages/content-page";
 import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
+  getAcquisitionHandoffClassificationOptions,
+  getAcquisitionHandoffPlan
+} from "@/lib/acquisition/handoff";
+import { handoffAcquisitionToProjectAction } from "@/lib/supabase/acquisition-handoff-actions";
+import {
   acquisitionCorrectionFieldIds,
   type AcquisitionCorrectionFieldId
 } from "@/types/acquisition";
-import {
-  acquisitionStatusLabels,
-  getAcquisitionGoalOptions
-} from "@/lib/acquisition/workflow";
+import { acquisitionStatusLabels } from "@/lib/acquisition/workflow";
 import {
   addAcquisitionCorrectionAction,
   addAcquisitionNoteAction,
   archiveAcquisitionAction,
-  linkAcquisitionToProjectAction,
   markPurchasedAcquisitionAction,
   markReadyAcquisitionAction,
   markRejectedAcquisitionAction
 } from "@/lib/supabase/acquisition-actions";
 import { getAcquisitionDetailState } from "@/lib/supabase/acquisition-queries";
+import { buildGeneratorCountries, buildGeneratorCurrencies } from "@/types/build-generator";
 import type { AcquisitionDecisionStatus } from "@/types/acquisition";
+import { hardwareUseCases } from "@/types/hardware";
 
 export const dynamic = "force-dynamic";
 
@@ -118,8 +121,6 @@ export default async function AcquisitionDetailPage({
   const state = await getAcquisitionDetailState(acquisitionId);
   const record = state.record;
   const returnTo = `/acquire/history/${acquisitionId}`;
-  const goalOptions =
-    state.analysis?.recommendedProjectGoals ?? getAcquisitionGoalOptions();
 
   if (!state.isConfigured) {
     return (
@@ -159,6 +160,9 @@ export default async function AcquisitionDetailPage({
       </main>
     );
   }
+
+  const handoffPlan = getAcquisitionHandoffPlan(record, state.analysis);
+  const classificationOptions = getAcquisitionHandoffClassificationOptions();
 
   return (
     <ContentPage
@@ -276,53 +280,190 @@ export default async function AcquisitionDetailPage({
           </article>
 
           <article className="rounded-lg border border-border bg-panel p-5">
-            <h2 className="text-lg font-semibold">Project handoff</h2>
+            <h2 className="text-lg font-semibold">Use in Project</h2>
             <p className="mt-2 text-sm leading-6 text-muted">
-              Acquisition does not create a build automatically. Link it to an
-              existing project or create a new project goal when the purchase is
-              worth pursuing.
+              Review the proposed slot mappings before applying anything. The
+              acquisition record remains unchanged; accepted slots become
+              acquisition-derived project slots with audit and evidence metadata.
             </p>
-            <div className="mt-4 grid gap-2">
-              {goalOptions.map((goal) => (
-                <Link
-                  key={goal.id}
-                  href={`${goal.href}&acquisitionId=${record.id}`}
-                  className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold transition hover:border-accent"
-                >
-                  {goal.label}
-                  <LinkIcon className="h-4 w-4 text-muted" aria-hidden="true" />
-                </Link>
-              ))}
+            <div className="mt-4 flex flex-wrap gap-2">
+              <StatusPill>{handoffPlan.summary}</StatusPill>
+              <StatusPill>{handoffPlan.classification}</StatusPill>
             </div>
-            {state.projects.length > 0 ? (
-              <form
-                action={linkAcquisitionToProjectAction}
-                className="mt-5 grid gap-3 rounded-lg border border-border bg-background p-4"
-              >
-                <input type="hidden" name="returnTo" value={returnTo} />
-                <input type="hidden" name="acquisitionId" value={record.id} />
+            <form
+              action={handoffAcquisitionToProjectAction}
+              className="mt-5 grid gap-5 rounded-lg border border-border bg-background p-4"
+            >
+              <input type="hidden" name="returnTo" value={returnTo} />
+              <input type="hidden" name="acquisitionId" value={record.id} />
+              <div className="grid gap-4 lg:grid-cols-3">
                 <label className="grid gap-2 text-sm font-medium">
-                  <span>Link existing project</span>
+                  <span>Handoff action</span>
                   <select
                     className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
-                    name="projectId"
+                    name="handoffMode"
+                    defaultValue={state.projects.length > 0 ? "add-existing" : "create-project"}
                   >
-                    {state.projects.map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.title} ({project.status})
+                    <option value="create-project">Create new project</option>
+                    <option value="add-existing">Add to existing project</option>
+                    <option value="create-branch">Create branch from project</option>
+                    <option value="link-evidence">Link as evidence only</option>
+                  </select>
+                </label>
+                <label className="grid gap-2 text-sm font-medium">
+                  <span>Classification</span>
+                  <select
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="classification"
+                    defaultValue={handoffPlan.classification}
+                  >
+                    {classificationOptions.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
                       </option>
                     ))}
                   </select>
                 </label>
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong"
-                >
-                  <LinkIcon className="h-4 w-4" aria-hidden="true" />
-                  Link project
-                </button>
-              </form>
-            ) : null}
+                <label className="grid gap-2 text-sm font-medium">
+                  <span>Existing project</span>
+                  <select
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="projectId"
+                    disabled={state.projects.length === 0}
+                  >
+                    {state.projects.length > 0 ? (
+                      state.projects.map((project) => (
+                        <option key={project.id} value={project.id}>
+                          {project.title} ({project.status})
+                        </option>
+                      ))
+                    ) : (
+                      <option>No existing projects</option>
+                    )}
+                  </select>
+                </label>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-4">
+                <label className="grid gap-2 text-sm font-medium lg:col-span-2">
+                  <span>New project title</span>
+                  <input
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="projectTitle"
+                    defaultValue={`Acquisition project: ${record.snapshot.title}`.slice(0, 100)}
+                  />
+                </label>
+                <label className="grid gap-2 text-sm font-medium">
+                  <span>Purpose</span>
+                  <select
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="purpose"
+                    defaultValue="engineering"
+                  >
+                    {hardwareUseCases.map((useCase) => (
+                      <option key={useCase} value={useCase}>
+                        {useCase}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="grid gap-2 text-sm font-medium">
+                  <span>Budget</span>
+                  <input
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="budget"
+                    defaultValue={record.snapshot.priceAmount ?? 850}
+                  />
+                </label>
+                <label className="grid gap-2 text-sm font-medium">
+                  <span>Country</span>
+                  <select
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="country"
+                    defaultValue="United States"
+                  >
+                    {buildGeneratorCountries.map((country) => (
+                      <option key={country} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="grid gap-2 text-sm font-medium">
+                  <span>Currency</span>
+                  <select
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="currency"
+                    defaultValue={record.draft.currency}
+                  >
+                    {buildGeneratorCurrencies.map((currency) => (
+                      <option key={currency} value={currency}>
+                        {currency}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="grid gap-2 text-sm font-medium lg:col-span-2">
+                  <span>Branch name</span>
+                  <input
+                    className="rounded-lg border border-border bg-panel px-3 py-2 text-sm text-foreground"
+                    name="branchName"
+                    defaultValue="acquisition-branch"
+                  />
+                </label>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-semibold">Slot mapping review</h3>
+                <div className="mt-3 grid gap-3">
+                  {handoffPlan.mappings.length > 0 ? (
+                    handoffPlan.mappings.map((mapping) => (
+                      <div
+                        key={mapping.slotId}
+                        className="grid gap-3 rounded-lg border border-border bg-panel p-3 lg:grid-cols-[auto_0.7fr_1fr_auto]"
+                      >
+                        <label className="flex items-start gap-2 text-sm font-semibold">
+                          <input
+                            className="mt-1 h-4 w-4 accent-accent"
+                            defaultChecked={mapping.confidence >= 60}
+                            name="acceptedSlotIds"
+                            type="checkbox"
+                            value={mapping.slotId}
+                          />
+                          Accept
+                        </label>
+                        <div>
+                          <p className="text-sm font-semibold">{mapping.slotLabel}</p>
+                          <p className="mt-1 text-xs text-muted">{mapping.reason}</p>
+                        </div>
+                        <label className="grid gap-2 text-sm font-medium">
+                          <span>Slot value or correction</span>
+                          <input
+                            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+                            name={`slotLabel:${mapping.slotId}`}
+                            defaultValue={mapping.proposedLabel}
+                          />
+                        </label>
+                        <StatusPill>{mapping.confidence}% confidence</StatusPill>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="rounded-lg border border-dashed border-border bg-panel p-4 text-sm text-muted">
+                      No confident slot mappings yet. Use evidence-only linking
+                      or add corrections before handoff.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong"
+              >
+                <LinkIcon className="h-4 w-4" aria-hidden="true" />
+                Use in Project
+              </button>
+            </form>
             {state.projectLinks.length > 0 ? (
               <div className="mt-5 grid gap-2">
                 <p className="text-sm font-semibold">Linked projects</p>

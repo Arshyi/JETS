@@ -131,27 +131,48 @@ export type Database = {
       };
       acquisition_project_links: {
         Row: {
+          accepted_slot_ids: string[];
           acquisition_id: string;
+          completed_at: string | null;
           created_at: string;
+          evidence_links: Json;
+          handoff_classification: string;
+          handoff_status: string;
           id: string;
           link_type: string;
           project_id: string | null;
+          rejected_slot_ids: string[];
+          slot_mappings: Json;
           user_id: string;
         };
         Insert: {
+          accepted_slot_ids?: string[];
           acquisition_id: string;
+          completed_at?: string | null;
           created_at?: string;
+          evidence_links?: Json;
+          handoff_classification?: string;
+          handoff_status?: string;
           id?: string;
           link_type?: string;
           project_id?: string | null;
+          rejected_slot_ids?: string[];
+          slot_mappings?: Json;
           user_id: string;
         };
         Update: {
+          accepted_slot_ids?: string[];
           acquisition_id?: string;
+          completed_at?: string | null;
           created_at?: string;
+          evidence_links?: Json;
+          handoff_classification?: string;
+          handoff_status?: string;
           id?: string;
           link_type?: string;
           project_id?: string | null;
+          rejected_slot_ids?: string[];
+          slot_mappings?: Json;
           user_id?: string;
         };
         Relationships: [];

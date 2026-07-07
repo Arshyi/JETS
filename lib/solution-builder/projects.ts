@@ -18,6 +18,8 @@ import type {
 } from "@/types/build-generator";
 import type {
   BuildProjectAuditEventRow,
+  AcquisitionProjectLinkRow,
+  AcquisitionRecordRow,
   BuildProjectNoteRow,
   BuildProjectOptimizationRunRow,
   BuildProjectRow,
@@ -39,6 +41,10 @@ import type { HardwareUseCase } from "@/types/hardware";
 export type BuildProjectDetailData = {
   auditEvents: BuildProjectAuditEventRow[];
   branches: BuildProjectRow[];
+  linkedAcquisitions: Array<{
+    acquisition: AcquisitionRecordRow | null;
+    link: AcquisitionProjectLinkRow;
+  }>;
   model: BuildWorkspaceModel;
   notes: BuildProjectNoteRow[];
   optimizationRuns: BuildProjectOptimizationRunRow[];

@@ -334,9 +334,15 @@ acquisition analysis snapshot, while user corrections are also written to
 still user-owned review context; it is not automatically promoted into public
 platform knowledge.
 
+Phase 4.2 carries that evidence into Solution Builder during handoff. Accepted
+slot mappings write acquisition evidence metadata into the project slot snapshot
+and store the evidence-link summary on `acquisition_project_links`. Project audit
+events explain when the acquisition was linked, which slots were proposed, which
+were accepted or rejected, and when the handoff completed.
+
 ## Current Boundaries
 
-Phase 4.1 does not implement:
+Phase 4.2 does not implement:
 
 - live scraping
 - marketplace APIs
@@ -348,6 +354,7 @@ Phase 4.1 does not implement:
 - source document storage
 - bulk evidence import
 - automatic promotion of evidence into platform knowledge
+- unreviewed automatic slot population
 
 The current value is review infrastructure plus manual acquisition behavior.
 JETS can inspect and correct listing-derived claims before the system starts
@@ -367,3 +374,15 @@ Still do not add AI or live scraping until manual acquisition persistence,
 correction review, and evidence linking are stable. A later moderator workflow
 can decide whether accepted acquisition corrections should create
 `parsed_field_evidence_links` or public evidence records.
+
+## Phase 4.2 Handoff Evidence
+
+Handoff evidence currently lives in:
+
+- accepted project slot `component_snapshot.acquisitionEvidence`
+- `acquisition_project_links.evidence_links`
+- `build_project_audit_events.metadata`
+
+This is intentionally project-local. A later moderation layer can promote
+accepted handoff evidence into shared evidence records after users prove the
+handoff workflow is producing reliable slot mappings.

@@ -1,4 +1,4 @@
-import { Archive, FileText, RotateCcw, Save, Sparkles } from "lucide-react";
+import { Archive, FileText, Link2, RotateCcw, Save, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { BuildValidationSummary } from "@/components/solution-builder/build-validation-summary";
@@ -19,6 +19,7 @@ import {
 import { getPlatformKnowledgeById } from "@/lib/platform-knowledge";
 import { analyzeBuildSolution } from "@/lib/solution-intelligence/engine";
 import type { BuildProjectDetailData } from "@/lib/solution-builder/projects";
+import type { BuildProjectSlotRow, Json } from "@/types/database";
 import type { BuildSlotRequirement } from "@/types/solution-builder";
 
 type ProjectDetailProps = {
@@ -30,6 +31,32 @@ const sectionLabels: Record<BuildSlotRequirement, string> = {
   required: "Required slots",
   solution: "Special solution slots"
 };
+
+function isRecord(value: unknown): value is Record<string, Json | undefined> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function getAcquisitionEvidence(slot: BuildProjectSlotRow) {
+  if (!isRecord(slot.component_snapshot)) {
+    return null;
+  }
+
+  const evidence = slot.component_snapshot.acquisitionEvidence;
+
+  if (!isRecord(evidence)) {
+    return null;
+  }
+
+  return {
+    acquisitionId:
+      typeof evidence.acquisitionId === "string" ? evidence.acquisitionId : null,
+    confidence:
+      typeof evidence.confidence === "number" ? evidence.confidence : null,
+    evidenceId: typeof evidence.evidenceId === "string" ? evidence.evidenceId : null,
+    fieldId: typeof evidence.fieldId === "string" ? evidence.fieldId : null,
+    sourceText: typeof evidence.sourceText === "string" ? evidence.sourceText : null
+  };
+}
 
 export function ProjectDetail({ data }: ProjectDetailProps) {
   const { model, projectRow } = data;
@@ -48,6 +75,9 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
       )
     })
   );
+  const acquisitionDerivedSlots = data.slotRows
+    .map((slot) => ({ evidence: getAcquisitionEvidence(slot), slot }))
+    .filter((item) => item.evidence);
 
   return (
     <main className="bg-background pb-16">
@@ -162,6 +192,31 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
               </div>
             </div>
           ) : null}
+          {data.linkedAcquisitions.length > 0 ? (
+            <div className="rounded-lg border border-border bg-panel p-5">
+              <div className="flex items-center gap-3">
+                <Link2 className="h-5 w-5 text-accent-strong dark:text-accent" aria-hidden="true" />
+                <h2 className="text-lg font-semibold">Linked acquisitions</h2>
+              </div>
+              <div className="mt-4 grid gap-3">
+                {data.linkedAcquisitions.slice(0, 4).map(({ acquisition, link }) => (
+                  <Link
+                    key={link.id}
+                    href={`/acquire/history/${link.acquisition_id}`}
+                    className="rounded-lg border border-border bg-background p-3 text-sm transition hover:border-accent"
+                  >
+                    <span className="block font-semibold">
+                      {acquisition?.title ?? "Acquisition record"}
+                    </span>
+                    <span className="mt-1 block text-xs text-muted">
+                      {link.handoff_classification} · {link.handoff_status} ·{" "}
+                      {link.accepted_slot_ids.length} accepted slots
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : null}
           <Link
             href={`/solution-builder/projects/${projectRow.id}/optimize`}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
@@ -178,6 +233,62 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
         </aside>
 
         <div className="grid gap-8">
+          {(data.linkedAcquisitions.length > 0 || acquisitionDerivedSlots.length > 0) ? (
+            <section className="rounded-lg border border-border bg-panel p-5">
+              <h2 className="text-xl font-bold">Source listing evidence</h2>
+              <p className="mt-2 text-sm leading-6 text-muted">
+                Acquisition handoff keeps the source listing attached to the project
+                and records which slots came from reviewed listing evidence.
+              </p>
+              <div className="mt-5 grid gap-4 lg:grid-cols-2">
+                {data.linkedAcquisitions.map(({ acquisition, link }) => (
+                  <div
+                    key={link.id}
+                    className="rounded-lg border border-border bg-background p-4"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="text-sm font-semibold">
+                        {acquisition?.title ?? "Acquisition record"}
+                      </h3>
+                      <StatusPill>{link.handoff_status}</StatusPill>
+                    </div>
+                    <p className="mt-2 text-sm leading-6 text-muted">
+                      {link.handoff_classification} · accepted{" "}
+                      {link.accepted_slot_ids.join(", ") || "no slots"} · rejected{" "}
+                      {link.rejected_slot_ids.join(", ") || "none"}
+                    </p>
+                    <Link
+                      href={`/acquire/history/${link.acquisition_id}`}
+                      className="mt-3 inline-flex text-sm font-semibold text-accent-strong dark:text-accent"
+                    >
+                      Open acquisition detail
+                    </Link>
+                  </div>
+                ))}
+                {acquisitionDerivedSlots.map(({ evidence, slot }) => (
+                  <div
+                    key={`${slot.id}-${evidence?.evidenceId}`}
+                    className="rounded-lg border border-border bg-background p-4"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="text-sm font-semibold">{slot.slot_id}</h3>
+                      <StatusPill>
+                        {evidence?.confidence ?? "unknown"}% confidence
+                      </StatusPill>
+                    </div>
+                    <p className="mt-2 text-sm leading-6 text-muted">
+                      {slot.notes || "Acquisition-derived slot."}
+                    </p>
+                    <p className="mt-2 text-xs text-muted">
+                      Evidence: {evidence?.fieldId ?? "listing"} ·{" "}
+                      {evidence?.sourceText?.slice(0, 120) ?? "No source text"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
           {slotGroups.map((group) => (
             <section key={group.requirement}>
               <div className="mb-4 flex items-center justify-between gap-3">
