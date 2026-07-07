@@ -69,6 +69,11 @@ checked by the hardware validation suite for constraints, opportunities,
 timeline, adapter paths, community knowledge cards, Platform Potential,
 evidence coverage, and Knowledge Quality warnings.
 
+Phase 5.0 adds Hardware Playbooks above this layer. Platform Knowledge still
+answers what a platform is; Playbooks answer what an experienced builder should
+do with it, which mistakes to avoid, which adapters matter, and which strategy
+paths the platform supports.
+
 ## Separation Of Concerns
 
 Specifications are stable-ish facts:
@@ -121,6 +126,23 @@ Inventory items do not own all this knowledge. They can link to a platform
 profile through `platformKnowledgeLinks`, `sourceListingId`, component ID, or
 alias matching. This prevents the inventory model from becoming a giant
 handwritten encyclopedia.
+
+## Hardware Playbooks
+
+Playbooks are intentionally separate from Platform Knowledge.
+
+For example, a platform profile can say that a workstation supports ECC memory,
+PCIe expansion, and an adapter-based NVMe path. A playbook can turn that into a
+plan:
+
+1. Audit BIOS, PSU, and chassis condition.
+2. Add PCIe NVMe storage.
+3. Move to a sensible ECC RAM target.
+4. Choose a GPU only after power and clearance are verified.
+5. Avoid common mistakes like treating an SFF office chassis as a full GPU base.
+
+This keeps specifications, evidence, and practical builder judgment reusable
+without mixing them into one large model.
 
 ## Platform Potential
 
@@ -237,6 +259,9 @@ The validation framework checks that known scenarios still resolve to expected
 platform IDs and platform constraints. For example, ThinkStation P510 should
 continue surfacing the PCIe NVMe adapter opportunity, while OptiPlex 7060 SFF
 should continue warning about low-profile expansion and proprietary PSU limits.
+
+Phase 5.0 also checks that every supported platform profile has at least one
+Hardware Playbook with required sections and evidence-linked recommendations.
 
 Incomplete platform evidence is reported as a warning, not hidden. This is
 intentional: Platform Potential answers how useful the hardware can be, while

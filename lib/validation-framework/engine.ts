@@ -9,6 +9,7 @@ import { buildImporterFixtureResult } from "@/lib/importer-fixtures/engine";
 import { buildListingIntelligenceRecord } from "@/lib/listing-intelligence/engine";
 import { normalizeMarketplaceListing } from "@/lib/marketplace-intelligence/normalize";
 import { optimizeBuildProject } from "@/lib/optimization-engine/pipeline";
+import { validateHardwarePlaybooks } from "@/lib/playbook-engine/engine";
 import { generateHardwareStrategies } from "@/lib/strategy-engine/engine";
 import { analyzeBuildSolution } from "@/lib/solution-intelligence/engine";
 import { createBuildWorkspaceModel } from "@/lib/solution-builder/workspace";
@@ -40,6 +41,7 @@ const validationCoverageAreas: ValidationCoverageArea[] = [
   "listing",
   "evidence",
   "platform",
+  "playbook",
   "solution",
   "strategy",
   "optimization",
@@ -227,6 +229,13 @@ function getRuleInventory(): Record<ValidationCoverageArea, string[]> {
       "platform:nvme-adapter",
       "platform:low-profile-constraint",
       "platform:rtx-upgrade"
+    ],
+    playbook: [
+      ...platformKnowledgeProfiles.map((profile) => `playbook:${profile.id}`),
+      "playbook:required-sections",
+      "playbook:evidence-links",
+      "playbook:strategy-signals",
+      "playbook:project-progress"
     ],
     solution: [
       ...solutionUseCaseIds.map((useCase) => `solution:${useCase}`),
@@ -518,6 +527,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   );
   const compatibilityFixtureFailures = getCompatibilityFixtureFailures();
   const platformKnowledge = validatePlatformKnowledge();
+  const playbookResults = validateHardwarePlaybooks();
   const strategyResults = validateStrategies();
   const coveredMarkers = createCoverageBuckets();
 
@@ -537,6 +547,33 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     evidence: ["evidence:importer-validation-errors", "evidence:knowledge-quality"]
   });
   addCoverage(coveredMarkers, {
+    playbook: [
+      ...playbookResults
+        .filter((result) => result.playbookCount > 0)
+        .map((result) => `playbook:${result.platformId}`),
+      ...(playbookResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message ===
+            "Every playbook has all required playbook sections."
+        )?.passed
+      )
+        ? ["playbook:required-sections"]
+        : []),
+      ...(playbookResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message ===
+            "Playbook evidence IDs resolve to known evidence records."
+        )?.passed
+      )
+        ? ["playbook:evidence-links"]
+        : []),
+      "playbook:strategy-signals",
+      "playbook:project-progress"
+    ]
+  });
+  addCoverage(coveredMarkers, {
     strategy: [
       ...strategyValidationFixtures.map((fixture) => `strategy:${fixture.id}`),
       "strategy:walk-away",
@@ -551,11 +588,13 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   }, {} as Record<ValidationCoverageArea, RuleCoverageResult>);
   const passedScenarios = scenarioResults.filter((result) => result.passed).length;
   const failedScenarios = scenarioResults.length - passedScenarios;
+  const playbookFailures = playbookResults.filter((result) => !result.passed).length;
   const strategyFailures = strategyResults.filter((result) => !result.passed).length;
   const platformWarnings = platformKnowledge.filter((result) => !result.passed).length;
   const passed =
     failedScenarios === 0 &&
     compatibilityFixtureFailures.length === 0 &&
+    playbookFailures === 0 &&
     strategyFailures === 0;
 
   return {
@@ -564,6 +603,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     overallPassRate: Math.round((passedScenarios / scenarioResults.length) * 100),
     passed,
     platformKnowledge,
+    playbookResults,
     ruleCoverage,
     scenarioResults,
     strategyResults,
@@ -571,6 +611,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
       failedScenarios,
       passedScenarios,
       platformWarnings,
+      playbookFailures,
       scenarios: scenarioResults.length,
       strategyFailures
     }
@@ -611,6 +652,12 @@ export function renderValidationReportMarkdown(
         `| ${statusLabel(result.passed)} | ${result.platformName} | ${result.qualityScore} | ${result.evidenceCount} | ${result.issues.join("; ") || "None"} |`
     )
     .join("\n");
+  const playbookRows = suite.playbookResults
+    .map(
+      (result) =>
+        `| ${statusLabel(result.passed)} | ${result.platformName} | ${result.playbookCount} | ${result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join("; ") || "None"} |`
+    )
+    .join("\n");
   const compatibilityFailures =
     suite.compatibilityFixtureFailures.length > 0
       ? suite.compatibilityFixtureFailures
@@ -633,6 +680,7 @@ Overall: ${statusLabel(suite.passed)}
 - Scenario pass rate: ${suite.overallPassRate}%
 - Passed scenarios: ${suite.summary.passedScenarios}
 - Failed scenarios: ${suite.summary.failedScenarios}
+- Playbook fixture failures: ${suite.summary.playbookFailures}
 - Strategy fixture failures: ${suite.summary.strategyFailures}
 - Platform knowledge warnings: ${suite.summary.platformWarnings}
 - Compatibility fixture failures: ${suite.compatibilityFixtureFailures.length}
@@ -652,6 +700,12 @@ ${coverageSections}
 | Status | Platform | Knowledge quality | Evidence records | Issues |
 | --- | --- | ---: | ---: | --- |
 ${platformRows}
+
+## Playbook Validation
+
+| Status | Platform | Playbooks | Issues |
+| --- | --- | ---: | --- |
+${playbookRows}
 
 ## Strategy Validation
 
@@ -695,6 +749,12 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
         `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.title)}</td><td>${escapeHtml(result.expectedTopStrategy)}</td><td>${escapeHtml(result.actualTopStrategy)}</td></tr>`
     )
     .join("");
+  const playbookRows = suite.playbookResults
+    .map(
+      (result) =>
+        `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.platformName)}</td><td>${result.playbookCount}</td><td>${escapeHtml(result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join(", ") || "None")}</td></tr>`
+    )
+    .join("");
   const coverage = validationCoverageAreas
     .map((area) => {
       const areaCoverage = suite.ruleCoverage[area];
@@ -724,6 +784,7 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
       <li>Scenario pass rate: ${suite.overallPassRate}%</li>
       <li>Passed scenarios: ${suite.summary.passedScenarios}</li>
       <li>Failed scenarios: ${suite.summary.failedScenarios}</li>
+      <li>Playbook fixture failures: ${suite.summary.playbookFailures}</li>
       <li>Strategy fixture failures: ${suite.summary.strategyFailures}</li>
       <li>Platform knowledge warnings: ${suite.summary.platformWarnings}</li>
     </ul>
@@ -736,6 +797,11 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
     <table>
       <thead><tr><th>Status</th><th>Fixture</th><th>Expected top strategy</th><th>Actual top strategy</th></tr></thead>
       <tbody>${strategyRows}</tbody>
+    </table>
+    <h2>Playbook Validation</h2>
+    <table>
+      <thead><tr><th>Status</th><th>Platform</th><th>Playbooks</th><th>Issues</th></tr></thead>
+      <tbody>${playbookRows}</tbody>
     </table>
     <h2>Rule Coverage</h2>
     ${coverage}

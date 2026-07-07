@@ -6,6 +6,7 @@ import type {
 } from "@/types/marketplace-intelligence";
 import type { OptimizationInput } from "@/types/optimization";
 import type { PlatformKnowledgeId } from "@/types/platform-knowledge";
+import type { PlaybookValidationResult } from "@/types/playbook";
 import type {
   BuildSlotId,
   BuildWorkspaceProject
@@ -35,6 +36,7 @@ export type ValidationCoverageArea =
   | "listing"
   | "evidence"
   | "platform"
+  | "playbook"
   | "solution"
   | "strategy"
   | "optimization"
@@ -131,6 +133,7 @@ export type HardwareValidationSuiteResult = {
   overallPassRate: number;
   passed: boolean;
   platformKnowledge: PlatformKnowledgeValidationResult[];
+  playbookResults: PlaybookValidationResult[];
   ruleCoverage: Record<ValidationCoverageArea, RuleCoverageResult>;
   scenarioResults: ValidationScenarioResult[];
   strategyResults: StrategyValidationResult[];
@@ -138,6 +141,7 @@ export type HardwareValidationSuiteResult = {
     failedScenarios: number;
     passedScenarios: number;
     platformWarnings: number;
+    playbookFailures: number;
     scenarios: number;
     strategyFailures: number;
   };

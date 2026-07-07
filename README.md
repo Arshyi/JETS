@@ -42,7 +42,8 @@ npm run validate:hardware
 - **4.0:** Manual Acquisition Workflow. Complete.
 - **4.1:** Persisted acquisition records and project links. Complete.
 - **4.2:** Acquisition to Project Handoff. Complete.
-- **4.3:** Strategy Engine. Current.
+- **4.3:** Strategy Engine. Complete.
+- **5.0:** Hardware Playbook Engine. Current.
 
 ## Primary Workflow
 
@@ -57,7 +58,7 @@ npm run validate:hardware
 Marketplace Intelligence sits below the workflow as input plumbing:
 
 ```text
-Raw Marketplace Data -> Listing Intelligence -> Evidence -> Platform Knowledge -> Strategy -> Builder -> Solution Intelligence -> Optimization -> Recommendation
+Raw Marketplace Data -> Listing Intelligence -> Evidence -> Platform Knowledge -> Playbooks -> Strategy -> Builder -> Solution Intelligence -> Optimization -> Recommendation
 ```
 
 Ingestion and parsing do not make recommendations. Optimization and reasoning do not know how a listing was captured. Evidence records explain why JETS trusts a parsed field, knowledge item, or recommendation.
@@ -345,6 +346,19 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/strategy-engine.md`.
 - Phase 4.3 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic project creation from acquisitions.
 
+## Phase 5.0 Notes
+
+- Hardware Playbook types live in `types/playbook.ts`.
+- Curated demo playbooks live in `data/playbooks.ts`.
+- The deterministic playbook lookup, project progress, strategy signals, and validation helpers live in `lib/playbook-engine/engine.ts`.
+- Reusable Playbook UI lives in `components/playbooks/playbook-panel.tsx`.
+- Project detail pages show a Project Playbook with completed recommendations, remaining recommendations, warnings, evidence links, and Knowledge Quality.
+- Acquisition detail pages show an Acquisition Playbook before project handoff so buyers understand platform-specific strategies and mistakes before committing.
+- Strategy can cite playbooks for recognized acquisitions instead of duplicating platform guidance.
+- Hardware validation now checks every supported platform has a playbook and that playbook recommendations resolve to evidence.
+- Documentation lives in `docs/playbook-engine.md`.
+- Phase 5.0 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic project mutation.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -430,4 +444,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through Phase 4.3 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through Phase 5.0 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, curated hardware playbooks, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge, Playbooks, or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/playbook-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.

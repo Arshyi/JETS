@@ -27,6 +27,7 @@ console.log(`Scenario pass rate: ${suite.overallPassRate}%`);
 console.log(
   `Scenarios: ${suite.summary.passedScenarios}/${suite.summary.scenarios} passed`
 );
+console.log(`Playbook fixture failures: ${suite.summary.playbookFailures}`);
 console.log(`Platform knowledge warnings: ${suite.summary.platformWarnings}`);
 console.log(`Markdown report: ${path.relative(projectRoot, markdownPath)}`);
 console.log(`HTML report: ${path.relative(projectRoot, htmlPath)}`);

@@ -1,6 +1,7 @@
 import { Archive, Compass, FileText, Link2, RotateCcw, Save, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { PlaybookPanel } from "@/components/playbooks/playbook-panel";
 import { BuildValidationSummary } from "@/components/solution-builder/build-validation-summary";
 import { CompareAgainstJets } from "@/components/solution-builder/compare-against-jets";
 import { PlatformKnowledgePanel } from "@/components/platform-knowledge/platform-knowledge-panel";
@@ -17,6 +18,10 @@ import {
   restoreBuildProjectAction
 } from "@/lib/supabase/project-actions";
 import { getPlatformKnowledgeById } from "@/lib/platform-knowledge";
+import {
+  getPlaybookProjectProgress,
+  getPlaybooksForProject
+} from "@/lib/playbook-engine/engine";
 import { analyzeBuildSolution } from "@/lib/solution-intelligence/engine";
 import type { BuildProjectDetailData } from "@/lib/solution-builder/projects";
 import type { BuildProjectSlotRow, Json } from "@/types/database";
@@ -72,6 +77,8 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
   const platformProfile = getPlatformKnowledgeById(
     model.platformInsight?.platformId
   );
+  const playbooks = getPlaybooksForProject(model);
+  const playbookProgress = getPlaybookProjectProgress(playbooks, model);
   const solutionIntelligence = analyzeBuildSolution(model);
   const warningCount = model.evaluation.warningCount + model.evaluation.blockingCount;
   const branchCount = data.branches.filter((branch) => branch.id !== projectRow.id).length;
@@ -349,6 +356,13 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
           ))}
 
           <PlatformKnowledgePanel profile={platformProfile} />
+
+          <PlaybookPanel
+            description="JETS compares this project against platform-specific builder playbooks, then separates completed recommendations from remaining upgrade guidance."
+            playbooks={playbooks}
+            progress={playbookProgress}
+            title="Project Playbook"
+          />
 
           <SolutionIntelligencePanel
             branchCount={branchCount}

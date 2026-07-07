@@ -4,6 +4,7 @@ import {
   currencyToUsd,
   defaultOwnedItems
 } from "@/lib/build-generator/config";
+import { getPlaybookStrategySignalsForAcquisition } from "@/lib/playbook-engine/engine";
 import { useCaseLabels } from "@/types/hardware";
 import type { OwnedItems } from "@/types/build-generator";
 import type { HardwareUseCase } from "@/types/hardware";
@@ -599,6 +600,34 @@ function applyAcquisitionSignals(
   }
 
   const title = acquisition.best.title;
+  const playbookSignals =
+    !acquisition.isBroken || definition.id === "repair-existing-hardware"
+      ? getPlaybookStrategySignalsForAcquisition(acquisition.best, definition.id)
+      : {
+          hiddenOpportunities: [],
+          reasons: [],
+          risks: []
+        };
+
+  if (playbookSignals.reasons.length > 0) {
+    addSignal(
+      signal,
+      { confidence: 4, platformPotential: 5, upgradeability: 3 },
+      playbookSignals.reasons[0]
+    );
+
+    for (const reason of playbookSignals.reasons.slice(1)) {
+      signal.reasons.push(reason);
+    }
+  }
+
+  for (const opportunity of playbookSignals.hiddenOpportunities) {
+    addHiddenOpportunity(signal, opportunity);
+  }
+
+  for (const risk of playbookSignals.risks) {
+    addRisk(signal, risk);
+  }
 
   if (acquisition.isAmazingDeal) {
     if (definition.id === "buy-used-workstation") {

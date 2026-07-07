@@ -20,6 +20,7 @@ Projects
 -> Listing Intelligence
 -> Evidence
 -> Platform Knowledge
+-> Playbooks
 -> Strategy
 -> Solution Intelligence
 -> Optimization
@@ -132,6 +133,7 @@ The runner exercises the real deterministic systems:
 - duplicate candidate detection
 - Platform Knowledge lookup
 - Knowledge Quality scoring
+- Hardware Playbook coverage
 - Strategy ranking fixtures
 - Solution Builder evaluation
 - Solution Intelligence
@@ -169,6 +171,7 @@ The report tracks coverage across:
 - Listing rules
 - Evidence rules
 - Platform rules
+- Playbook rules
 - Strategy rules
 - Solution Intelligence rules
 - Optimization rules
@@ -208,6 +211,17 @@ Every platform profile is checked for:
 Incomplete platform knowledge is reported as a warning. Warnings do not fail the
 suite yet because several demo profiles intentionally need more evidence.
 
+## Playbook Validation
+
+Phase 5.0 adds Hardware Playbook validation.
+
+The suite now checks that every supported platform profile has at least one
+playbook, every playbook contains the required sections, every recommendation
+links to evidence, and every evidence link resolves to a known evidence record.
+Unlike platform evidence warnings, missing playbooks fail the suite because a
+supported platform without a playbook would leave Strategy and Builder without
+experienced-builder guidance.
+
 ## Human-Readable Reports
 
 The suite writes both Markdown and HTML reports.
@@ -216,6 +230,7 @@ The report includes:
 
 - overall pass/fail
 - scenario pass rate
+- playbook fixture failures
 - platform warnings
 - compatibility fixture failures
 - scenario table

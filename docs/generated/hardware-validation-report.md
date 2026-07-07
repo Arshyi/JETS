@@ -7,8 +7,9 @@ Overall: PASS
 - Scenario pass rate: 100%
 - Passed scenarios: 12
 - Failed scenarios: 0
+- Playbook fixture failures: 0
 - Strategy fixture failures: 0
-- Platform knowledge warnings: 5
+- Platform knowledge warnings: 3
 - Compatibility fixture failures: 0
 
 ## Scenario Results
@@ -67,6 +68,13 @@ Uncovered:
 - platform:hp-z840
 - platform:mac-pro-5-1
 - platform:precision-t5810
+
+### playbook
+
+Coverage: 12/12 (100%)
+
+Uncovered:
+- None
 
 ### solution
 
@@ -131,13 +139,26 @@ Uncovered:
 | Status | Platform | Knowledge quality | Evidence records | Issues |
 | --- | --- | ---: | ---: | --- |
 | PASS | Lenovo ThinkStation P520 | 64 | 6 | None |
-| FAIL | Lenovo ThinkStation P510 | 29 | 0 | No linked evidence records; Knowledge quality score is low |
-| FAIL | Dell Precision T5810 | 29 | 0 | No linked evidence records; Knowledge quality score is low |
-| FAIL | Dell Precision 5820 | 29 | 0 | No linked evidence records; Knowledge quality score is low |
+| PASS | Lenovo ThinkStation P510 | 52 | 2 | None |
+| FAIL | Dell Precision T5810 | 34 | 1 | Knowledge quality score is low |
+| PASS | Dell Precision 5820 | 50 | 1 | None |
 | PASS | Dell OptiPlex 7060 SFF | 68 | 3 | None |
-| FAIL | HP Z440 | 29 | 0 | No linked evidence records; Knowledge quality score is low |
-| PASS | HP Z840 | 50 | 1 | None |
-| FAIL | Mac Pro 5,1 | 37 | 1 | Knowledge quality score is low |
+| FAIL | HP Z440 | 35 | 2 | Knowledge quality score is low |
+| PASS | HP Z840 | 52 | 2 | None |
+| FAIL | Mac Pro 5,1 | 38 | 2 | Knowledge quality score is low |
+
+## Playbook Validation
+
+| Status | Platform | Playbooks | Issues |
+| --- | --- | ---: | --- |
+| PASS | Lenovo ThinkStation P520 | 1 | None |
+| PASS | Lenovo ThinkStation P510 | 2 | None |
+| PASS | Dell Precision T5810 | 1 | None |
+| PASS | Dell Precision 5820 | 1 | None |
+| PASS | Dell OptiPlex 7060 SFF | 1 | None |
+| PASS | HP Z440 | 1 | None |
+| PASS | HP Z840 | 1 | None |
+| PASS | Mac Pro 5,1 | 1 | None |
 
 ## Strategy Validation
 

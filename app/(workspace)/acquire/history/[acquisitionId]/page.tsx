@@ -13,6 +13,7 @@ import Link from "next/link";
 import { SignedOutState } from "@/components/auth/signed-out-state";
 import { SupabaseSetupState } from "@/components/auth/supabase-setup-state";
 import { ContentPage } from "@/components/pages/content-page";
+import { PlaybookPanel } from "@/components/playbooks/playbook-panel";
 import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
@@ -20,6 +21,7 @@ import {
   getAcquisitionHandoffPlan
 } from "@/lib/acquisition/handoff";
 import { handoffAcquisitionToProjectAction } from "@/lib/supabase/acquisition-handoff-actions";
+import { getPlaybooksForPlatform } from "@/lib/playbook-engine/engine";
 import {
   acquisitionCorrectionFieldIds,
   type AcquisitionCorrectionFieldId
@@ -175,6 +177,11 @@ export default async function AcquisitionDetailPage({
 
   const handoffPlan = getAcquisitionHandoffPlan(record, state.analysis);
   const classificationOptions = getAcquisitionHandoffClassificationOptions();
+  const acquisitionPlaybooks = getPlaybooksForPlatform(
+    state.analysis?.detectedPlatformId ??
+      state.analysis?.detectedPlatformName ??
+      record.snapshot.detectedPlatformName
+  );
 
   return (
     <ContentPage
@@ -251,6 +258,12 @@ export default async function AcquisitionDetailPage({
             {state.message}
           </div>
         ) : null}
+
+        <PlaybookPanel
+          description="Before turning this acquisition into a project, review the relevant platform playbook. It captures likely upgrade paths, common mistakes, adapters, and reasons this listing may or may not deserve a build."
+          playbooks={acquisitionPlaybooks}
+          title="Acquisition Playbook"
+        />
 
         <section className="grid gap-6 lg:grid-cols-2">
           <article className="rounded-lg border border-border bg-panel p-5">

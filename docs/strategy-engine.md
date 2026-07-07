@@ -43,6 +43,14 @@ Strategy lives in:
 - `app/(workspace)/strategy/page.tsx`
 - `lib/supabase/strategy-actions.ts`
 
+Phase 5.0 adds a Playbook dependency:
+
+- `lib/playbook-engine/engine.ts`
+- `data/playbooks.ts`
+
+Strategy uses playbooks as evidence-backed support signals for recognized
+acquisitions. It does not copy playbook rules into strategy scoring.
+
 Persistence extends the existing project model through:
 
 - `supabase/migrations/202607070002_v4_3_strategy_engine.sql`
@@ -184,6 +192,21 @@ Captured listing
 
 This prevents every acquisition from automatically becoming project work.
 
+Phase 5.0 also lets Strategy cite Hardware Playbooks. If a saved Precision,
+ThinkStation, OptiPlex, HP Z-series, Mac Pro, mini PC, or laptop/eGPU path maps
+to a known playbook, the strategy recommendation can explain which playbook
+supports the path, which hidden opportunity matters, and which risks should
+remain visible.
+
+This keeps the decision flow layered:
+
+```text
+Platform Knowledge -> Playbook -> Strategy -> Builder
+```
+
+Platform Knowledge identifies the hardware. Playbooks describe experienced
+builder moves. Strategy decides whether the path deserves a project.
+
 ## Validation
 
 The hardware validation suite now includes strategy fixtures:
@@ -203,6 +226,9 @@ npm run validate:hardware
 
 The suite fails if the deterministic strategy ranking drifts away from those
 golden scenarios.
+
+The suite also checks Hardware Playbook coverage so strategy guidance cannot
+quietly lose the supporting playbook layer for a recognized platform.
 
 ## Future AI Hooks
 

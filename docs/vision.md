@@ -26,6 +26,8 @@ Optimization is the differentiator. The long-term workflow should become Build -
 
 Platform knowledge is the moat. JETS should know the quirks, hidden upgrade paths, adapter tricks, PCIe tradeoffs, and community discoveries that make one used platform much more useful than another similarly priced machine.
 
+Hardware playbooks turn that knowledge into builder judgment. Platform Knowledge answers what a machine is; Playbooks answer what an experienced builder should do with it, which mistakes to avoid, which adapters unlock value, and which strategies the platform can support.
+
 Solution intelligence is the product becoming active. JETS should combine CPU, GPU, RAM, PSU, platform, cooling, budget, and use-case context into a complete-system explanation so users do not do that reasoning manually.
 
 Marketplace intelligence is the Phase 3 feeder layer. Marketplace listings are not the product; they are raw input that must become normalized hardware with confidence, platform detection, health, opportunities, and future solution paths before Builder, Knowledge, Intelligence, Optimization, or Recommendation layers use it.
@@ -38,7 +40,7 @@ Validation is the quality layer. Before real marketplace data arrives, every det
 
 The near-term acquisition journey should feel continuous:
 
-Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Recommendation Preview -> Save Acquisition -> Review History -> Strategy -> Use in Project -> Builder Validation.
+Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence -> Platform Detection -> Listing Intelligence -> Playbook -> Recommendation Preview -> Save Acquisition -> Review History -> Strategy -> Use in Project -> Builder Validation.
 
 The project journey remains:
 
@@ -326,7 +328,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 4.0 - Manual Acquisition Workflow
 
-- Current.
+- Complete.
 - Add `/acquire` as the first-class manual listing capture workspace.
 - Let users enter marketplace, URL, title, description, price, currency, location, condition, seller notes, placeholder image count, and personal notes.
 - Show raw listing, parsed fields, detected platform, confidence, evidence, missing information, Recommendation Readiness, and recommendation preview before saving.
@@ -358,7 +360,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Version 4.3 - Strategy Engine
 
-- Current.
+- Complete.
 - Add deterministic strategy reasoning before project creation.
 - Compare upgrade existing machine, buy used workstation, build from scratch, laptop plus eGPU, mini PC, server conversion, repair existing hardware, wait for better value, and hybrid strategy paths.
 - Show tradeoff matrices for cost, performance, upgradeability, reliability, power draw, noise, difficulty, repairability, platform potential, future expansion, and confidence.
@@ -366,6 +368,18 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Let saved acquisitions influence strategy without forcing every acquisition into Builder.
 - Add validation fixtures for budget-too-small, overpriced-workstation, amazing-deal, bad-platform, excellent-platform, and repair-candidate cases.
 - Keep live scraping, AI extraction, OCR, checkout, image uploads, and automated acquisition-to-project creation deferred.
+
+### Phase 5.0 - Hardware Playbook Engine
+
+- Current.
+- Add curated Hardware Playbooks for ThinkStation, Precision, OptiPlex, HP Z-series, Mac Pro, mini PC, and laptop/eGPU paths.
+- Capture Overview, recommended strategies, upgrade paths, known bottlenecks, common mistakes, adapters, PCIe, power, cooling, firmware, storage, memory, repair, lifespan, and ideal workloads.
+- Link every playbook recommendation to evidence, verification state, confidence, and Knowledge Quality.
+- Surface relevant playbooks on Project detail pages with completed and remaining recommendations.
+- Surface relevant playbooks on Acquisition detail pages before project handoff.
+- Let Strategy reference playbooks instead of duplicating platform-specific advice.
+- Validate that every supported platform profile has at least one playbook.
+- Keep live scraping, AI extraction, OCR, checkout, image uploads, and automatic project mutation deferred.
 
 ## Idea Parking Lot
 
@@ -412,6 +426,10 @@ Ideas below are valuable, but they are not current milestone scope.
 - Moderator verification workflow
 - Knowledge Quality history
 - Strategy timing and walk-away reasoning
+- Hardware playbook authoring workflow
+- Playbook moderation and evidence promotion
+- User-submitted playbook notes
+- Playbook-driven acquisition watchlists
 
 ## Product Principles
 
