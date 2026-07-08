@@ -3,6 +3,10 @@ import {
   platformKnowledgeLinks,
   platformKnowledgeProfiles
 } from "@/data/platform-knowledge";
+import {
+  getPlatformEncyclopediaById,
+  getPlatformEncyclopediaSummary
+} from "@/lib/platform-encyclopedia";
 import type { ComponentInventoryItem } from "@/types/component-inventory";
 import type {
   BuildWorkspaceProject,
@@ -176,9 +180,17 @@ export function getPlatformKnowledgeInsightForProfile(
   matchedBy: PlatformKnowledgeInsight["matchedBy"] = "none",
   matchedLabel?: string
 ): PlatformKnowledgeInsight {
+  const encyclopediaSummary = getPlatformEncyclopediaSummary(
+    getPlatformEncyclopediaById(profile.id)
+  );
+
   return {
     adapterCount: getRecommendedAdaptersForPlatform(profile.id).length,
     constraintCount: profile.constraints.length,
+    encyclopediaDiagramCount: encyclopediaSummary?.diagramCount ?? 0,
+    encyclopediaFactCount: encyclopediaSummary?.factCount ?? 0,
+    encyclopediaWorkloadProfileCount:
+      encyclopediaSummary?.workloadProfileCount ?? 0,
     matchedBy,
     matchedLabel,
     opportunityCount: profile.upgradeOpportunities.length,

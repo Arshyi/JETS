@@ -2,6 +2,7 @@ import { AlertTriangle, Cpu, Gauge, Lightbulb, Wrench } from "lucide-react";
 
 import { EvidencePanel } from "@/components/evidence/evidence-panel";
 import { AdapterIntelligenceCard } from "@/components/platform-knowledge/adapter-intelligence-card";
+import { PlatformEncyclopediaSummary } from "@/components/platform-knowledge/platform-encyclopedia-summary";
 import { UpgradeOpportunityCard } from "@/components/platform-knowledge/upgrade-opportunity-card";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
@@ -12,6 +13,7 @@ import {
   getKnowledgeQualityForPlatform,
   getKnowledgeTimelineForPlatform
 } from "@/lib/evidence-engine";
+import { getPlatformEncyclopediaById } from "@/lib/platform-encyclopedia";
 import { getRecommendedAdaptersForPlatform } from "@/lib/platform-knowledge";
 import type { PlatformKnowledgeProfile } from "@/types/platform-knowledge";
 
@@ -53,6 +55,7 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
   const conflicts = getEvidenceConflictsForPlatform(profile.id);
   const discoveries = getCommunityDiscoveriesForPlatform(profile.id);
   const knowledgeTimeline = getKnowledgeTimelineForPlatform(profile.id);
+  const encyclopedia = getPlatformEncyclopediaById(profile.id);
 
   return (
     <section className="rounded-lg border border-border bg-panel p-5">
@@ -101,6 +104,12 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
           title="Why do we believe this platform profile?"
         />
       </div>
+
+      {encyclopedia ? (
+        <div className="mt-6">
+          <PlatformEncyclopediaSummary entry={encyclopedia} />
+        </div>
+      ) : null}
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_0.9fr]">
         <section>

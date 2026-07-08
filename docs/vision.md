@@ -26,6 +26,8 @@ Optimization is the differentiator. The long-term workflow should become Build -
 
 Platform knowledge is the moat. JETS should know the quirks, hidden upgrade paths, adapter tricks, PCIe tradeoffs, and community discoveries that make one used platform much more useful than another similarly priced machine.
 
+The Platform Encyclopedia is the deep reference layer under Platform Knowledge. Platform Knowledge should summarize a platform; the encyclopedia should store topology, upgrade limits, reliability, workload suitability, structured diagram metadata, and evidence-linked engineering facts.
+
 Hardware playbooks turn that knowledge into builder judgment. Platform Knowledge answers what a machine is; Playbooks answer what an experienced builder should do with it, which mistakes to avoid, which adapters unlock value, and which strategies the platform can support.
 
 Action Plans turn playbooks into workflow. They should translate platform-specific guidance into dependency-aware engineering tasks with evidence, estimated time, estimated cost, validation impact, and progress tracking.
@@ -396,13 +398,23 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Phase 5.2 - Persisted Engineering Action Plans
 
-- Current.
+- Complete.
 - Persist Action Plan tasks, progress, comments, dependencies, and audit events in Supabase.
 - Keep task records scoped to the owning project user through RLS.
 - Add server actions for accepting, completing, reopening, skipping, rejecting, note updates, and optional task ordering.
 - Persist completion, remaining cost, remaining time, project maturity, Knowledge coverage, and validation progress.
 - Let completed persisted tasks resolve linked Builder validation issues in the displayed project validation layer.
 - Keep AI, live scraping, OCR, checkout, admin task moderation, image uploads, and automatic hardware mutation deferred.
+
+### Phase 5.3 - Platform Encyclopedia
+
+- Current.
+- Add a reusable Platform Encyclopedia model below Playbooks and above Platform Knowledge summaries.
+- Store platform revisions, chipset, CPU support, memory topology, PCIe topology, storage topology, power, cooling, firmware, limitations, hidden capabilities, repair notes, common failures, lifecycle, community discoveries, upgrade paths, reliability, and workload profiles.
+- Support metadata-only engineering diagrams for PCIe lanes, memory channels, drive bays, power connectors, expansion slots, and thermal zones.
+- Make Playbooks, Strategy, and Action Plans reference encyclopedia sections instead of duplicating engineering knowledge.
+- Extend hardware validation so supported platforms warn when topology, upgrade, reliability, or workload coverage is missing.
+- Keep AI, live scraping, OCR, checkout, automatic knowledge ingestion, and automatic hardware mutation deferred.
 
 ## Idea Parking Lot
 
@@ -456,6 +468,9 @@ Ideas below are valuable, but they are not current milestone scope.
 - Technician handoff reports
 - Before/after validation exports
 - Action Plan task template authoring
+- Platform encyclopedia authoring workflow
+- Platform topology diagrams from reviewed manuals
+- Encyclopedia fact moderation and promotion
 
 ## Product Principles
 

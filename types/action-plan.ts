@@ -42,6 +42,7 @@ export type EngineeringActionTask = {
   dependencyTaskIds: string[];
   description: string;
   difficulty: EngineeringActionDifficulty;
+  encyclopediaEntryIds: string[];
   estimatedCostUsd: number;
   estimatedTimeMinutes: number;
   evidenceRecordIds: Array<EvidenceRecord["id"]>;

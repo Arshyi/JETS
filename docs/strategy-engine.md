@@ -51,6 +51,15 @@ Phase 5.0 adds a Playbook dependency:
 Strategy uses playbooks as evidence-backed support signals for recognized
 acquisitions. It does not copy playbook rules into strategy scoring.
 
+Phase 5.3 adds Platform Encyclopedia references:
+
+- `types/platform-encyclopedia.ts`
+- `lib/platform-encyclopedia.ts`
+
+Strategy can cite encyclopedia sections for recognized platforms when a strategy
+depends on topology, reliability, upgrade paths, lifecycle, or workload fit. It
+does not copy encyclopedia facts into strategy scoring.
+
 Phase 5.1 adds Action Plans after Builder. Strategy is now carried forward into
 the generated plan so engineering tasks can still explain which strategic path
 caused the project to exist.
@@ -205,13 +214,13 @@ remain visible.
 This keeps the decision flow layered:
 
 ```text
-Platform Knowledge -> Playbook -> Strategy -> Builder -> Action Plan
+Platform Knowledge -> Platform Encyclopedia -> Playbook -> Strategy -> Builder -> Action Plan
 ```
 
-Platform Knowledge identifies the hardware. Playbooks describe experienced
-builder moves. Strategy decides whether the path deserves a project. Action
-Plans translate the selected project path into dependency-aware engineering
-tasks.
+Platform Knowledge identifies the hardware. Platform Encyclopedia stores the
+deep engineering facts. Playbooks describe experienced builder moves. Strategy
+decides whether the path deserves a project. Action Plans translate the selected
+project path into dependency-aware engineering tasks.
 
 ## Validation
 
@@ -235,6 +244,9 @@ golden scenarios.
 
 The suite also checks Hardware Playbook coverage so strategy guidance cannot
 quietly lose the supporting playbook layer for a recognized platform.
+Phase 5.3 also checks Platform Encyclopedia coverage so strategy cannot lean on
+recognized platform context without topology, upgrade, reliability, and workload
+knowledge behind it.
 
 ## Future AI Hooks
 
@@ -260,8 +272,8 @@ Phase 4.3 is conservative:
 - no branch-level strategy diff
 - no market trend timing model
 
-Phase 5.1 carries strategy provenance into Action Plans, but task status is not
-yet persisted to Supabase and does not create strategy audit events.
+Phase 5.3 strategy encyclopedia references are deterministic section pointers,
+not a market timing model or strategy authoring workflow.
 
 The value is the new decision layer. JETS can now tell a user when the smartest
 hardware move is not to start a project.

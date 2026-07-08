@@ -10,10 +10,13 @@ import type {
   EngineeringActionTaskStatus,
   EngineeringActionTaskType
 } from "@/types/action-plan";
+import { getEncyclopediaReferencesForSlots } from "@/lib/platform-encyclopedia";
+import { platformKnowledgeIds } from "@/types/platform-knowledge";
 import type {
   HardwarePlaybook,
   HardwarePlaybookRecommendation
 } from "@/types/playbook";
+import type { PlatformKnowledgeId } from "@/types/platform-knowledge";
 import type {
   BuildSlotId,
   BuildValidationIssue,
@@ -169,6 +172,10 @@ const priorityScores: Record<EngineeringActionPriority, number> = {
   medium: 55
 };
 
+function isPlatformKnowledgeId(value: string | null): value is PlatformKnowledgeId {
+  return Boolean(value && platformKnowledgeIds.includes(value as PlatformKnowledgeId));
+}
+
 function clampPercent(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
@@ -265,6 +272,15 @@ function createRecommendationTask(
     dependencyTaskIds,
     description: getTaskDescription(rule, recommendation),
     difficulty: rule.difficulty,
+    encyclopediaEntryIds:
+      recommendation.encyclopediaEntryIds ??
+      (isPlatformKnowledgeId(playbook.platformId)
+        ? getEncyclopediaReferencesForSlots(
+            playbook.platformId,
+            unique([...slotIds, ...recommendation.slotHints]),
+            "Action task references platform encyclopedia sections through its playbook recommendation."
+          ).map((reference) => reference.entryId)
+        : []),
     estimatedCostUsd: rule.costUsd,
     estimatedTimeMinutes: rule.timeMinutes,
     evidenceRecordIds: recommendation.evidenceRecordIds,
@@ -429,6 +445,13 @@ function buildTasksFromValidationIssues(input: GenerateActionPlanInput) {
         dependencyTaskIds: [],
         description: `Builder validation raised "${issue.title}". Complete this task to document the engineering step that should resolve or narrow the warning.`,
         difficulty: rule.difficulty,
+        encyclopediaEntryIds: isPlatformKnowledgeId(platformId)
+          ? getEncyclopediaReferencesForSlots(
+              platformId,
+              slotIds,
+              "Validation-derived action task references slot-relevant encyclopedia sections."
+            ).map((reference) => reference.entryId)
+          : [],
         estimatedCostUsd: rule.costUsd,
         estimatedTimeMinutes: rule.timeMinutes,
         evidenceRecordIds: [],
@@ -476,6 +499,10 @@ function dedupeTasks(tasks: EngineeringActionTask[]) {
       evidenceRecordIds: unique([
         ...existing.evidenceRecordIds,
         ...task.evidenceRecordIds
+      ]),
+      encyclopediaEntryIds: unique([
+        ...existing.encyclopediaEntryIds,
+        ...task.encyclopediaEntryIds
       ]),
       resolvesValidationIssueIds: unique([
         ...existing.resolvesValidationIssueIds,
@@ -694,7 +721,10 @@ export function validateActionPlanFixture(
     (task) => task.dependencyTaskIds.length > 0
   );
   const tasksWithEvidence = plan.tasks.filter(
-    (task) => task.evidenceRecordIds.length > 0 || task.resolvesValidationIssueIds.length > 0
+    (task) =>
+      task.evidenceRecordIds.length > 0 ||
+      task.resolvesValidationIssueIds.length > 0 ||
+      task.encyclopediaEntryIds.length > 0
   );
   const tasksWithValidationImpact = plan.tasks.filter(
     (task) => task.resolvesValidationIssueIds.length > 0
@@ -723,7 +753,7 @@ export function validateActionPlanFixture(
       [...dependencyIds].filter((id) => taskIds.has(id)).length
     ),
     createAssertion(
-      "Tasks link back to evidence, playbooks, or validation issues.",
+      "Tasks link back to evidence, playbooks, encyclopedia, or validation issues.",
       tasksWithEvidence.length === plan.tasks.length,
       plan.tasks.length,
       tasksWithEvidence.length

@@ -62,7 +62,7 @@ Uncovered:
 
 ### platform
 
-Coverage: 8/19 (42%)
+Coverage: 22/33 (67%)
 
 Uncovered:
 - platform-adapter:m2-to-pcie-adapter
@@ -150,16 +150,16 @@ Uncovered:
 
 ## Platform Knowledge Validation
 
-| Status | Platform | Knowledge quality | Evidence records | Issues |
-| --- | --- | ---: | ---: | --- |
-| PASS | Lenovo ThinkStation P520 | 64 | 6 | None |
-| PASS | Lenovo ThinkStation P510 | 52 | 2 | None |
-| FAIL | Dell Precision T5810 | 34 | 1 | Knowledge quality score is low |
-| PASS | Dell Precision 5820 | 50 | 1 | None |
-| PASS | Dell OptiPlex 7060 SFF | 68 | 3 | None |
-| FAIL | HP Z440 | 35 | 2 | Knowledge quality score is low |
-| PASS | HP Z840 | 52 | 2 | None |
-| FAIL | Mac Pro 5,1 | 38 | 2 | Knowledge quality score is low |
+| Status | Platform | Knowledge quality | Evidence records | Encyclopedia sections | Issues |
+| --- | --- | ---: | ---: | ---: | --- |
+| PASS | Lenovo ThinkStation P520 | 64 | 6 | 19 | None |
+| PASS | Lenovo ThinkStation P510 | 52 | 2 | 19 | None |
+| FAIL | Dell Precision T5810 | 34 | 1 | 19 | Knowledge quality score is low |
+| PASS | Dell Precision 5820 | 50 | 1 | 19 | None |
+| PASS | Dell OptiPlex 7060 SFF | 68 | 3 | 19 | None |
+| FAIL | HP Z440 | 35 | 2 | 19 | Knowledge quality score is low |
+| PASS | HP Z840 | 52 | 2 | 19 | None |
+| FAIL | Mac Pro 5,1 | 38 | 2 | 19 | Knowledge quality score is low |
 
 ## Playbook Validation
 

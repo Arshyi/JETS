@@ -66,6 +66,9 @@ function RecommendationCard({
         <StatusPill tone={toneForVerification(recommendation.verification)}>
           {recommendation.verification}
         </StatusPill>
+        {recommendation.encyclopediaEntryIds?.length ? (
+          <StatusPill>{recommendation.encyclopediaEntryIds.length} encyclopedia refs</StatusPill>
+        ) : null}
       </div>
       <h4 className="mt-3 text-base font-semibold">{recommendation.title}</h4>
       <p className="mt-2 text-sm leading-6 text-muted">{recommendation.summary}</p>
@@ -170,6 +173,9 @@ export function PlaybookPanel({
         </StatusPill>
         {evidenceSummary ? (
           <StatusPill>{evidenceSummary.evidenceCount} evidence records</StatusPill>
+        ) : null}
+        {primaryPlaybook.encyclopediaEntryIds?.length ? (
+          <StatusPill>{primaryPlaybook.encyclopediaEntryIds.length} encyclopedia refs</StatusPill>
         ) : null}
       </div>
 

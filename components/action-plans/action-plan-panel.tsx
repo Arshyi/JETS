@@ -321,6 +321,9 @@ export function ActionPlanPanel({
                   </p>
                   <p className="mt-2 leading-6 text-muted">
                     {task.evidenceRecordIds.length} evidence records
+                    {task.encyclopediaEntryIds.length > 0
+                      ? ` - ${task.encyclopediaEntryIds.length} encyclopedia refs`
+                      : ""}
                     {task.recommendation
                       ? ` - ${task.recommendation.title}`
                       : " - Builder validation"}

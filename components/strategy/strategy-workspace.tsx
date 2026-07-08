@@ -323,6 +323,9 @@ export function StrategyWorkspace({
                     ? `${strategy.expectedLifespanYears} year life`
                     : "No build yet"}
                 </StatusPill>
+                {strategy.encyclopediaEntryIds.length > 0 ? (
+                  <StatusPill>{strategy.encyclopediaEntryIds.length} encyclopedia refs</StatusPill>
+                ) : null}
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2">

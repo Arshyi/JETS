@@ -181,6 +181,9 @@ export type PlatformKnowledgeLink = {
 export type PlatformKnowledgeInsight = {
   adapterCount: number;
   constraintCount: number;
+  encyclopediaDiagramCount: number;
+  encyclopediaFactCount: number;
+  encyclopediaWorkloadProfileCount: number;
   matchedBy: "component" | "source-listing" | "alias" | "none";
   matchedLabel?: string;
   opportunityCount: number;

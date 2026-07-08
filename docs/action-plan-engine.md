@@ -6,6 +6,8 @@ durable, auditable, cross-device project workflow.
 This is not AI, live scraping, OCR, browser automation, marketplace APIs, or
 checkout. It is a deterministic workflow layer generated from the current
 project, platform, playbook, strategy source, and Builder validation state.
+Phase 5.3 also lets tasks carry Platform Encyclopedia references so engineering
+work remains connected to topology, upgrade, reliability, and workload facts.
 
 ## Purpose
 
@@ -92,6 +94,7 @@ The pipeline is:
 
 ```text
 Platform Knowledge
+-> Platform Encyclopedia
 -> Playbook
 -> Strategy
 -> Project
@@ -135,12 +138,13 @@ Every task includes:
 - verification state
 - related slots
 - source platform
+- source encyclopedia sections
 - source playbook recommendation
 - source strategy
 - Builder validation issues it may resolve
 
-Nothing is disconnected: each task can point back to the playbook, evidence,
-strategy, platform, or validation issue that caused it to exist.
+Nothing is disconnected: each task can point back to the playbook, encyclopedia,
+evidence, strategy, platform, or validation issue that caused it to exist.
 
 ## Dependency Model
 
@@ -236,7 +240,7 @@ The validation suite now checks that Action Plans:
 - generate tasks
 - include dependency chains
 - resolve dependency IDs
-- link to evidence, playbooks, or validation issues
+- link to evidence, playbooks, encyclopedia references, or validation issues
 - expose Builder validation impact
 - expose progress metrics
 - support expected task statuses

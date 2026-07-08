@@ -27,6 +27,11 @@ RAM, PCIe, and constraints. A P510 playbook can say to prioritize PCIe NVMe,
 64 GB ECC, power-validated GPU selection, BIOS review, and adapter planning
 before pretending it is a generic gaming tower.
 
+Phase 5.3 adds the Platform Encyclopedia between Platform Knowledge summaries
+and Playbooks. Playbooks now reference encyclopedia sections for topology,
+upgrade limits, reliability, and workload context instead of duplicating that
+knowledge inside each recommendation.
+
 ## Architecture
 
 Domain types live in:
@@ -44,6 +49,11 @@ The engine lives in:
 The reusable UI lives in:
 
 - `components/playbooks/playbook-panel.tsx`
+
+Platform Encyclopedia references live in:
+
+- `types/platform-encyclopedia.ts`
+- `lib/platform-encyclopedia.ts`
 
 Validation is integrated into:
 
@@ -85,6 +95,8 @@ Each playbook includes:
 
 Recommendations are slot-aware. They can point at GPU, storage, RAM, PSU,
 cooling, PCIe adapters, eGPU docks, laptop RAM adapters, or other builder slots.
+Phase 5.3 also lets playbooks and recommendations point at encyclopedia section
+references for those slots.
 
 ## Current Demo Playbooks
 
@@ -115,6 +127,10 @@ current project slots, and Builder validation issues, then generates tasks with
 dependencies, cost/time estimates, evidence links, verification state, and
 validation impact.
 
+Phase 5.3 gives both layers encyclopedia references. A playbook can reference
+storage topology or power topology, and the Action Plan task generated from that
+recommendation can carry the same reference into the project workflow.
+
 Acquisition detail pages show the Acquisition Playbook before handoff. This
 keeps a saved listing from becoming a project before the buyer understands the
 platform strategy, likely adapters, common mistakes, and evidence state.
@@ -124,8 +140,9 @@ Strategy does not duplicate the playbook knowledge. It uses playbooks as
 supporting signals for why a used workstation, repair path, mini PC, or hybrid
 path is sensible.
 
-Hardware validation now fails when a supported platform lacks a playbook or a
-playbook recommendation points at missing evidence.
+Hardware validation now fails when a supported platform lacks a playbook, a
+playbook recommendation points at missing evidence, or platform encyclopedia
+coverage is missing for required engineering sections.
 
 ## Confidence
 
@@ -161,6 +178,15 @@ Action Plans are the workflow layer above this knowledge. A playbook can say
 "use a PCIe NVMe adapter"; an Action Plan can create "install adapter",
 "replace storage", "verify power", and "stress test" tasks in the right order.
 
+The Phase 5.3 ownership rule is:
+
+```text
+Platform Knowledge: what this platform is
+Platform Encyclopedia: what engineers should know about it
+Playbooks: what an experienced builder recommends doing
+Action Plans: what this project should do next
+```
+
 ## Future AI Hooks
 
 Future AI should not invent playbooks directly into production truth.
@@ -191,6 +217,6 @@ They do not:
 They give JETS a reusable place to store experienced-builder guidance while the
 rest of the app remains deterministic.
 
-Phase 5.1 task state is local to the browser. Persisted task history, shared
-multi-device plans, and server-side validation adjustments are intentionally
-deferred until the workflow is proven.
+Phase 5.3 playbook encyclopedia references are section-level pointers, not a
+full authoring workflow. Moderated playbook editing, encyclopedia fact
+promotion, and reviewer-owned guidance changes remain future work.

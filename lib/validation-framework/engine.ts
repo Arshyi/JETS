@@ -1,5 +1,6 @@
 import { compatibilityValidationFixtures } from "@/data/compatibility/validation-fixtures";
 import { adapterIntelligenceProfiles, platformKnowledgeProfiles } from "@/data/platform-knowledge";
+import { platformEncyclopediaEntries } from "@/data/platform-encyclopedia";
 import { buildWorkspaceSlotDefinitions, starterEngineeringWorkspaceProject } from "@/data/solution-builder";
 import { strategyValidationFixtures } from "@/data/strategy-validation-fixtures";
 import { hardwareValidationScenarios } from "@/data/validation/hardware-scenarios";
@@ -13,6 +14,7 @@ import { buildImporterFixtureResult } from "@/lib/importer-fixtures/engine";
 import { buildListingIntelligenceRecord } from "@/lib/listing-intelligence/engine";
 import { normalizeMarketplaceListing } from "@/lib/marketplace-intelligence/normalize";
 import { optimizeBuildProject } from "@/lib/optimization-engine/pipeline";
+import { validatePlatformEncyclopediaCoverage } from "@/lib/platform-encyclopedia";
 import {
   getPlaybooksForProject,
   validateHardwarePlaybooks
@@ -241,10 +243,19 @@ function getRuleInventory(): Record<ValidationCoverageArea, string[]> {
     ],
     platform: [
       ...platformKnowledgeProfiles.map((profile) => `platform:${profile.id}`),
+      ...platformEncyclopediaEntries.map(
+        (entry) => `platform-encyclopedia:${entry.platformId}`
+      ),
       ...adapterIntelligenceProfiles.map((adapter) => `platform-adapter:${adapter.id}`),
       "platform:nvme-adapter",
       "platform:low-profile-constraint",
-      "platform:rtx-upgrade"
+      "platform:rtx-upgrade",
+      "platform-encyclopedia:memory-topology",
+      "platform-encyclopedia:power-topology",
+      "platform-encyclopedia:storage-guidance",
+      "platform-encyclopedia:upgrade-paths",
+      "platform-encyclopedia:reliability",
+      "platform-encyclopedia:workload-profiles"
     ],
     playbook: [
       ...platformKnowledgeProfiles.map((profile) => `playbook:${profile.id}`),
@@ -465,9 +476,16 @@ function validatePlatformKnowledge(): PlatformKnowledgeValidationResult[] {
   return platformKnowledgeProfiles.map((profile) => {
     const evidence = getEvidenceSummaryForPlatform(profile.id);
     const quality = getKnowledgeQualityForPlatform(profile);
+    const encyclopediaCoverage = validatePlatformEncyclopediaCoverage(
+      profile.id,
+      profile.name
+    );
     const adapterCount = adapterIntelligenceProfiles.filter((adapter) =>
       adapter.recommendedPlatformIds.includes(profile.id)
     ).length;
+    const encyclopediaIssues = encyclopediaCoverage.missing.map(
+      (issue) => `Missing encyclopedia ${issue.toLowerCase()}`
+    );
     const issues = [
       profile.constraints.length === 0 ? "Missing constraints" : null,
       profile.upgradeOpportunities.length === 0 ? "Missing upgrade opportunities" : null,
@@ -476,10 +494,13 @@ function validatePlatformKnowledge(): PlatformKnowledgeValidationResult[] {
       adapterCount === 0 ? "No recommended adapter profile" : null,
       profile.potential.overall <= 0 ? "Missing platform potential score" : null,
       evidence.evidenceCount === 0 ? "No linked evidence records" : null,
-      quality.overall < 45 ? "Knowledge quality score is low" : null
+      quality.overall < 45 ? "Knowledge quality score is low" : null,
+      ...encyclopediaIssues
     ].filter((issue): issue is string => Boolean(issue));
 
     return {
+      encyclopediaIssues,
+      encyclopediaSectionCount: encyclopediaCoverage.sectionCount,
       evidenceCount: evidence.evidenceCount,
       issues,
       passed: issues.length === 0,
@@ -595,7 +616,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
         result.assertions.find(
           (assertion) =>
             assertion.message ===
-            "Tasks link back to evidence, playbooks, or validation issues."
+            "Tasks link back to evidence, playbooks, encyclopedia, or validation issues."
         )?.passed
       )
         ? ["action-plan:evidence-links"]
@@ -628,6 +649,41 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     evidence: ["evidence:importer-validation-errors", "evidence:knowledge-quality"]
   });
   addCoverage(coveredMarkers, {
+    platform: [
+      ...platformKnowledge
+        .filter((result) => result.encyclopediaIssues.length === 0)
+        .map((result) => `platform-encyclopedia:${result.platformId}`),
+      ...(platformKnowledge.every((result) =>
+        !result.encyclopediaIssues.includes("Missing encyclopedia memory topology")
+      )
+        ? ["platform-encyclopedia:memory-topology"]
+        : []),
+      ...(platformKnowledge.every((result) =>
+        !result.encyclopediaIssues.includes("Missing encyclopedia power topology")
+      )
+        ? ["platform-encyclopedia:power-topology"]
+        : []),
+      ...(platformKnowledge.every((result) =>
+        !result.encyclopediaIssues.includes("Missing encyclopedia storage guidance")
+      )
+        ? ["platform-encyclopedia:storage-guidance"]
+        : []),
+      ...(platformKnowledge.every((result) =>
+        !result.encyclopediaIssues.includes("Missing encyclopedia upgrade paths")
+      )
+        ? ["platform-encyclopedia:upgrade-paths"]
+        : []),
+      ...(platformKnowledge.every((result) =>
+        !result.encyclopediaIssues.includes("Missing encyclopedia reliability data")
+      )
+        ? ["platform-encyclopedia:reliability"]
+        : []),
+      ...(platformKnowledge.every((result) =>
+        !result.encyclopediaIssues.includes("Missing encyclopedia workload profile")
+      )
+        ? ["platform-encyclopedia:workload-profiles"]
+        : [])
+    ],
     playbook: [
       ...playbookResults
         .filter((result) => result.playbookCount > 0)
@@ -734,7 +790,7 @@ export function renderValidationReportMarkdown(
   const platformRows = suite.platformKnowledge
     .map(
       (result) =>
-        `| ${statusLabel(result.passed)} | ${result.platformName} | ${result.qualityScore} | ${result.evidenceCount} | ${result.issues.join("; ") || "None"} |`
+        `| ${statusLabel(result.passed)} | ${result.platformName} | ${result.qualityScore} | ${result.evidenceCount} | ${result.encyclopediaSectionCount} | ${result.issues.join("; ") || "None"} |`
     )
     .join("\n");
   const playbookRows = suite.playbookResults
@@ -795,8 +851,8 @@ ${actionPlanRows}
 
 ## Platform Knowledge Validation
 
-| Status | Platform | Knowledge quality | Evidence records | Issues |
-| --- | --- | ---: | ---: | --- |
+| Status | Platform | Knowledge quality | Evidence records | Encyclopedia sections | Issues |
+| --- | --- | ---: | ---: | ---: | --- |
 ${platformRows}
 
 ## Playbook Validation

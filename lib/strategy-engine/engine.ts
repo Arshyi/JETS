@@ -4,10 +4,13 @@ import {
   currencyToUsd,
   defaultOwnedItems
 } from "@/lib/build-generator/config";
+import { getEncyclopediaReferencesForStrategy } from "@/lib/platform-encyclopedia";
 import { getPlaybookStrategySignalsForAcquisition } from "@/lib/playbook-engine/engine";
 import { useCaseLabels } from "@/types/hardware";
+import { platformKnowledgeIds } from "@/types/platform-knowledge";
 import type { OwnedItems } from "@/types/build-generator";
 import type { HardwareUseCase } from "@/types/hardware";
+import type { PlatformKnowledgeId } from "@/types/platform-knowledge";
 import type {
   HardwareStrategyRecommendation,
   HardwareStrategyTypeId,
@@ -30,6 +33,7 @@ type StrategyDefinition = {
 };
 
 type StrategySignal = {
+  encyclopediaEntryIds: string[];
   hiddenOpportunities: string[];
   reasons: string[];
   risks: string[];
@@ -408,6 +412,10 @@ function getAcquisitionSignals(input: StrategyInput) {
   };
 }
 
+function isPlatformKnowledgeId(value: string | null): value is PlatformKnowledgeId {
+  return Boolean(value && platformKnowledgeIds.includes(value as PlatformKnowledgeId));
+}
+
 function getPrimaryGoal(input: StrategyInput): HardwareUseCase {
   return input.goals[0] ?? "general";
 }
@@ -434,6 +442,15 @@ function addHiddenOpportunity(signal: StrategySignal, opportunity: string) {
   if (!signal.hiddenOpportunities.includes(opportunity)) {
     signal.hiddenOpportunities.push(opportunity);
   }
+}
+
+function addEncyclopediaReferences(
+  signal: StrategySignal,
+  references: string[]
+) {
+  signal.encyclopediaEntryIds = [
+    ...new Set([...signal.encyclopediaEntryIds, ...references])
+  ];
 }
 
 function applyBudgetSignals(
@@ -627,6 +644,27 @@ function applyAcquisitionSignals(
 
   for (const risk of playbookSignals.risks) {
     addRisk(signal, risk);
+  }
+
+  if (isPlatformKnowledgeId(acquisition.best.detectedPlatformId)) {
+    const references = getEncyclopediaReferencesForStrategy(
+      acquisition.best.detectedPlatformId,
+      definition.id,
+      "Strategy uses encyclopedia sections for recognized acquisition context."
+    );
+
+    if (references.length > 0) {
+      addEncyclopediaReferences(
+        signal,
+        references.map((reference) => reference.entryId)
+      );
+      signal.reasons.push(
+        `Encyclopedia context: ${references
+          .slice(0, 2)
+          .map((reference) => reference.sectionId.replaceAll("-", " "))
+          .join(", ")}.`
+      );
+    }
   }
 
   if (acquisition.isAmazingDeal) {
@@ -849,6 +887,7 @@ function scoreStrategy(
   input: StrategyInput
 ): Omit<HardwareStrategyRecommendation, "rank" | "whyAlternativesRankedLower"> {
   const signal: StrategySignal = {
+    encyclopediaEntryIds: [],
     hiddenOpportunities: [],
     reasons: [`${definition.title} starts from the ${definition.summary.toLowerCase()}`],
     risks: [...definition.risks],
@@ -895,6 +934,7 @@ function scoreStrategy(
 
   return {
     confidence: signal.tradeoffs.confidence,
+    encyclopediaEntryIds: signal.encyclopediaEntryIds,
     expectedLifespanYears:
       definition.defaultLifespanYears +
       (input.timeHorizon === "long" && definition.defaultLifespanYears > 0 ? 1 : 0),

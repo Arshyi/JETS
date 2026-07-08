@@ -45,7 +45,8 @@ npm run validate:hardware
 - **4.3:** Strategy Engine. Complete.
 - **5.0:** Hardware Playbook Engine. Complete.
 - **5.1:** Engineering Action Plans. Complete.
-- **5.2:** Persisted Engineering Action Plans. Current.
+- **5.2:** Persisted Engineering Action Plans. Complete.
+- **5.3:** Platform Encyclopedia. Current.
 
 ## Primary Workflow
 
@@ -60,7 +61,7 @@ npm run validate:hardware
 Marketplace Intelligence sits below the workflow as input plumbing:
 
 ```text
-Raw Marketplace Data -> Listing Intelligence -> Evidence -> Platform Knowledge -> Playbooks -> Strategy -> Builder -> Action Plans -> Solution Intelligence -> Optimization -> Recommendation
+Raw Marketplace Data -> Listing Intelligence -> Evidence -> Platform Knowledge -> Platform Encyclopedia -> Playbooks -> Strategy -> Builder -> Action Plans -> Solution Intelligence -> Optimization -> Recommendation
 ```
 
 Ingestion and parsing do not make recommendations. Optimization and reasoning do not know how a listing was captured. Evidence records explain why JETS trusts a parsed field, knowledge item, or recommendation.
@@ -384,6 +385,18 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Supabase RLS keeps action plans scoped to the owning project user. Admin/service-role review remains future-only.
 - Phase 5.2 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic project slot mutation.
 
+## Phase 5.3 Notes
+
+- Platform Encyclopedia types live in `types/platform-encyclopedia.ts`.
+- Curated demo encyclopedia entries live in `data/platform-encyclopedia.ts`.
+- Lookup, reference, summary, and coverage helpers live in `lib/platform-encyclopedia.ts`.
+- Platform Knowledge remains the summary layer; Platform Encyclopedia is the deeper engineering reference for topology, upgrade paths, reliability, workload fit, and structured diagram metadata.
+- Project Platform Knowledge panels now show encyclopedia coverage, topology notes, upgrade context, reliability notes, and workload suitability for recognized platforms.
+- Hardware Playbooks, Strategy recommendations, and Action Plan tasks now reference encyclopedia sections instead of duplicating engineering knowledge.
+- Hardware validation warns when supported platforms are missing memory topology, power topology, storage guidance, upgrade paths, reliability data, or workload profiles.
+- Documentation lives in `docs/platform-encyclopedia.md`.
+- Phase 5.3 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic knowledge ingestion.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -470,4 +483,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through Phase 5.2 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, curated hardware playbooks, deterministic persisted action plans, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge, Playbooks, Action Plans, or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/playbook-engine.md`, `docs/action-plan-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through Phase 5.3 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, curated platform encyclopedia entries, curated hardware playbooks, deterministic persisted action plans, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge, Encyclopedia, Playbooks, Action Plans, or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/platform-encyclopedia.md`, `docs/playbook-engine.md`, `docs/action-plan-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.

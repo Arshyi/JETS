@@ -105,6 +105,8 @@ export type ValidationScenarioResult = {
 };
 
 export type PlatformKnowledgeValidationResult = {
+  encyclopediaIssues: string[];
+  encyclopediaSectionCount: number;
   evidenceCount: number;
   issues: string[];
   passed: boolean;

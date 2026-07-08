@@ -37,10 +37,17 @@ The lookup and summary utilities live in:
 
 - `lib/platform-knowledge.ts`
 
+The deeper Platform Encyclopedia model lives in:
+
+- `types/platform-encyclopedia.ts`
+- `data/platform-encyclopedia.ts`
+- `lib/platform-encyclopedia.ts`
+
 The UI layer lives in:
 
 - `components/platform-knowledge/platform-knowledge-panel.tsx`
 - `components/platform-knowledge/platform-knowledge-summary.tsx`
+- `components/platform-knowledge/platform-encyclopedia-summary.tsx`
 - `components/platform-knowledge/upgrade-opportunity-card.tsx`
 - `components/platform-knowledge/adapter-intelligence-card.tsx`
 
@@ -73,6 +80,12 @@ Phase 5.0 adds Hardware Playbooks above this layer. Platform Knowledge still
 answers what a platform is; Playbooks answer what an experienced builder should
 do with it, which mistakes to avoid, which adapters matter, and which strategy
 paths the platform supports.
+
+Phase 5.3 adds the Platform Encyclopedia below Playbooks and beside Platform
+Knowledge summaries. Platform Knowledge remains the fast summary of what a
+platform is. The Encyclopedia stores deeper engineering reference material such
+as memory topology, PCIe topology, storage guidance, power layout, cooling
+zones, firmware notes, reliability, workload suitability, and upgrade limits.
 
 ## Separation Of Concerns
 
@@ -111,6 +124,22 @@ Upgrade opportunities are actionable paths:
 - community modifications
 - risk-managed reuse paths
 
+Platform Encyclopedia entries are deeper engineering references:
+
+- memory topology
+- PCIe topology
+- storage topology
+- power topology
+- cooling topology
+- reliability patterns
+- workload suitability
+- structured diagram metadata
+- upgrade encyclopedia facts
+
+Playbooks should reference encyclopedia sections when they need this context.
+They should not copy long-lived platform facts into recommendation prose unless
+the prose is explaining a specific action.
+
 Adapter intelligence is its own registry:
 
 - PCIe NVMe adapter
@@ -143,6 +172,15 @@ plan:
 
 This keeps specifications, evidence, and practical builder judgment reusable
 without mixing them into one large model.
+
+The Phase 5.3 hierarchy is:
+
+```text
+Platform Knowledge: summary and platform potential
+Platform Encyclopedia: detailed engineering reference
+Hardware Playbooks: experienced-builder guidance
+Engineering Action Plans: project-specific task workflow
+```
 
 ## Platform Potential
 
@@ -262,6 +300,9 @@ should continue warning about low-profile expansion and proprietary PSU limits.
 
 Phase 5.0 also checks that every supported platform profile has at least one
 Hardware Playbook with required sections and evidence-linked recommendations.
+Phase 5.3 also checks that every supported platform profile has encyclopedia
+coverage for memory topology, power topology, storage guidance, upgrade paths,
+reliability data, and workload profiles.
 
 Incomplete platform evidence is reported as a warning, not hidden. This is
 intentional: Platform Potential answers how useful the hardware can be, while
@@ -310,5 +351,6 @@ v2.5 does not:
 - mutate optimizer decisions automatically
 - replace compatibility validation
 
-The current value is architectural: JETS now has a place to store and display the
-kind of hardware knowledge that makes unusual solution paths possible.
+The current value is architectural: JETS now has a summary layer and a deeper
+encyclopedia layer for the kind of hardware knowledge that makes unusual
+solution paths possible.

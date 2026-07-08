@@ -5,6 +5,10 @@ import {
   getEvidenceSummaryForPlatform,
   getKnowledgeQualityForPlatform
 } from "@/lib/evidence-engine";
+import {
+  getEncyclopediaReferencesForPlatform,
+  getEncyclopediaReferencesForSlots
+} from "@/lib/platform-encyclopedia";
 import type {
   HardwarePlaybook,
   HardwarePlaybookRecommendation,
@@ -13,6 +17,8 @@ import type {
   PlaybookValidationResult
 } from "@/types/playbook";
 import { playbookSectionIds } from "@/types/playbook";
+import { platformKnowledgeIds } from "@/types/platform-knowledge";
+import type { PlatformKnowledgeId } from "@/types/platform-knowledge";
 import type { BuildSlotId, BuildWorkspaceModel } from "@/types/solution-builder";
 import type {
   HardwareStrategyTypeId,
@@ -85,12 +91,48 @@ function getKnowledgeScore(playbook: HardwarePlaybook) {
   return getKnowledgeQualityForPlatform(profile).overall;
 }
 
+function isPlatformKnowledgeId(value: string): value is PlatformKnowledgeId {
+  return platformKnowledgeIds.includes(value as PlatformKnowledgeId);
+}
+
+function getPlaybookEncyclopediaEntryIds(playbook: HardwarePlaybook) {
+  if (!isPlatformKnowledgeId(playbook.platformId)) {
+    return playbook.encyclopediaEntryIds ?? [];
+  }
+
+  return (
+    playbook.encyclopediaEntryIds ??
+    getEncyclopediaReferencesForPlatform(
+      playbook.platformId,
+      [
+        "overview",
+        "upgrade-encyclopedia",
+        "known-limitations",
+        "workload-profiles"
+      ],
+      "Playbook references platform encyclopedia sections."
+    ).map((reference) => reference.entryId)
+  );
+}
+
 function getHydratedRecommendation(
   recommendation: HardwarePlaybookRecommendation,
-  knowledgeQualityScore: number
+  knowledgeQualityScore: number,
+  platformId: HardwarePlaybook["platformId"]
 ): HardwarePlaybookRecommendation {
+  const encyclopediaEntryIds =
+    recommendation.encyclopediaEntryIds ??
+    (isPlatformKnowledgeId(platformId)
+      ? getEncyclopediaReferencesForSlots(
+          platformId,
+          recommendation.slotHints,
+          "Playbook recommendation references slot-relevant encyclopedia sections."
+        ).map((reference) => reference.entryId)
+      : []);
+
   return {
     ...recommendation,
+    encyclopediaEntryIds,
     knowledgeQualityScore
   };
 }
@@ -100,9 +142,14 @@ function hydratePlaybook(playbook: HardwarePlaybook): HardwarePlaybook {
 
   return {
     ...playbook,
+    encyclopediaEntryIds: getPlaybookEncyclopediaEntryIds(playbook),
     knowledgeQualityScore,
     recommendations: playbook.recommendations.map((recommendation) =>
-      getHydratedRecommendation(recommendation, knowledgeQualityScore)
+      getHydratedRecommendation(
+        recommendation,
+        knowledgeQualityScore,
+        playbook.platformId
+      )
     )
   };
 }
@@ -360,6 +407,12 @@ export function validateHardwarePlaybooks(): PlaybookValidationResult[] {
         missingEvidenceIds.length === 0,
         0,
         missingEvidenceIds.length
+      ),
+      createAssertion(
+        "Every platform playbook references encyclopedia entries.",
+        playbooks.every((playbook) => (playbook.encyclopediaEntryIds ?? []).length > 0),
+        playbooks.length,
+        playbooks.filter((playbook) => (playbook.encyclopediaEntryIds ?? []).length > 0).length
       )
     ];
 

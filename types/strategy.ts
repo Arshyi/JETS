@@ -171,6 +171,7 @@ export type StrategyProjectSeed = {
 
 export type HardwareStrategyRecommendation = {
   confidence: number;
+  encyclopediaEntryIds: string[];
   expectedLifespanYears: number;
   hiddenOpportunities: string[];
   id: string;

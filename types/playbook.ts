@@ -54,6 +54,7 @@ export type HardwarePlaybookRecommendation = {
   completedWhenSlotIds?: BuildSlotId[];
   confidence: PlaybookConfidence;
   difficulty: PlaybookDifficulty;
+  encyclopediaEntryIds?: string[];
   estimatedCostText: string;
   evidenceRecordIds: Array<EvidenceRecord["id"]>;
   id: string;
@@ -67,6 +68,7 @@ export type HardwarePlaybookRecommendation = {
 };
 
 export type HardwarePlaybook = {
+  encyclopediaEntryIds?: string[];
   evidenceRecordIds: Array<EvidenceRecord["id"]>;
   idealWorkloads: HardwareUseCase[];
   id: string;
