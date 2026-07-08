@@ -44,7 +44,8 @@ npm run validate:hardware
 - **4.2:** Acquisition to Project Handoff. Complete.
 - **4.3:** Strategy Engine. Complete.
 - **5.0:** Hardware Playbook Engine. Complete.
-- **5.1:** Engineering Action Plans. Current.
+- **5.1:** Engineering Action Plans. Complete.
+- **5.2:** Persisted Engineering Action Plans. Current.
 
 ## Primary Workflow
 
@@ -373,6 +374,16 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/action-plan-engine.md`.
 - Phase 5.1 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, Supabase task persistence, or automatic project mutation.
 
+## Phase 5.2 Notes
+
+- Action Plan persistence migration lives in `supabase/migrations/202607080001_v5_2_persisted_action_plans.sql`.
+- Persisted tables cover action plan tasks, progress snapshots, comments, audit events, and task dependencies.
+- Server actions live in `lib/supabase/action-plan-actions.ts` for accept, complete, reopen, skip, reject, notes, optional task ordering, and first-time plan save.
+- Project detail pages load persisted Action Plan rows through `lib/supabase/queries.ts`.
+- Completed persisted tasks can resolve linked Builder validation issue IDs in the displayed project validation state.
+- Supabase RLS keeps action plans scoped to the owning project user. Admin/service-role review remains future-only.
+- Phase 5.2 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic project slot mutation.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -424,6 +435,7 @@ Apply these Supabase migrations in order:
 12. `202607060004_v4_1_acquisition_persistence.sql`
 13. `202607070001_v4_2_acquisition_project_handoff.sql`
 14. `202607070002_v4_3_strategy_engine.sql`
+15. `202607080001_v5_2_persisted_action_plans.sql`
 
 ## Vercel Deployment
 
@@ -458,4 +470,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through Phase 5.1 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, curated hardware playbooks, deterministic action plans, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge, Playbooks, Action Plans, or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/playbook-engine.md`, `docs/action-plan-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through Phase 5.2 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, curated hardware playbooks, deterministic persisted action plans, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge, Playbooks, Action Plans, or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/playbook-engine.md`, `docs/action-plan-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.

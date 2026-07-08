@@ -385,14 +385,24 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Phase 5.1 - Engineering Action Plans
 
-- Current.
+- Complete.
 - Generate deterministic Action Plans from platform, playbook, strategy, current project, and Builder validation state.
 - Add engineering task types for adapter install, PSU replacement, RAM upgrade, GPU install, BIOS/firmware, storage, cooling, cable management, thermal inspection, power verification, and stress testing.
 - Track task metadata for title, description, time, cost, difficulty, dependencies, evidence, verification, priority, and risk.
 - Let project users accept, skip, reject, complete, and undo tasks locally.
 - Enforce dependency chains so a task cannot be treated as complete before prerequisites are complete.
 - Track overall completion, remaining cost/time, platform improvement, Knowledge coverage, project maturity, and validation impact.
-- Keep Supabase task persistence, server-side validation mutation, AI, live scraping, OCR, checkout, and automatic project mutation deferred.
+- Keep Supabase task persistence, AI, live scraping, OCR, checkout, and automatic project mutation deferred.
+
+### Phase 5.2 - Persisted Engineering Action Plans
+
+- Current.
+- Persist Action Plan tasks, progress, comments, dependencies, and audit events in Supabase.
+- Keep task records scoped to the owning project user through RLS.
+- Add server actions for accepting, completing, reopening, skipping, rejecting, note updates, and optional task ordering.
+- Persist completion, remaining cost, remaining time, project maturity, Knowledge coverage, and validation progress.
+- Let completed persisted tasks resolve linked Builder validation issues in the displayed project validation layer.
+- Keep AI, live scraping, OCR, checkout, admin task moderation, image uploads, and automatic hardware mutation deferred.
 
 ## Idea Parking Lot
 
@@ -443,9 +453,9 @@ Ideas below are valuable, but they are not current milestone scope.
 - Playbook moderation and evidence promotion
 - User-submitted playbook notes
 - Playbook-driven acquisition watchlists
-- Persisted Action Plan task history
-- Action Plan audit events
-- Server-side validation adjustments from completed tasks
+- Technician handoff reports
+- Before/after validation exports
+- Action Plan task template authoring
 
 ## Product Principles
 

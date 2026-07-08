@@ -1,6 +1,7 @@
 # JETS Action Plan Engine
 
-Phase 5.1 adds Engineering Action Plans.
+Phase 5.1 added Engineering Action Plans. Phase 5.2 persists them as a
+durable, auditable, cross-device project workflow.
 
 This is not AI, live scraping, OCR, browser automation, marketplace APIs, or
 checkout. It is a deterministic workflow layer generated from the current
@@ -40,6 +41,16 @@ The project UI lives in:
 
 - `components/action-plans/action-plan-panel.tsx`
 
+Supabase persistence lives in:
+
+- `lib/supabase/action-plan-actions.ts`
+- `supabase/migrations/202607080001_v5_2_persisted_action_plans.sql`
+
+Persistence adapters live in:
+
+- `lib/action-plan-engine/persistence.ts`
+- `lib/action-plan-engine/validation.ts`
+
 Project integration lives in:
 
 - `components/solution-builder/project-detail.tsx`
@@ -49,6 +60,22 @@ Validation integration lives in:
 - `types/validation-framework.ts`
 - `lib/validation-framework/engine.ts`
 - `scripts/validate-hardware-knowledge.cjs`
+
+## Persistence Schema
+
+Phase 5.2 creates:
+
+- `action_plan_tasks`: generated task definitions plus user workflow status,
+  notes, timestamps, ordering, and source snapshots.
+- `action_plan_progress`: per-project completion, remaining cost/time, maturity,
+  Knowledge coverage, and validation progress snapshots.
+- `action_plan_comments`: user notes attached to task records.
+- `action_plan_audit_events`: every accepted, completed, skipped, reopened,
+  rejected, notes-updated, reorder, and plan-save transition.
+- `action_plan_dependencies`: durable prerequisite links between task rows.
+
+RLS keeps every row scoped to the owning `build_projects.user_id`. There is no
+moderator or service-role task workflow in Phase 5.2.
 
 ## Inputs
 
@@ -134,9 +161,9 @@ Power verification
 -> Stress testing
 ```
 
-The UI prevents a task from appearing complete when prerequisites are not
-complete. If stored local state says a task is complete but a dependency is not,
-the engine normalizes it back to accepted.
+The UI and server actions prevent a task from appearing complete when
+prerequisites are not complete. If persisted state says a task is complete but a
+dependency is not, the engine normalizes it back to accepted.
 
 ## Project Workflow
 
@@ -145,14 +172,18 @@ Playbook.
 
 Users can:
 
+- save the generated plan to the project
 - accept a task
 - skip a task
 - reject the recommendation
 - mark a task complete
-- undo completion
+- reopen a completed task
+- update task notes
+- reorder optional tasks
 
-Phase 5.1 stores task choices in browser local storage per project. This keeps
-the milestone focused on workflow shape before adding database persistence.
+Phase 5.2 stores task choices in Supabase and writes audit events for every
+transition. The first task action syncs the generated plan definition; users can
+also save the plan explicitly before making a decision.
 
 ## Progress Tracking
 
@@ -166,6 +197,7 @@ The Action Plan calculates:
 - project maturity
 - accepted, blocked, skipped, rejected, and completed task counts
 - resolved Builder validation issue IDs
+- validation progress percent
 
 Project maturity blends Builder completion with task completion and validation
 impact. It is not a hardware score. It is a workflow-readiness signal.
@@ -182,10 +214,14 @@ Examples:
 - a cooling or physical-fit warning can create a thermal inspection task
 - a PCIe warning can create an adapter task
 
-Completed tasks expose `resolvedValidationIssueIds`, so the UI can show which
-validation signals have been addressed by engineering work. Core server-side
-Builder validation still remains the source of truth until task persistence is
-added.
+Completed persisted tasks expose `resolvedValidationIssueIds`. Project detail
+pages use those IDs to adjust the displayed Builder validation state, so a task
+such as "Install PCIe NVMe adapter" can remove the corresponding "No NVMe"
+warning after it is completed.
+
+Core compatibility rules still generate the original issue set. Phase 5.2 adds a
+workflow-resolution layer on top; it does not mutate hardware slots or pretend a
+physical change happened without the user completing the task.
 
 ## Validation
 
@@ -207,27 +243,25 @@ The validation suite now checks that Action Plans:
 
 ## Current Limitations
 
-Phase 5.1 does not persist task state to Supabase.
-
-It also does not:
+Phase 5.2 does not:
 
 - mutate project slots automatically
-- mark Builder validation issues resolved on the server
-- create audit events for task status changes
+- install or verify hardware outside the user's confirmation
+- add admin/service-role review flows for action plans
 - estimate exact real-world labor or cost
 - use AI to generate tasks
 - ingest live marketplace data
 
-The value of this milestone is workflow shape: Playbook recommendations can now
-become project-specific engineering tasks with dependencies, progress, evidence,
-and validation impact.
+The value of this milestone is durable workflow state: Playbook recommendations
+can now become project-specific engineering tasks with dependencies, progress,
+evidence, audit history, and validation impact across devices.
 
-## Phase 5.2 Direction
+## Phase 5.3 Direction
 
-The natural next step is persisted Action Plans:
+The natural next step is richer execution workflow:
 
-- Supabase tables for action plan tasks and task events
-- project audit entries for task changes
-- task state shared across devices
-- server-side validation adjustments from accepted/completed tasks
-- task-derived project maturity history
+- action plan dashboard and history views across all projects
+- task templates for platform-specific service procedures
+- before/after validation reports for completed task groups
+- exportable technician checklist
+- merge accepted task outcomes into project branches when the user approves

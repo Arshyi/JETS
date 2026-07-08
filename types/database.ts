@@ -267,6 +267,270 @@ export type Database = {
         };
         Relationships: [];
       };
+      action_plan_audit_events: {
+        Row: {
+          after_state: Json | null;
+          before_state: Json | null;
+          created_at: string;
+          event_type: string;
+          id: string;
+          metadata: Json;
+          project_id: string;
+          summary: string;
+          task_id: string | null;
+          user_id: string;
+        };
+        Insert: {
+          after_state?: Json | null;
+          before_state?: Json | null;
+          created_at?: string;
+          event_type: string;
+          id?: string;
+          metadata?: Json;
+          project_id: string;
+          summary: string;
+          task_id?: string | null;
+          user_id: string;
+        };
+        Update: {
+          after_state?: Json | null;
+          before_state?: Json | null;
+          created_at?: string;
+          event_type?: string;
+          id?: string;
+          metadata?: Json;
+          project_id?: string;
+          summary?: string;
+          task_id?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      action_plan_comments: {
+        Row: {
+          body: string;
+          comment_type: string;
+          created_at: string;
+          id: string;
+          project_id: string;
+          task_id: string | null;
+          user_id: string;
+        };
+        Insert: {
+          body: string;
+          comment_type?: string;
+          created_at?: string;
+          id?: string;
+          project_id: string;
+          task_id?: string | null;
+          user_id: string;
+        };
+        Update: {
+          body?: string;
+          comment_type?: string;
+          created_at?: string;
+          id?: string;
+          project_id?: string;
+          task_id?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      action_plan_dependencies: {
+        Row: {
+          created_at: string;
+          dependency_key: string;
+          depends_on_task_id: string;
+          id: string;
+          project_id: string;
+          task_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          dependency_key: string;
+          depends_on_task_id: string;
+          id?: string;
+          project_id: string;
+          task_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          dependency_key?: string;
+          depends_on_task_id?: string;
+          id?: string;
+          project_id?: string;
+          task_id?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      action_plan_progress: {
+        Row: {
+          action_plan_snapshot: Json;
+          completion_percent: number;
+          created_at: string;
+          estimated_remaining_cost_usd: number;
+          estimated_remaining_time_minutes: number;
+          id: string;
+          knowledge_coverage_percent: number;
+          platform_improvement_percent: number;
+          project_id: string;
+          project_maturity_percent: number;
+          resolved_validation_issue_ids: string[];
+          updated_at: string;
+          user_id: string;
+          validation_progress_percent: number;
+        };
+        Insert: {
+          action_plan_snapshot?: Json;
+          completion_percent?: number;
+          created_at?: string;
+          estimated_remaining_cost_usd?: number;
+          estimated_remaining_time_minutes?: number;
+          id?: string;
+          knowledge_coverage_percent?: number;
+          platform_improvement_percent?: number;
+          project_id: string;
+          project_maturity_percent?: number;
+          resolved_validation_issue_ids?: string[];
+          updated_at?: string;
+          user_id: string;
+          validation_progress_percent?: number;
+        };
+        Update: {
+          action_plan_snapshot?: Json;
+          completion_percent?: number;
+          created_at?: string;
+          estimated_remaining_cost_usd?: number;
+          estimated_remaining_time_minutes?: number;
+          id?: string;
+          knowledge_coverage_percent?: number;
+          platform_improvement_percent?: number;
+          project_id?: string;
+          project_maturity_percent?: number;
+          resolved_validation_issue_ids?: string[];
+          updated_at?: string;
+          user_id?: string;
+          validation_progress_percent?: number;
+        };
+        Relationships: [];
+      };
+      action_plan_tasks: {
+        Row: {
+          accepted_at: string | null;
+          completed_at: string | null;
+          created_at: string;
+          description: string;
+          difficulty: string;
+          estimated_cost_usd: number;
+          estimated_time_minutes: number;
+          evidence_record_ids: string[];
+          id: string;
+          is_optional: boolean;
+          notes: string;
+          platform_id: string | null;
+          platform_name: string | null;
+          playbook_id: string | null;
+          playbook_recommendation_id: string | null;
+          playbook_recommendation_title: string | null;
+          priority: string;
+          project_id: string;
+          rejected_at: string | null;
+          reopened_at: string | null;
+          resolves_validation_issue_ids: string[];
+          risk: string;
+          skipped_at: string | null;
+          slot_ids: string[];
+          sort_order: number;
+          status: string;
+          strategy_id: string | null;
+          strategy_title: string | null;
+          task_key: string;
+          task_snapshot: Json;
+          task_type: string;
+          title: string;
+          updated_at: string;
+          user_id: string;
+          verification: string;
+        };
+        Insert: {
+          accepted_at?: string | null;
+          completed_at?: string | null;
+          created_at?: string;
+          description?: string;
+          difficulty?: string;
+          estimated_cost_usd?: number;
+          estimated_time_minutes?: number;
+          evidence_record_ids?: string[];
+          id?: string;
+          is_optional?: boolean;
+          notes?: string;
+          platform_id?: string | null;
+          platform_name?: string | null;
+          playbook_id?: string | null;
+          playbook_recommendation_id?: string | null;
+          playbook_recommendation_title?: string | null;
+          priority?: string;
+          project_id: string;
+          rejected_at?: string | null;
+          reopened_at?: string | null;
+          resolves_validation_issue_ids?: string[];
+          risk?: string;
+          skipped_at?: string | null;
+          slot_ids?: string[];
+          sort_order?: number;
+          status?: string;
+          strategy_id?: string | null;
+          strategy_title?: string | null;
+          task_key: string;
+          task_snapshot?: Json;
+          task_type: string;
+          title: string;
+          updated_at?: string;
+          user_id: string;
+          verification?: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          completed_at?: string | null;
+          created_at?: string;
+          description?: string;
+          difficulty?: string;
+          estimated_cost_usd?: number;
+          estimated_time_minutes?: number;
+          evidence_record_ids?: string[];
+          id?: string;
+          is_optional?: boolean;
+          notes?: string;
+          platform_id?: string | null;
+          platform_name?: string | null;
+          playbook_id?: string | null;
+          playbook_recommendation_id?: string | null;
+          playbook_recommendation_title?: string | null;
+          priority?: string;
+          project_id?: string;
+          rejected_at?: string | null;
+          reopened_at?: string | null;
+          resolves_validation_issue_ids?: string[];
+          risk?: string;
+          skipped_at?: string | null;
+          slot_ids?: string[];
+          sort_order?: number;
+          status?: string;
+          strategy_id?: string | null;
+          strategy_title?: string | null;
+          task_key?: string;
+          task_snapshot?: Json;
+          task_type?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+          verification?: string;
+        };
+        Relationships: [];
+      };
       build_project_audit_events: {
         Row: {
           after_state: Json | null;
@@ -1770,6 +2034,16 @@ export type AcquisitionProjectLinkRow =
   Database["public"]["Tables"]["acquisition_project_links"]["Row"];
 export type AcquisitionRecordRow =
   Database["public"]["Tables"]["acquisition_records"]["Row"];
+export type ActionPlanAuditEventRow =
+  Database["public"]["Tables"]["action_plan_audit_events"]["Row"];
+export type ActionPlanCommentRow =
+  Database["public"]["Tables"]["action_plan_comments"]["Row"];
+export type ActionPlanDependencyRow =
+  Database["public"]["Tables"]["action_plan_dependencies"]["Row"];
+export type ActionPlanProgressRow =
+  Database["public"]["Tables"]["action_plan_progress"]["Row"];
+export type ActionPlanTaskRow =
+  Database["public"]["Tables"]["action_plan_tasks"]["Row"];
 export type BuildProjectRow =
   Database["public"]["Tables"]["build_projects"]["Row"];
 export type BuildProjectSlotRow =

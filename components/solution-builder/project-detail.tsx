@@ -19,6 +19,8 @@ import {
   restoreBuildProjectAction
 } from "@/lib/supabase/project-actions";
 import { generateProjectActionPlan } from "@/lib/action-plan-engine/engine";
+import { getActionPlanProgressFromTaskRows } from "@/lib/action-plan-engine/persistence";
+import { applyActionPlanValidationProgress } from "@/lib/action-plan-engine/validation";
 import { getPlatformKnowledgeById } from "@/lib/platform-knowledge";
 import {
   getPlaybookProjectProgress,
@@ -87,13 +89,22 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
     strategyId: projectRow.strategy_id,
     strategyTitle: projectRow.strategy_title
   });
-  const solutionIntelligence = analyzeBuildSolution(model);
-  const warningCount = model.evaluation.warningCount + model.evaluation.blockingCount;
+  const actionPlanProgress = getActionPlanProgressFromTaskRows(
+    actionPlan,
+    data.actionPlanTasks
+  );
+  const displayedModel = applyActionPlanValidationProgress(
+    model,
+    actionPlanProgress.resolvedValidationIssueIds
+  );
+  const solutionIntelligence = analyzeBuildSolution(displayedModel);
+  const warningCount =
+    displayedModel.evaluation.warningCount + displayedModel.evaluation.blockingCount;
   const branchCount = data.branches.filter((branch) => branch.id !== projectRow.id).length;
   const slotGroups = (["required", "optional", "solution"] as const).map(
     (requirement) => ({
       requirement,
-      slots: model.evaluation.slots.filter(
+      slots: displayedModel.evaluation.slots.filter(
         (slot) => slot.definition.requirement === requirement
       )
     })
@@ -169,7 +180,7 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
           <div className="mt-6">
             <ProjectWorkflowProgress
               branchCount={branchCount}
-              completionPercent={model.evaluation.completionPercent}
+              completionPercent={displayedModel.evaluation.completionPercent}
               currentStage="components"
               hasOptimizationRuns={data.optimizationRuns.length > 0}
               projectId={projectRow.id}
@@ -181,7 +192,7 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[340px_1fr] lg:px-8">
         <aside className="grid gap-6 lg:sticky lg:top-24 lg:self-start">
-          <BuildValidationSummary evaluation={model.evaluation} />
+          <BuildValidationSummary evaluation={displayedModel.evaluation} />
           <ProjectBranchWorkspace
             branches={data.branches}
             currentProject={projectRow}
@@ -372,7 +383,14 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
             title="Project Playbook"
           />
 
-          <ActionPlanPanel plan={actionPlan} />
+          <ActionPlanPanel
+            auditEvents={data.actionPlanAuditEvents}
+            comments={data.actionPlanComments}
+            persistedProgress={data.actionPlanProgress}
+            persistedTasks={data.actionPlanTasks}
+            plan={actionPlan}
+            returnTo={returnTo}
+          />
 
           <SolutionIntelligencePanel
             branchCount={branchCount}

@@ -7,6 +7,11 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AcquisitionProjectLinkRow,
   AcquisitionRecordRow,
+  ActionPlanAuditEventRow,
+  ActionPlanCommentRow,
+  ActionPlanDependencyRow,
+  ActionPlanProgressRow,
+  ActionPlanTaskRow,
   BuildHistoryRow,
   BuildProjectAuditEventRow,
   BuildProjectNoteRow,
@@ -628,7 +633,12 @@ export async function getBuildProjectDetail(projectId: string) {
     auditResult,
     branchesResult,
     optimizationRunsResult,
-    acquisitionLinksResult
+    acquisitionLinksResult,
+    actionPlanTasksResult,
+    actionPlanProgressResult,
+    actionPlanCommentsResult,
+    actionPlanAuditEventsResult,
+    actionPlanDependenciesResult
   ] = await Promise.all([
     client
       .from("build_project_slots")
@@ -669,6 +679,39 @@ export async function getBuildProjectDetail(projectId: string) {
       .eq("project_id", projectId)
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
+      .limit(40),
+    client
+      .from("action_plan_tasks")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true }),
+    client
+      .from("action_plan_progress")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .maybeSingle(),
+    client
+      .from("action_plan_comments")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(50),
+    client
+      .from("action_plan_audit_events")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(50),
+    client
+      .from("action_plan_dependencies")
+      .select("*")
+      .eq("project_id", projectId)
+      .eq("user_id", userId)
   ]);
   const slotRows = (slotsResult.data ?? []) as BuildProjectSlotRow[];
   const workspaceProject = buildWorkspaceProjectFromRows(projectRow, slotRows);
@@ -691,6 +734,12 @@ export async function getBuildProjectDetail(projectId: string) {
 
   return {
     data: {
+      actionPlanAuditEvents: (actionPlanAuditEventsResult.data ?? []) as ActionPlanAuditEventRow[],
+      actionPlanComments: (actionPlanCommentsResult.data ?? []) as ActionPlanCommentRow[],
+      actionPlanDependencies: (actionPlanDependenciesResult.data ?? []) as ActionPlanDependencyRow[],
+      actionPlanProgress:
+        (actionPlanProgressResult.data as ActionPlanProgressRow | null) ?? null,
+      actionPlanTasks: (actionPlanTasksResult.data ?? []) as ActionPlanTaskRow[],
       auditEvents: (auditResult.data ?? []) as BuildProjectAuditEventRow[],
       branches: (branchesResult.data ?? []) as BuildProjectRow[],
       linkedAcquisitions: acquisitionLinks.map((link) => ({
@@ -712,6 +761,11 @@ export async function getBuildProjectDetail(projectId: string) {
       branchesResult.error?.message ??
       optimizationRunsResult.error?.message ??
       acquisitionLinksResult.error?.message ??
+      actionPlanTasksResult.error?.message ??
+      actionPlanProgressResult.error?.message ??
+      actionPlanCommentsResult.error?.message ??
+      actionPlanAuditEventsResult.error?.message ??
+      actionPlanDependenciesResult.error?.message ??
       acquisitionRecordsResult.error?.message
   };
 }

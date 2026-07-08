@@ -17,9 +17,14 @@ import type {
   OwnedItems
 } from "@/types/build-generator";
 import type {
-  BuildProjectAuditEventRow,
   AcquisitionProjectLinkRow,
   AcquisitionRecordRow,
+  ActionPlanAuditEventRow,
+  ActionPlanCommentRow,
+  ActionPlanDependencyRow,
+  ActionPlanProgressRow,
+  ActionPlanTaskRow,
+  BuildProjectAuditEventRow,
   BuildProjectNoteRow,
   BuildProjectOptimizationRunRow,
   BuildProjectRow,
@@ -39,6 +44,11 @@ import type {
 import type { HardwareUseCase } from "@/types/hardware";
 
 export type BuildProjectDetailData = {
+  actionPlanAuditEvents: ActionPlanAuditEventRow[];
+  actionPlanComments: ActionPlanCommentRow[];
+  actionPlanDependencies: ActionPlanDependencyRow[];
+  actionPlanProgress: ActionPlanProgressRow | null;
+  actionPlanTasks: ActionPlanTaskRow[];
   auditEvents: BuildProjectAuditEventRow[];
   branches: BuildProjectRow[];
   linkedAcquisitions: Array<{

@@ -41,10 +41,12 @@ export type EngineeringActionRisk = "low" | "medium" | "high" | "critical";
 export type EngineeringActionTask = {
   dependencyTaskIds: string[];
   description: string;
+  difficulty: EngineeringActionDifficulty;
   estimatedCostUsd: number;
   estimatedTimeMinutes: number;
   evidenceRecordIds: Array<EvidenceRecord["id"]>;
   id: string;
+  isOptional: boolean;
   priority: EngineeringActionPriority;
   recommendation: {
     playbookId: HardwarePlaybook["id"];
@@ -54,6 +56,7 @@ export type EngineeringActionTask = {
   resolvesValidationIssueIds: string[];
   risk: EngineeringActionRisk;
   slotIds: BuildSlotId[];
+  sortOrder: number;
   source: {
     platformId: PlaybookPlatformId | PlatformKnowledgeId | null;
     platformName: string | null;
@@ -79,6 +82,7 @@ export type EngineeringActionPlanProgress = {
   resolvedValidationIssueIds: string[];
   skippedTasks: number;
   totalTasks: number;
+  validationProgressPercent: number;
 };
 
 export type EngineeringActionPlan = {

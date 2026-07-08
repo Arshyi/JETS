@@ -283,13 +283,17 @@ The generated report includes:
 - use-case reasoning for gaming, engineering, CAD, programming, virtualization, local AI, rendering, home server, streaming, and office work
 - cost efficiency and budget allocation
 
-## Phase 5.1 Engineering Action Plans
+## Phase 5.1-5.2 Engineering Action Plans
 
 Action Plans live in:
 
 - `types/action-plan.ts`
 - `lib/action-plan-engine/engine.ts`
+- `lib/action-plan-engine/persistence.ts`
+- `lib/action-plan-engine/validation.ts`
 - `components/action-plans/action-plan-panel.tsx`
+- `lib/supabase/action-plan-actions.ts`
+- `supabase/migrations/202607080001_v5_2_persisted_action_plans.sql`
 
 The project detail page now generates an Action Plan from:
 
@@ -314,14 +318,27 @@ Action Plans translate guidance into engineering tasks:
 - power verification
 - stress testing
 
-Users can accept, skip, reject, complete, and undo tasks. Dependencies prevent a
-task from being marked complete before prerequisites are complete. Progress
-tracks completion, remaining cost, remaining time, platform improvement,
-Knowledge coverage, project maturity, and validation signals addressed by
-completed tasks.
+Users can save the plan to the project, accept tasks, skip tasks, reject
+recommendations, complete tasks, reopen completed tasks, update task notes, and
+reorder optional work. Dependencies prevent a task from being marked complete
+before prerequisites are complete.
 
-Phase 5.1 task choices are stored locally in the browser. Supabase-backed task
-persistence and server-side validation adjustments are deferred.
+Phase 5.2 persists task state in Supabase:
+
+- `action_plan_tasks`
+- `action_plan_progress`
+- `action_plan_comments`
+- `action_plan_audit_events`
+- `action_plan_dependencies`
+
+Progress tracks completion, remaining cost, remaining time, platform
+improvement, Knowledge coverage, project maturity, validation progress, and
+validation signals addressed by completed tasks.
+
+Completed persisted tasks can resolve linked validation issue IDs in the
+displayed Builder validation state. This is a workflow-resolution layer, not
+automatic hardware mutation: JETS only treats the warning as addressed after the
+user completes the task that is supposed to resolve it.
 - hidden opportunity detection
 - platform opportunity detection from the Platform Knowledge Engine
 - optimization advisor modes

@@ -264,10 +264,12 @@ function createRecommendationTask(
   return {
     dependencyTaskIds,
     description: getTaskDescription(rule, recommendation),
+    difficulty: rule.difficulty,
     estimatedCostUsd: rule.costUsd,
     estimatedTimeMinutes: rule.timeMinutes,
     evidenceRecordIds: recommendation.evidenceRecordIds,
     id: `action-${slugify(recommendation.id)}-${rule.type}`,
+    isOptional: rule.priority !== "critical",
     priority: rule.priority,
     recommendation: {
       playbookId: playbook.id,
@@ -277,6 +279,7 @@ function createRecommendationTask(
     resolvesValidationIssueIds: issues.map((issue) => issue.id),
     risk: rule.risk,
     slotIds: unique([...slotIds, ...recommendation.slotHints]),
+    sortOrder: 0,
     source: {
       platformId: playbook.platformId,
       platformName: playbook.platformName,
@@ -425,16 +428,19 @@ function buildTasksFromValidationIssues(input: GenerateActionPlanInput) {
       {
         dependencyTaskIds: [],
         description: `Builder validation raised "${issue.title}". Complete this task to document the engineering step that should resolve or narrow the warning.`,
+        difficulty: rule.difficulty,
         estimatedCostUsd: rule.costUsd,
         estimatedTimeMinutes: rule.timeMinutes,
         evidenceRecordIds: [],
         id: `validation-${slugify(issue.id)}-${rule.type}`,
+        isOptional: issue.severity !== "blocking" && rule.priority !== "critical",
         priority:
           issue.severity === "blocking" ? "critical" : rule.priority,
         recommendation: null,
         resolvesValidationIssueIds: [issue.id],
         risk: issue.severity === "blocking" ? "high" : rule.risk,
         slotIds,
+        sortOrder: 0,
         source: {
           platformId,
           platformName,
@@ -479,12 +485,17 @@ function dedupeTasks(tasks: EngineeringActionTask[]) {
     });
   }
 
-  return [...seen.values()].sort((left, right) => {
-    return (
-      priorityScores[right.priority] - priorityScores[left.priority] ||
-      left.title.localeCompare(right.title)
-    );
-  });
+  return [...seen.values()]
+    .sort((left, right) => {
+      return (
+        priorityScores[right.priority] - priorityScores[left.priority] ||
+        left.title.localeCompare(right.title)
+      );
+    })
+    .map((task, index) => ({
+      ...task,
+      sortOrder: index
+    }));
 }
 
 export function createDefaultActionPlanState(
@@ -588,6 +599,12 @@ export function getActionPlanProgress(
     actionableTasks.length > 0
       ? (completedTasks.length / actionableTasks.length) * 100
       : 100;
+  const validationProgress =
+    plan.generatedFrom.builderValidationIssueCount > 0
+      ? (resolvedValidationIssueIds.length /
+          plan.generatedFrom.builderValidationIssueCount) *
+        100
+      : 100;
 
   return {
     acceptedTasks: acceptedTasks.length,
@@ -619,7 +636,8 @@ export function getActionPlanProgress(
     rejectedTasks: rejectedTasks.length,
     resolvedValidationIssueIds,
     skippedTasks: skippedTasks.length,
-    totalTasks: plan.tasks.length
+    totalTasks: plan.tasks.length,
+    validationProgressPercent: clampPercent(validationProgress)
   };
 }
 
