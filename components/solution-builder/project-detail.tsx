@@ -1,6 +1,7 @@
 import { Archive, Compass, FileText, Link2, RotateCcw, Save, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { ActionPlanPanel } from "@/components/action-plans/action-plan-panel";
 import { PlaybookPanel } from "@/components/playbooks/playbook-panel";
 import { BuildValidationSummary } from "@/components/solution-builder/build-validation-summary";
 import { CompareAgainstJets } from "@/components/solution-builder/compare-against-jets";
@@ -17,6 +18,7 @@ import {
   renameBuildProjectAction,
   restoreBuildProjectAction
 } from "@/lib/supabase/project-actions";
+import { generateProjectActionPlan } from "@/lib/action-plan-engine/engine";
 import { getPlatformKnowledgeById } from "@/lib/platform-knowledge";
 import {
   getPlaybookProjectProgress,
@@ -79,6 +81,12 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
   );
   const playbooks = getPlaybooksForProject(model);
   const playbookProgress = getPlaybookProjectProgress(playbooks, model);
+  const actionPlan = generateProjectActionPlan({
+    model,
+    playbooks,
+    strategyId: projectRow.strategy_id,
+    strategyTitle: projectRow.strategy_title
+  });
   const solutionIntelligence = analyzeBuildSolution(model);
   const warningCount = model.evaluation.warningCount + model.evaluation.blockingCount;
   const branchCount = data.branches.filter((branch) => branch.id !== projectRow.id).length;
@@ -363,6 +371,8 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
             progress={playbookProgress}
             title="Project Playbook"
           />
+
+          <ActionPlanPanel plan={actionPlan} />
 
           <SolutionIntelligencePanel
             branchCount={branchCount}

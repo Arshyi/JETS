@@ -7,6 +7,7 @@ Overall: PASS
 - Scenario pass rate: 100%
 - Passed scenarios: 12
 - Failed scenarios: 0
+- Action plan fixture failures: 0
 - Playbook fixture failures: 0
 - Strategy fixture failures: 0
 - Platform knowledge warnings: 3
@@ -30,6 +31,13 @@ Overall: PASS
 | PASS | Duplicate Listing | thinkstation-p520 | needs-review | high |
 
 ## Rule Coverage
+
+### action-plan
+
+Coverage: 6/6 (100%)
+
+Uncovered:
+- None
 
 ### marketplace
 
@@ -133,6 +141,12 @@ Uncovered:
 - builder:ram-platform-fit
 - builder:slot-headroom
 - builder:storage-interface-fit
+
+## Action Plan Validation
+
+| Status | Fixture | Tasks | Issues |
+| --- | --- | ---: | --- |
+| PASS | Engineering Workstation action plan | 12 | None |
 
 ## Platform Knowledge Validation
 

@@ -19,10 +19,12 @@ The intended journey is:
 4. Slot-by-slot Inventory selection fills components.
 5. Validation summarizes missing and risky areas.
 6. Platform knowledge explains quirks, constraints, and hidden paths.
-7. Solution intelligence reasons across CPU, GPU, RAM, PSU, platform, cooling, budget, and use case.
-8. Optimization analyzes unlocked slots.
-9. Branching preserves alternatives.
-10. Compare and Finish review the solution.
+7. Playbooks explain what experienced builders do with the platform.
+8. Action Plans turn playbook guidance into dependency-aware tasks.
+9. Solution intelligence reasons across CPU, GPU, RAM, PSU, platform, cooling, budget, and use case.
+10. Optimization analyzes unlocked slots.
+11. Branching preserves alternatives.
+12. Compare and Finish review the solution.
 
 Future marketplace data should enter the journey only after it has moved through:
 
@@ -31,6 +33,8 @@ Raw Marketplace Data
 -> Normalized Hardware
 -> Evidence
 -> Platform Knowledge
+-> Playbooks
+-> Action Plans
 -> Solution Intelligence
 -> Optimization
 -> Recommendation
@@ -278,6 +282,46 @@ The generated report includes:
 - upgrade impact simulations
 - use-case reasoning for gaming, engineering, CAD, programming, virtualization, local AI, rendering, home server, streaming, and office work
 - cost efficiency and budget allocation
+
+## Phase 5.1 Engineering Action Plans
+
+Action Plans live in:
+
+- `types/action-plan.ts`
+- `lib/action-plan-engine/engine.ts`
+- `components/action-plans/action-plan-panel.tsx`
+
+The project detail page now generates an Action Plan from:
+
+- current `BuildWorkspaceModel`
+- relevant Hardware Playbooks
+- strategy source
+- selected project slots
+- Builder validation issues
+
+Action Plans translate guidance into engineering tasks:
+
+- install adapter
+- replace PSU
+- upgrade RAM
+- install GPU
+- flash BIOS
+- update firmware
+- replace storage
+- replace cooling
+- cable management
+- thermal inspection
+- power verification
+- stress testing
+
+Users can accept, skip, reject, complete, and undo tasks. Dependencies prevent a
+task from being marked complete before prerequisites are complete. Progress
+tracks completion, remaining cost, remaining time, platform improvement,
+Knowledge coverage, project maturity, and validation signals addressed by
+completed tasks.
+
+Phase 5.1 task choices are stored locally in the browser. Supabase-backed task
+persistence and server-side validation adjustments are deferred.
 - hidden opportunity detection
 - platform opportunity detection from the Platform Knowledge Engine
 - optimization advisor modes

@@ -51,6 +51,10 @@ Phase 5.0 adds a Playbook dependency:
 Strategy uses playbooks as evidence-backed support signals for recognized
 acquisitions. It does not copy playbook rules into strategy scoring.
 
+Phase 5.1 adds Action Plans after Builder. Strategy is now carried forward into
+the generated plan so engineering tasks can still explain which strategic path
+caused the project to exist.
+
 Persistence extends the existing project model through:
 
 - `supabase/migrations/202607070002_v4_3_strategy_engine.sql`
@@ -201,11 +205,13 @@ remain visible.
 This keeps the decision flow layered:
 
 ```text
-Platform Knowledge -> Playbook -> Strategy -> Builder
+Platform Knowledge -> Playbook -> Strategy -> Builder -> Action Plan
 ```
 
 Platform Knowledge identifies the hardware. Playbooks describe experienced
-builder moves. Strategy decides whether the path deserves a project.
+builder moves. Strategy decides whether the path deserves a project. Action
+Plans translate the selected project path into dependency-aware engineering
+tasks.
 
 ## Validation
 
@@ -253,6 +259,9 @@ Phase 4.3 is conservative:
 - no user-editable strategy weights
 - no branch-level strategy diff
 - no market trend timing model
+
+Phase 5.1 carries strategy provenance into Action Plans, but task status is not
+yet persisted to Supabase and does not create strategy audit events.
 
 The value is the new decision layer. JETS can now tell a user when the smartest
 hardware move is not to start a project.

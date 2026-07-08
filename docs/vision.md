@@ -28,6 +28,8 @@ Platform knowledge is the moat. JETS should know the quirks, hidden upgrade path
 
 Hardware playbooks turn that knowledge into builder judgment. Platform Knowledge answers what a machine is; Playbooks answer what an experienced builder should do with it, which mistakes to avoid, which adapters unlock value, and which strategies the platform can support.
 
+Action Plans turn playbooks into workflow. They should translate platform-specific guidance into dependency-aware engineering tasks with evidence, estimated time, estimated cost, validation impact, and progress tracking.
+
 Solution intelligence is the product becoming active. JETS should combine CPU, GPU, RAM, PSU, platform, cooling, budget, and use-case context into a complete-system explanation so users do not do that reasoning manually.
 
 Marketplace intelligence is the Phase 3 feeder layer. Marketplace listings are not the product; they are raw input that must become normalized hardware with confidence, platform detection, health, opportunities, and future solution paths before Builder, Knowledge, Intelligence, Optimization, or Recommendation layers use it.
@@ -44,7 +46,7 @@ Home -> Acquire Hardware -> Paste Listing -> Preview -> Normalize -> Evidence ->
 
 The project journey remains:
 
-Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Optimization -> Branch -> Compare -> Finished Solution.
+Goal -> Create Project -> Builder -> Slot Inventory -> Validation -> Playbook -> Action Plan -> Optimization -> Branch -> Compare -> Finished Solution.
 
 Inventory should usually appear from inside a builder slot, not as a place users manually browse first.
 
@@ -371,7 +373,7 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Phase 5.0 - Hardware Playbook Engine
 
-- Current.
+- Complete.
 - Add curated Hardware Playbooks for ThinkStation, Precision, OptiPlex, HP Z-series, Mac Pro, mini PC, and laptop/eGPU paths.
 - Capture Overview, recommended strategies, upgrade paths, known bottlenecks, common mistakes, adapters, PCIe, power, cooling, firmware, storage, memory, repair, lifespan, and ideal workloads.
 - Link every playbook recommendation to evidence, verification state, confidence, and Knowledge Quality.
@@ -380,6 +382,17 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Let Strategy reference playbooks instead of duplicating platform-specific advice.
 - Validate that every supported platform profile has at least one playbook.
 - Keep live scraping, AI extraction, OCR, checkout, image uploads, and automatic project mutation deferred.
+
+### Phase 5.1 - Engineering Action Plans
+
+- Current.
+- Generate deterministic Action Plans from platform, playbook, strategy, current project, and Builder validation state.
+- Add engineering task types for adapter install, PSU replacement, RAM upgrade, GPU install, BIOS/firmware, storage, cooling, cable management, thermal inspection, power verification, and stress testing.
+- Track task metadata for title, description, time, cost, difficulty, dependencies, evidence, verification, priority, and risk.
+- Let project users accept, skip, reject, complete, and undo tasks locally.
+- Enforce dependency chains so a task cannot be treated as complete before prerequisites are complete.
+- Track overall completion, remaining cost/time, platform improvement, Knowledge coverage, project maturity, and validation impact.
+- Keep Supabase task persistence, server-side validation mutation, AI, live scraping, OCR, checkout, and automatic project mutation deferred.
 
 ## Idea Parking Lot
 
@@ -430,6 +443,9 @@ Ideas below are valuable, but they are not current milestone scope.
 - Playbook moderation and evidence promotion
 - User-submitted playbook notes
 - Playbook-driven acquisition watchlists
+- Persisted Action Plan task history
+- Action Plan audit events
+- Server-side validation adjustments from completed tasks
 
 ## Product Principles
 

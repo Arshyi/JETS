@@ -1,4 +1,5 @@
 import type { ImporterValidationErrorCode } from "@/types/importer-fixtures";
+import type { ActionPlanValidationResult } from "@/types/action-plan";
 import type { ListingReadinessStatus } from "@/types/listing-intelligence";
 import type {
   MarketplaceNormalizedListing,
@@ -32,6 +33,7 @@ export const validationScenarioIds = [
 export type ValidationScenarioId = (typeof validationScenarioIds)[number];
 
 export type ValidationCoverageArea =
+  | "action-plan"
   | "marketplace"
   | "listing"
   | "evidence"
@@ -132,12 +134,14 @@ export type HardwareValidationSuiteResult = {
   generatedAt: string;
   overallPassRate: number;
   passed: boolean;
+  actionPlanResults: ActionPlanValidationResult[];
   platformKnowledge: PlatformKnowledgeValidationResult[];
   playbookResults: PlaybookValidationResult[];
   ruleCoverage: Record<ValidationCoverageArea, RuleCoverageResult>;
   scenarioResults: ValidationScenarioResult[];
   strategyResults: StrategyValidationResult[];
   summary: {
+    actionPlanFailures: number;
     failedScenarios: number;
     passedScenarios: number;
     platformWarnings: number;

@@ -21,6 +21,7 @@ Projects
 -> Evidence
 -> Platform Knowledge
 -> Playbooks
+-> Action Plans
 -> Strategy
 -> Solution Intelligence
 -> Optimization
@@ -134,6 +135,7 @@ The runner exercises the real deterministic systems:
 - Platform Knowledge lookup
 - Knowledge Quality scoring
 - Hardware Playbook coverage
+- Action Plan task generation
 - Strategy ranking fixtures
 - Solution Builder evaluation
 - Solution Intelligence
@@ -172,6 +174,7 @@ The report tracks coverage across:
 - Evidence rules
 - Platform rules
 - Playbook rules
+- Action Plan rules
 - Strategy rules
 - Solution Intelligence rules
 - Optimization rules
@@ -222,6 +225,18 @@ Unlike platform evidence warnings, missing playbooks fail the suite because a
 supported platform without a playbook would leave Strategy and Builder without
 experienced-builder guidance.
 
+## Action Plan Validation
+
+Phase 5.1 adds Engineering Action Plan validation.
+
+The suite checks that the deterministic Action Plan Engine generates tasks,
+creates dependency chains, resolves dependency IDs, links tasks back to
+evidence, playbooks, or Builder validation issues, exposes validation impact,
+calculates progress metrics, and supports the expected task statuses.
+
+This protects the new workflow layer from becoming disconnected from the
+knowledge stack it is supposed to guide.
+
 ## Human-Readable Reports
 
 The suite writes both Markdown and HTML reports.
@@ -230,6 +245,7 @@ The report includes:
 
 - overall pass/fail
 - scenario pass rate
+- action plan fixture failures
 - playbook fixture failures
 - platform warnings
 - compatibility fixture failures

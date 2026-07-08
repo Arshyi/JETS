@@ -51,6 +51,12 @@ Validation is integrated into:
 - `lib/validation-framework/engine.ts`
 - `scripts/validate-hardware-knowledge.cjs`
 
+Phase 5.1 adds Action Plans above Playbooks:
+
+- `types/action-plan.ts`
+- `lib/action-plan-engine/engine.ts`
+- `components/action-plans/action-plan-panel.tsx`
+
 ## Playbook Model
 
 Each playbook includes:
@@ -103,6 +109,12 @@ Project detail pages show the Project Playbook. JETS compares selected slots
 against playbook recommendations and separates completed recommendations from
 remaining recommendations and warnings.
 
+Phase 5.1 turns those recommendations into project-specific Engineering Action
+Plans. The Action Plan layer reads playbook recommendations, strategy source,
+current project slots, and Builder validation issues, then generates tasks with
+dependencies, cost/time estimates, evidence links, verification state, and
+validation impact.
+
 Acquisition detail pages show the Acquisition Playbook before handoff. This
 keeps a saved listing from becoming a project before the buyer understands the
 platform strategy, likely adapters, common mistakes, and evidence state.
@@ -145,6 +157,10 @@ With playbooks, the app can say:
 This is the first Phase 5 knowledge layer: practical engineering judgment that
 Builder, Acquisition, Strategy, Optimization, and future AI can all cite.
 
+Action Plans are the workflow layer above this knowledge. A playbook can say
+"use a PCIe NVMe adapter"; an Action Plan can create "install adapter",
+"replace storage", "verify power", and "stress test" tasks in the right order.
+
 ## Future AI Hooks
 
 Future AI should not invent playbooks directly into production truth.
@@ -174,3 +190,7 @@ They do not:
 
 They give JETS a reusable place to store experienced-builder guidance while the
 rest of the app remains deterministic.
+
+Phase 5.1 task state is local to the browser. Persisted task history, shared
+multi-device plans, and server-side validation adjustments are intentionally
+deferred until the workflow is proven.

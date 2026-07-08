@@ -4,12 +4,19 @@ import { buildWorkspaceSlotDefinitions, starterEngineeringWorkspaceProject } fro
 import { strategyValidationFixtures } from "@/data/strategy-validation-fixtures";
 import { hardwareValidationScenarios } from "@/data/validation/hardware-scenarios";
 import { getCompatibilityValidationResults } from "@/data/compatibility/validation-fixtures";
+import {
+  generateProjectActionPlan,
+  validateActionPlanFixture
+} from "@/lib/action-plan-engine/engine";
 import { getKnowledgeQualityForPlatform, getEvidenceSummaryForPlatform } from "@/lib/evidence-engine";
 import { buildImporterFixtureResult } from "@/lib/importer-fixtures/engine";
 import { buildListingIntelligenceRecord } from "@/lib/listing-intelligence/engine";
 import { normalizeMarketplaceListing } from "@/lib/marketplace-intelligence/normalize";
 import { optimizeBuildProject } from "@/lib/optimization-engine/pipeline";
-import { validateHardwarePlaybooks } from "@/lib/playbook-engine/engine";
+import {
+  getPlaybooksForProject,
+  validateHardwarePlaybooks
+} from "@/lib/playbook-engine/engine";
 import { generateHardwareStrategies } from "@/lib/strategy-engine/engine";
 import { analyzeBuildSolution } from "@/lib/solution-intelligence/engine";
 import { createBuildWorkspaceModel } from "@/lib/solution-builder/workspace";
@@ -37,6 +44,7 @@ import type {
 const validationGeneratedAt = "2026-07-06T00:00:00.000Z";
 
 const validationCoverageAreas: ValidationCoverageArea[] = [
+  "action-plan",
   "marketplace",
   "listing",
   "evidence",
@@ -192,6 +200,14 @@ function addCoverage(
 
 function getRuleInventory(): Record<ValidationCoverageArea, string[]> {
   return {
+    "action-plan": [
+      "action-plan:generated",
+      "action-plan:dependencies",
+      "action-plan:evidence-links",
+      "action-plan:validation-impact",
+      "action-plan:progress-metrics",
+      "action-plan:task-statuses"
+    ],
     builder: builderRuleInventory,
     compatibility: compatibilityRules.map((rule) => `compatibility:${rule.id}`),
     evidence: [
@@ -520,12 +536,26 @@ function validateStrategies() {
   });
 }
 
+function validateActionPlans() {
+  const model = createBuildWorkspaceModel(cloneProject(starterEngineeringWorkspaceProject));
+  const playbooks = getPlaybooksForProject(model);
+  const actionPlan = generateProjectActionPlan({
+    model,
+    playbooks,
+    strategyId: "buy-used-workstation",
+    strategyTitle: "Buy used workstation"
+  });
+
+  return [validateActionPlanFixture(actionPlan)];
+}
+
 export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   const importerErrorCodes = getExpectedImporterErrorCodes();
   const scenarioResults = hardwareValidationScenarios.map((scenario) =>
     validateScenario(scenario, importerErrorCodes)
   );
   const compatibilityFixtureFailures = getCompatibilityFixtureFailures();
+  const actionPlanResults = validateActionPlans();
   const platformKnowledge = validatePlatformKnowledge();
   const playbookResults = validateHardwarePlaybooks();
   const strategyResults = validateStrategies();
@@ -544,6 +574,57 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   }
 
   addCoverage(coveredMarkers, {
+    "action-plan": [
+      ...(actionPlanResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message === "Action plan generates at least one task."
+        )?.passed
+      )
+        ? ["action-plan:generated"]
+        : []),
+      ...(actionPlanResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message === "Action plan includes dependency chains."
+        )?.passed
+      )
+        ? ["action-plan:dependencies"]
+        : []),
+      ...(actionPlanResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message ===
+            "Tasks link back to evidence, playbooks, or validation issues."
+        )?.passed
+      )
+        ? ["action-plan:evidence-links"]
+        : []),
+      ...(actionPlanResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message === "Action plan exposes builder validation impact."
+        )?.passed
+      )
+        ? ["action-plan:validation-impact"]
+        : []),
+      ...(actionPlanResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message === "Action plan exposes progress metrics."
+        )?.passed
+      )
+        ? ["action-plan:progress-metrics"]
+        : []),
+      ...(actionPlanResults.every((result) =>
+        result.assertions.find(
+          (assertion) =>
+            assertion.message === "Action plan supports the expected task statuses."
+        )?.passed
+      )
+        ? ["action-plan:task-statuses"]
+        : [])
+    ],
     evidence: ["evidence:importer-validation-errors", "evidence:knowledge-quality"]
   });
   addCoverage(coveredMarkers, {
@@ -588,17 +669,20 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   }, {} as Record<ValidationCoverageArea, RuleCoverageResult>);
   const passedScenarios = scenarioResults.filter((result) => result.passed).length;
   const failedScenarios = scenarioResults.length - passedScenarios;
+  const actionPlanFailures = actionPlanResults.filter((result) => !result.passed).length;
   const playbookFailures = playbookResults.filter((result) => !result.passed).length;
   const strategyFailures = strategyResults.filter((result) => !result.passed).length;
   const platformWarnings = platformKnowledge.filter((result) => !result.passed).length;
   const passed =
     failedScenarios === 0 &&
+    actionPlanFailures === 0 &&
     compatibilityFixtureFailures.length === 0 &&
     playbookFailures === 0 &&
     strategyFailures === 0;
 
   return {
     compatibilityFixtureFailures,
+    actionPlanResults,
     generatedAt: validationGeneratedAt,
     overallPassRate: Math.round((passedScenarios / scenarioResults.length) * 100),
     passed,
@@ -608,6 +692,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     scenarioResults,
     strategyResults,
     summary: {
+      actionPlanFailures,
       failedScenarios,
       passedScenarios,
       platformWarnings,
@@ -658,6 +743,12 @@ export function renderValidationReportMarkdown(
         `| ${statusLabel(result.passed)} | ${result.platformName} | ${result.playbookCount} | ${result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join("; ") || "None"} |`
     )
     .join("\n");
+  const actionPlanRows = suite.actionPlanResults
+    .map(
+      (result) =>
+        `| ${statusLabel(result.passed)} | ${result.title} | ${result.taskCount} | ${result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join("; ") || "None"} |`
+    )
+    .join("\n");
   const compatibilityFailures =
     suite.compatibilityFixtureFailures.length > 0
       ? suite.compatibilityFixtureFailures
@@ -680,6 +771,7 @@ Overall: ${statusLabel(suite.passed)}
 - Scenario pass rate: ${suite.overallPassRate}%
 - Passed scenarios: ${suite.summary.passedScenarios}
 - Failed scenarios: ${suite.summary.failedScenarios}
+- Action plan fixture failures: ${suite.summary.actionPlanFailures}
 - Playbook fixture failures: ${suite.summary.playbookFailures}
 - Strategy fixture failures: ${suite.summary.strategyFailures}
 - Platform knowledge warnings: ${suite.summary.platformWarnings}
@@ -694,6 +786,12 @@ ${scenarioRows}
 ## Rule Coverage
 
 ${coverageSections}
+
+## Action Plan Validation
+
+| Status | Fixture | Tasks | Issues |
+| --- | --- | ---: | --- |
+${actionPlanRows}
 
 ## Platform Knowledge Validation
 
@@ -755,6 +853,12 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
         `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.platformName)}</td><td>${result.playbookCount}</td><td>${escapeHtml(result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join(", ") || "None")}</td></tr>`
     )
     .join("");
+  const actionPlanRows = suite.actionPlanResults
+    .map(
+      (result) =>
+        `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.title)}</td><td>${result.taskCount}</td><td>${escapeHtml(result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join(", ") || "None")}</td></tr>`
+    )
+    .join("");
   const coverage = validationCoverageAreas
     .map((area) => {
       const areaCoverage = suite.ruleCoverage[area];
@@ -784,6 +888,7 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
       <li>Scenario pass rate: ${suite.overallPassRate}%</li>
       <li>Passed scenarios: ${suite.summary.passedScenarios}</li>
       <li>Failed scenarios: ${suite.summary.failedScenarios}</li>
+      <li>Action plan fixture failures: ${suite.summary.actionPlanFailures}</li>
       <li>Playbook fixture failures: ${suite.summary.playbookFailures}</li>
       <li>Strategy fixture failures: ${suite.summary.strategyFailures}</li>
       <li>Platform knowledge warnings: ${suite.summary.platformWarnings}</li>
@@ -792,6 +897,11 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
     <table>
       <thead><tr><th>Status</th><th>Scenario</th><th>Platform</th><th>Readiness</th><th>Confidence</th></tr></thead>
       <tbody>${rows}</tbody>
+    </table>
+    <h2>Action Plan Validation</h2>
+    <table>
+      <thead><tr><th>Status</th><th>Fixture</th><th>Tasks</th><th>Issues</th></tr></thead>
+      <tbody>${actionPlanRows}</tbody>
     </table>
     <h2>Strategy Validation</h2>
     <table>
