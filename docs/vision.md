@@ -38,6 +38,8 @@ Marketplace intelligence is the Phase 3 feeder layer. Marketplace listings are n
 
 Evidence is the trust layer. Every important conclusion should be able to answer why JETS believes it, where the claim came from, how it was extracted, whether it has been verified, and whether conflicting evidence exists.
 
+The Hardware Reasoning Graph is the intelligence layer. It should store the relationships between platforms, slots, adapters, components, strategies, playbooks, projects, acquisitions, action plans, and evidence. JETS should increasingly explain multi-hop paths users would not normally find themselves.
+
 Listing Intelligence is the bridge between raw marketplace input and trusted evidence. JETS should understand an individual listing as an engineering object: raw text, parsed fields, human corrections, duplicate risk, health, recommendation readiness, and future ingestion hooks.
 
 Validation is the quality layer. Before real marketplace data arrives, every deterministic engine should be regression-testable against golden hardware scenarios so JETS does not become overconfident or drift away from known hardware truths.
@@ -408,13 +410,25 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Phase 5.3 - Platform Encyclopedia
 
-- Current.
+- Complete.
 - Add a reusable Platform Encyclopedia model below Playbooks and above Platform Knowledge summaries.
 - Store platform revisions, chipset, CPU support, memory topology, PCIe topology, storage topology, power, cooling, firmware, limitations, hidden capabilities, repair notes, common failures, lifecycle, community discoveries, upgrade paths, reliability, and workload profiles.
 - Support metadata-only engineering diagrams for PCIe lanes, memory channels, drive bays, power connectors, expansion slots, and thermal zones.
 - Make Playbooks, Strategy, and Action Plans reference encyclopedia sections instead of duplicating engineering knowledge.
 - Extend hardware validation so supported platforms warn when topology, upgrade, reliability, or workload coverage is missing.
 - Keep AI, live scraping, OCR, checkout, automatic knowledge ingestion, and automatic hardware mutation deferred.
+
+### Phase 6.0 - Hardware Reasoning Graph
+
+- Current.
+- Stop adding workflows and model the relationships JETS already implies.
+- Add a reusable graph model for platforms, CPUs, GPUs, RAM, storage, power supplies, adapters, PCIe cards, cooling, cases, strategies, playbooks, projects, acquisitions, action plans, evidence, opportunities, constraints, workloads, and components.
+- Support deterministic edges such as supports, blocks, improves, requires, replaces, bottlenecks, upgrades, same_socket, same_generation, better_value, repair_path, and adapter_path.
+- Add multi-hop traversal so recommendations can expose reasoning paths instead of only scores.
+- Add opportunity and constraint graph discovery for adapter paths, repair paths, wait decisions, GPU limits, PSU constraints, and platform potential.
+- Make Platform Knowledge, Playbooks, Strategy, Action Plans, Optimization, and Validation query graph context.
+- Add graph validation for orphan nodes, circular requires edges, duplicate edges, broken references, missing node types, missing edge types, and fixture paths.
+- Keep AI, live scraping, OCR, checkout, graph persistence, graph editing, and automatic marketplace graph writes deferred.
 
 ## Idea Parking Lot
 
@@ -471,6 +485,9 @@ Ideas below are valuable, but they are not current milestone scope.
 - Platform encyclopedia authoring workflow
 - Platform topology diagrams from reviewed manuals
 - Encyclopedia fact moderation and promotion
+- Hardware reasoning graph path explanations
+- Graph relationship authoring and moderation
+- Graph-backed opportunity discovery for acquisitions
 
 ## Product Principles
 

@@ -10,6 +10,7 @@ Overall: PASS
 - Action plan fixture failures: 0
 - Playbook fixture failures: 0
 - Strategy fixture failures: 0
+- Reasoning graph errors: 0
 - Platform knowledge warnings: 3
 - Compatibility fixture failures: 0
 
@@ -184,6 +185,12 @@ Uncovered:
 | PASS | Bad platform | wait-for-better-value | wait-for-better-value |
 | PASS | Excellent platform | buy-used-workstation | buy-used-workstation |
 | PASS | Repair candidate | repair-existing-hardware | repair-existing-hardware |
+
+## Reasoning Graph Validation
+
+| Status | Nodes | Edges | Duplicate edges | Orphan nodes | Fixture paths | Issues |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| PASS | 152 | 344 | 0 | 0 | 4/4 | None |
 
 ## Compatibility Fixture Failures
 

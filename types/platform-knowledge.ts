@@ -191,5 +191,8 @@ export type PlatformKnowledgeInsight = {
   platformId: PlatformKnowledgeId;
   platformName: string;
   potentialScore: number;
+  reasoningConstraintPathCount: number;
+  reasoningEdgeCount: number;
+  reasoningOpportunityPathCount: number;
   summary: string;
 };

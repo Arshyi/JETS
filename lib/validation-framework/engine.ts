@@ -15,6 +15,7 @@ import { buildListingIntelligenceRecord } from "@/lib/listing-intelligence/engin
 import { normalizeMarketplaceListing } from "@/lib/marketplace-intelligence/normalize";
 import { optimizeBuildProject } from "@/lib/optimization-engine/pipeline";
 import { validatePlatformEncyclopediaCoverage } from "@/lib/platform-encyclopedia";
+import { validateReasoningGraph } from "@/lib/reasoning-graph/engine";
 import {
   getPlaybooksForProject,
   validateHardwarePlaybooks
@@ -580,6 +581,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   const platformKnowledge = validatePlatformKnowledge();
   const playbookResults = validateHardwarePlaybooks();
   const strategyResults = validateStrategies();
+  const reasoningGraph = validateReasoningGraph();
   const coveredMarkers = createCoverageBuckets();
 
   for (const scenarioResult of scenarioResults) {
@@ -616,7 +618,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
         result.assertions.find(
           (assertion) =>
             assertion.message ===
-            "Tasks link back to evidence, playbooks, encyclopedia, or validation issues."
+            "Tasks link back to evidence, playbooks, encyclopedia, graph paths, or validation issues."
         )?.passed
       )
         ? ["action-plan:evidence-links"]
@@ -727,6 +729,9 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   const failedScenarios = scenarioResults.length - passedScenarios;
   const actionPlanFailures = actionPlanResults.filter((result) => !result.passed).length;
   const playbookFailures = playbookResults.filter((result) => !result.passed).length;
+  const reasoningGraphErrors = reasoningGraph.issues.filter(
+    (issue) => issue.severity === "error"
+  ).length;
   const strategyFailures = strategyResults.filter((result) => !result.passed).length;
   const platformWarnings = platformKnowledge.filter((result) => !result.passed).length;
   const passed =
@@ -734,6 +739,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     actionPlanFailures === 0 &&
     compatibilityFixtureFailures.length === 0 &&
     playbookFailures === 0 &&
+    reasoningGraphErrors === 0 &&
     strategyFailures === 0;
 
   return {
@@ -744,6 +750,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     passed,
     platformKnowledge,
     playbookResults,
+    reasoningGraph,
     ruleCoverage,
     scenarioResults,
     strategyResults,
@@ -753,6 +760,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
       passedScenarios,
       platformWarnings,
       playbookFailures,
+      reasoningGraphErrors,
       scenarios: scenarioResults.length,
       strategyFailures
     }
@@ -811,6 +819,12 @@ export function renderValidationReportMarkdown(
           .map((failure) => `- ${failure}`)
           .join("\n")
       : "No compatibility fixture failures.";
+  const reasoningGraphIssues =
+    suite.reasoningGraph.issues.length > 0
+      ? suite.reasoningGraph.issues
+          .map((issue) => `${issue.severity.toUpperCase()}: ${issue.message}`)
+          .join("; ")
+      : "None";
   const failureSections = suite.scenarioResults
     .filter((result) => !result.passed)
     .map(
@@ -830,6 +844,7 @@ Overall: ${statusLabel(suite.passed)}
 - Action plan fixture failures: ${suite.summary.actionPlanFailures}
 - Playbook fixture failures: ${suite.summary.playbookFailures}
 - Strategy fixture failures: ${suite.summary.strategyFailures}
+- Reasoning graph errors: ${suite.summary.reasoningGraphErrors}
 - Platform knowledge warnings: ${suite.summary.platformWarnings}
 - Compatibility fixture failures: ${suite.compatibilityFixtureFailures.length}
 
@@ -871,6 +886,12 @@ ${suite.strategyResults
       `| ${statusLabel(result.passed)} | ${result.title} | ${result.expectedTopStrategy} | ${result.actualTopStrategy} |`
   )
   .join("\n")}
+
+## Reasoning Graph Validation
+
+| Status | Nodes | Edges | Duplicate edges | Orphan nodes | Fixture paths | Issues |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| ${statusLabel(suite.reasoningGraph.passed)} | ${suite.reasoningGraph.nodeCount} | ${suite.reasoningGraph.edgeCount} | ${suite.reasoningGraph.duplicateEdgeCount} | ${suite.reasoningGraph.orphanNodeCount} | ${suite.reasoningGraph.pathFixtureCount}/4 | ${reasoningGraphIssues} |
 
 ## Compatibility Fixture Failures
 
@@ -915,6 +936,12 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
         `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.title)}</td><td>${result.taskCount}</td><td>${escapeHtml(result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join(", ") || "None")}</td></tr>`
     )
     .join("");
+  const reasoningGraphIssues =
+    suite.reasoningGraph.issues.length > 0
+      ? suite.reasoningGraph.issues
+          .map((issue) => `${issue.severity.toUpperCase()}: ${issue.message}`)
+          .join("; ")
+      : "None";
   const coverage = validationCoverageAreas
     .map((area) => {
       const areaCoverage = suite.ruleCoverage[area];
@@ -947,6 +974,7 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
       <li>Action plan fixture failures: ${suite.summary.actionPlanFailures}</li>
       <li>Playbook fixture failures: ${suite.summary.playbookFailures}</li>
       <li>Strategy fixture failures: ${suite.summary.strategyFailures}</li>
+      <li>Reasoning graph errors: ${suite.summary.reasoningGraphErrors}</li>
       <li>Platform knowledge warnings: ${suite.summary.platformWarnings}</li>
     </ul>
     <h2>Scenario Results</h2>
@@ -968,6 +996,11 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
     <table>
       <thead><tr><th>Status</th><th>Platform</th><th>Playbooks</th><th>Issues</th></tr></thead>
       <tbody>${playbookRows}</tbody>
+    </table>
+    <h2>Reasoning Graph Validation</h2>
+    <table>
+      <thead><tr><th>Status</th><th>Nodes</th><th>Edges</th><th>Duplicate edges</th><th>Orphan nodes</th><th>Fixture paths</th><th>Issues</th></tr></thead>
+      <tbody><tr><td>${statusLabel(suite.reasoningGraph.passed)}</td><td>${suite.reasoningGraph.nodeCount}</td><td>${suite.reasoningGraph.edgeCount}</td><td>${suite.reasoningGraph.duplicateEdgeCount}</td><td>${suite.reasoningGraph.orphanNodeCount}</td><td>${suite.reasoningGraph.pathFixtureCount}/4</td><td>${escapeHtml(reasoningGraphIssues)}</td></tr></tbody>
     </table>
     <h2>Rule Coverage</h2>
     ${coverage}

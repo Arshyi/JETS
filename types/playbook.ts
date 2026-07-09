@@ -59,6 +59,7 @@ export type HardwarePlaybookRecommendation = {
   evidenceRecordIds: Array<EvidenceRecord["id"]>;
   id: string;
   knowledgeQualityScore: number;
+  reasoningPathIds?: string[];
   slotHints: BuildSlotId[];
   strategyTypes: HardwareStrategyTypeId[];
   summary: string;
@@ -77,6 +78,7 @@ export type HardwarePlaybook = {
   platformName: string;
   recommendedStrategyTypes: HardwareStrategyTypeId[];
   recommendations: HardwarePlaybookRecommendation[];
+  reasoningPathIds?: string[];
   sections: HardwarePlaybookSection[];
   summary: string;
   title: string;

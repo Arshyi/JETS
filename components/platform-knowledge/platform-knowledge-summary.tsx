@@ -42,6 +42,7 @@ export function PlatformKnowledgeSummary({
         <StatusPill>{insight.opportunityCount} opportunities</StatusPill>
         <StatusPill>{insight.constraintCount} constraints</StatusPill>
         <StatusPill>{insight.adapterCount} adapters</StatusPill>
+        <StatusPill>{insight.reasoningOpportunityPathCount} graph paths</StatusPill>
       </div>
     </div>
   );

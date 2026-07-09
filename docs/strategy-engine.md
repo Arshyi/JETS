@@ -60,6 +60,16 @@ Strategy can cite encyclopedia sections for recognized platforms when a strategy
 depends on topology, reliability, upgrade paths, lifecycle, or workload fit. It
 does not copy encyclopedia facts into strategy scoring.
 
+Phase 6.0 adds Hardware Reasoning Graph path IDs:
+
+- `types/reasoning-graph.ts`
+- `lib/reasoning-graph/engine.ts`
+
+Strategy can now cite deterministic relationship paths for recognized platform
+and strategy context. For example, a workstation recommendation can be supported
+by an adapter path, while a wait recommendation can be supported by a better
+value relationship.
+
 Phase 5.1 adds Action Plans after Builder. Strategy is now carried forward into
 the generated plan so engineering tasks can still explain which strategic path
 caused the project to exist.
@@ -214,13 +224,14 @@ remain visible.
 This keeps the decision flow layered:
 
 ```text
-Platform Knowledge -> Platform Encyclopedia -> Playbook -> Strategy -> Builder -> Action Plan
+Platform Knowledge -> Platform Encyclopedia -> Hardware Reasoning Graph -> Playbook -> Strategy -> Builder -> Action Plan
 ```
 
 Platform Knowledge identifies the hardware. Platform Encyclopedia stores the
-deep engineering facts. Playbooks describe experienced builder moves. Strategy
-decides whether the path deserves a project. Action Plans translate the selected
-project path into dependency-aware engineering tasks.
+deep engineering facts. The Hardware Reasoning Graph stores relationships and
+multi-hop paths. Playbooks describe experienced builder moves. Strategy decides
+whether the path deserves a project. Action Plans translate the selected project
+path into dependency-aware engineering tasks.
 
 ## Validation
 
@@ -247,6 +258,9 @@ quietly lose the supporting playbook layer for a recognized platform.
 Phase 5.3 also checks Platform Encyclopedia coverage so strategy cannot lean on
 recognized platform context without topology, upgrade, reliability, and workload
 knowledge behind it.
+Phase 6.0 adds graph validation so strategy cannot silently lose deterministic
+relationship paths that support repair, wait, adapter, workstation, and project
+creation decisions.
 
 ## Future AI Hooks
 

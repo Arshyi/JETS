@@ -29,6 +29,7 @@ console.log(
 );
 console.log(`Action plan fixture failures: ${suite.summary.actionPlanFailures}`);
 console.log(`Playbook fixture failures: ${suite.summary.playbookFailures}`);
+console.log(`Reasoning graph errors: ${suite.summary.reasoningGraphErrors}`);
 console.log(`Platform knowledge warnings: ${suite.summary.platformWarnings}`);
 console.log(`Markdown report: ${path.relative(projectRoot, markdownPath)}`);
 console.log(`HTML report: ${path.relative(projectRoot, htmlPath)}`);

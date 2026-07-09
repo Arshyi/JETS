@@ -26,6 +26,12 @@ Playbooks answer:
 What should a builder do with that knowledge?
 ```
 
+The Hardware Reasoning Graph answers:
+
+```text
+How do these facts relate across multiple hops?
+```
+
 That separation matters. A platform profile can summarize a ThinkStation P520.
 The encyclopedia can describe memory topology, PCIe topology, power behavior,
 storage paths, cooling zones, reliability issues, and workload fit. A playbook
@@ -181,6 +187,7 @@ The current knowledge stack is:
 Evidence
 -> Platform Knowledge
 -> Platform Encyclopedia
+-> Hardware Reasoning Graph
 -> Hardware Playbooks
 -> Strategy
 -> Builder

@@ -32,6 +32,10 @@ and Playbooks. Playbooks now reference encyclopedia sections for topology,
 upgrade limits, reliability, and workload context instead of duplicating that
 knowledge inside each recommendation.
 
+Phase 6.0 adds the Hardware Reasoning Graph. Playbooks now carry graph path IDs
+beside evidence and encyclopedia references so recommendations can trace back to
+relationships such as adapter paths, repair paths, bottlenecks, and upgrades.
+
 ## Architecture
 
 Domain types live in:
@@ -54,6 +58,11 @@ Platform Encyclopedia references live in:
 
 - `types/platform-encyclopedia.ts`
 - `lib/platform-encyclopedia.ts`
+
+Reasoning graph references live in:
+
+- `types/reasoning-graph.ts`
+- `lib/reasoning-graph/engine.ts`
 
 Validation is integrated into:
 
@@ -183,6 +192,7 @@ The Phase 5.3 ownership rule is:
 ```text
 Platform Knowledge: what this platform is
 Platform Encyclopedia: what engineers should know about it
+Hardware Reasoning Graph: how hardware facts relate across multiple hops
 Playbooks: what an experienced builder recommends doing
 Action Plans: what this project should do next
 ```

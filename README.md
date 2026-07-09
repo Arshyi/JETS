@@ -46,7 +46,8 @@ npm run validate:hardware
 - **5.0:** Hardware Playbook Engine. Complete.
 - **5.1:** Engineering Action Plans. Complete.
 - **5.2:** Persisted Engineering Action Plans. Complete.
-- **5.3:** Platform Encyclopedia. Current.
+- **5.3:** Platform Encyclopedia. Complete.
+- **6.0:** Hardware Reasoning Graph. Current.
 
 ## Primary Workflow
 
@@ -61,10 +62,12 @@ npm run validate:hardware
 Marketplace Intelligence sits below the workflow as input plumbing:
 
 ```text
-Raw Marketplace Data -> Listing Intelligence -> Evidence -> Platform Knowledge -> Platform Encyclopedia -> Playbooks -> Strategy -> Builder -> Action Plans -> Solution Intelligence -> Optimization -> Recommendation
+Raw Marketplace Data -> Listing Intelligence -> Evidence -> Hardware Reasoning Graph -> Platform Knowledge -> Platform Encyclopedia -> Playbooks -> Strategy -> Builder -> Action Plans -> Solution Intelligence -> Optimization -> Recommendation
 ```
 
 Ingestion and parsing do not make recommendations. Optimization and reasoning do not know how a listing was captured. Evidence records explain why JETS trusts a parsed field, knowledge item, or recommendation.
+The Hardware Reasoning Graph stores the relationships between these facts so
+JETS can explain multi-hop paths instead of only showing lists of facts.
 
 See `docs/user-workflow.md` for the journey diagram and UX rules.
 
@@ -397,6 +400,18 @@ See `docs/user-workflow.md` for the journey diagram and UX rules.
 - Documentation lives in `docs/platform-encyclopedia.md`.
 - Phase 5.3 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, or automatic knowledge ingestion.
 
+## Phase 6.0 Notes
+
+- Reasoning graph types live in `types/reasoning-graph.ts`.
+- Deterministic graph data lives in `data/reasoning-graph.ts`.
+- Traversal, opportunity discovery, constraint discovery, explanation paths, and validation live in `lib/reasoning-graph/engine.ts`.
+- Graph validation runs with `npm run validate:graph` and writes reports to `docs/generated/reasoning-graph-report.md` and `docs/generated/reasoning-graph-report.html`.
+- Platform Knowledge, Playbooks, Strategy, Action Plans, Optimization, and Hardware Validation now query graph path context instead of duplicating relationships.
+- Supported node types include platforms, components, adapters, PCIe slots/cards, strategies, playbooks, projects, acquisitions, action plans, evidence, opportunities, constraints, and workloads.
+- Supported edge types include supports, blocks, improves, requires, replaces, bottlenecks, upgrades, shares_platform, same_socket, same_chipset, same_generation, higher_power, lower_noise, better_value, repair_path, and adapter_path.
+- Documentation lives in `docs/reasoning-graph.md`.
+- Phase 6.0 still does not implement AI, live scraping, browser automation, marketplace APIs, OCR, checkout, image uploads, graph persistence, or graph authoring.
+
 ## Post-Auth Beta Hardening Notes
 
 - Signup now defaults to the signed-in onboarding flow at `/onboarding`.
@@ -483,4 +498,4 @@ For Supabase Email confirmation, the default template using `{{ .ConfirmationURL
 
 ## Compliance Boundary
 
-JETS v0.4 through Phase 5.3 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, curated platform encyclopedia entries, curated hardware playbooks, deterministic persisted action plans, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge, Encyclopedia, Playbooks, Action Plans, or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/platform-encyclopedia.md`, `docs/playbook-engine.md`, `docs/action-plan-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.
+JETS v0.4 through Phase 6.0 use local mock adapters, deterministic local rules, component-aware mock inventory, curated demo platform knowledge, curated platform encyclopedia entries, curated graph relationships, curated hardware playbooks, deterministic persisted action plans, deterministic solution intelligence, deterministic optimization, deterministic strategy reasoning, branch-safe project variants, demo marketplace normalization, demo evidence records, deterministic importer fixtures, validation scenarios, manual acquisition capture, reviewed acquisition-to-project handoff, and Supabase-backed user persistence/review infrastructure only. Future live ingestion must respect robots.txt, marketplace terms, approved APIs or vendor feeds, conservative rate limits, sourcing, moderation, correction workflows, and removal requests. Future AI, OCR, scraper, CSV, API, browser-extension, and user-submitted data should feed Listing Intelligence and Evidence first, not Knowledge, Encyclopedia, Graph, Playbooks, Action Plans, or Recommendations directly. See `docs/ingestion.md`, `docs/marketplace-intelligence.md`, `docs/evidence-engine.md`, `docs/listing-intelligence.md`, `docs/importer-fixtures.md`, `docs/validation-framework.md`, `docs/acquisition-workflow.md`, `docs/platform-knowledge-engine.md`, `docs/platform-encyclopedia.md`, `docs/reasoning-graph.md`, `docs/playbook-engine.md`, `docs/action-plan-engine.md`, `docs/solution-intelligence-engine.md`, and `docs/strategy-engine.md` for the current ingestion and knowledge notes.

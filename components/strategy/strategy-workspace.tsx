@@ -326,6 +326,9 @@ export function StrategyWorkspace({
                 {strategy.encyclopediaEntryIds.length > 0 ? (
                   <StatusPill>{strategy.encyclopediaEntryIds.length} encyclopedia refs</StatusPill>
                 ) : null}
+                {strategy.reasoningPathIds.length > 0 ? (
+                  <StatusPill>{strategy.reasoningPathIds.length} graph paths</StatusPill>
+                ) : null}
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2">

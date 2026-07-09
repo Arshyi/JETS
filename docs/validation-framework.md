@@ -79,16 +79,20 @@ The Node runner lives in:
 
 - `scripts/register-ts.cjs`
 - `scripts/validate-hardware-knowledge.cjs`
+- `scripts/validate-reasoning-graph.cjs`
 
 Generated reports are written to:
 
 - `docs/generated/hardware-validation-report.md`
 - `docs/generated/hardware-validation-report.html`
+- `docs/generated/reasoning-graph-report.md`
+- `docs/generated/reasoning-graph-report.html`
 
 Run the suite with:
 
 ```bash
 npm run validate:hardware
+npm run validate:graph
 ```
 
 ## Scenario Library
@@ -136,6 +140,7 @@ The runner exercises the real deterministic systems:
 - Knowledge Quality scoring
 - Hardware Playbook coverage
 - Action Plan task generation
+- Hardware Reasoning Graph validation
 - Strategy ranking fixtures
 - Solution Builder evaluation
 - Solution Intelligence

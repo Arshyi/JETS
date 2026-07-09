@@ -324,6 +324,9 @@ export function ActionPlanPanel({
                     {task.encyclopediaEntryIds.length > 0
                       ? ` - ${task.encyclopediaEntryIds.length} encyclopedia refs`
                       : ""}
+                    {task.reasoningPathIds.length > 0
+                      ? ` - ${task.reasoningPathIds.length} graph paths`
+                      : ""}
                     {task.recommendation
                       ? ` - ${task.recommendation.title}`
                       : " - Builder validation"}

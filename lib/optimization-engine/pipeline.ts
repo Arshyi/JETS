@@ -4,6 +4,7 @@ import {
   getComponentsForSlot,
   toWorkspaceSelection
 } from "@/lib/component-inventory";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import { createBuildWorkspaceModel } from "@/lib/solution-builder/workspace";
 import type { ComponentInventoryItem } from "@/types/component-inventory";
 import type {
@@ -576,6 +577,11 @@ export function optimizeBuildProject(
   input: OptimizationInput
 ): OptimizationResult {
   const baselineModel = createBuildWorkspaceModel(project);
+  const reasoningPathIds = baselineModel.platformInsight
+    ? getReasoningGraphPathIdsForContext({
+        platformId: baselineModel.platformInsight.platformId
+      })
+    : [];
   const baselineMetrics = getMetrics(project, baselineModel.evaluation);
   const baselineScore = getWeightedScore(baselineMetrics, input.goal);
   const candidateSuggestions = getCandidateSuggestions(
@@ -603,6 +609,10 @@ export function optimizeBuildProject(
     ...ownedSuggestions
   ])
     .filter((suggestion) => suggestion.scoreDelta > 0 || input.depth === "experimental")
+    .map((suggestion) => ({
+      ...suggestion,
+      reasoningPathIds
+    }))
     .slice(0, input.depth === "standard" ? 5 : input.depth === "enthusiast" ? 7 : 9);
   const optimizedScore = clampScore(
     baselineScore +
@@ -615,18 +625,24 @@ export function optimizeBuildProject(
     baselineEvaluation: baselineModel.evaluation,
     baselineScore,
     depth: input.depth,
-    explanations: explainResult({
-      baselineScore,
-      depth: input.depth,
-      goal: input.goal,
-      lockedSlots: input.lockedSlots,
-      optimizedScore,
-      suggestions: rankedSuggestions
-    }),
+    explanations: [
+      ...explainResult({
+        baselineScore,
+        depth: input.depth,
+        goal: input.goal,
+        lockedSlots: input.lockedSlots,
+        optimizedScore,
+        suggestions: rankedSuggestions
+      }),
+      ...(reasoningPathIds.length > 0
+        ? [`Reasoning graph: ${reasoningPathIds.length} deterministic path${reasoningPathIds.length === 1 ? "" : "s"} linked to this platform.`]
+        : [])
+    ],
     goal: input.goal,
     lockedSlots: input.lockedSlots,
     optimizedScore,
     pipeline: pipelineSteps,
+    reasoningPathIds,
     suggestions: rankedSuggestions
   };
 }

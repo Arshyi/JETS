@@ -8,6 +8,8 @@ checkout. It is a deterministic workflow layer generated from the current
 project, platform, playbook, strategy source, and Builder validation state.
 Phase 5.3 also lets tasks carry Platform Encyclopedia references so engineering
 work remains connected to topology, upgrade, reliability, and workload facts.
+Phase 6.0 adds Hardware Reasoning Graph path IDs so tasks can also point back
+to deterministic multi-hop relationships.
 
 ## Purpose
 
@@ -95,6 +97,7 @@ The pipeline is:
 ```text
 Platform Knowledge
 -> Platform Encyclopedia
+-> Hardware Reasoning Graph
 -> Playbook
 -> Strategy
 -> Project
@@ -139,12 +142,14 @@ Every task includes:
 - related slots
 - source platform
 - source encyclopedia sections
+- source graph paths
 - source playbook recommendation
 - source strategy
 - Builder validation issues it may resolve
 
 Nothing is disconnected: each task can point back to the playbook, encyclopedia,
-evidence, strategy, platform, or validation issue that caused it to exist.
+graph path, evidence, strategy, platform, or validation issue that caused it to
+exist.
 
 ## Dependency Model
 

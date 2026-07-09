@@ -59,6 +59,7 @@ export type OptimizationSuggestion = {
   explanation: string;
   powerImpact: number;
   reason: string;
+  reasoningPathIds?: string[];
   reliabilityImpact: number;
   scoreDelta: number;
   slotId: BuildSlotId;
@@ -82,6 +83,7 @@ export type OptimizationResult = {
   lockedSlots: BuildSlotId[];
   optimizedScore: number;
   pipeline: string[];
+  reasoningPathIds: string[];
   suggestions: OptimizationSuggestion[];
 };
 

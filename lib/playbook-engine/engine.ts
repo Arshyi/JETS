@@ -9,6 +9,7 @@ import {
   getEncyclopediaReferencesForPlatform,
   getEncyclopediaReferencesForSlots
 } from "@/lib/platform-encyclopedia";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import type {
   HardwarePlaybook,
   HardwarePlaybookRecommendation,
@@ -128,12 +129,21 @@ function getHydratedRecommendation(
           recommendation.slotHints,
           "Playbook recommendation references slot-relevant encyclopedia sections."
         ).map((reference) => reference.entryId)
+        : []);
+  const reasoningPathIds =
+    recommendation.reasoningPathIds ??
+    (isPlatformKnowledgeId(platformId)
+      ? getReasoningGraphPathIdsForContext({
+          platformId,
+          slotIds: recommendation.slotHints
+        })
       : []);
 
   return {
     ...recommendation,
     encyclopediaEntryIds,
-    knowledgeQualityScore
+    knowledgeQualityScore,
+    reasoningPathIds
   };
 }
 
@@ -144,6 +154,11 @@ function hydratePlaybook(playbook: HardwarePlaybook): HardwarePlaybook {
     ...playbook,
     encyclopediaEntryIds: getPlaybookEncyclopediaEntryIds(playbook),
     knowledgeQualityScore,
+    reasoningPathIds: isPlatformKnowledgeId(playbook.platformId)
+      ? getReasoningGraphPathIdsForContext({
+          platformId: playbook.platformId
+        })
+      : playbook.reasoningPathIds,
     recommendations: playbook.recommendations.map((recommendation) =>
       getHydratedRecommendation(
         recommendation,
@@ -413,6 +428,12 @@ export function validateHardwarePlaybooks(): PlaybookValidationResult[] {
         playbooks.every((playbook) => (playbook.encyclopediaEntryIds ?? []).length > 0),
         playbooks.length,
         playbooks.filter((playbook) => (playbook.encyclopediaEntryIds ?? []).length > 0).length
+      ),
+      createAssertion(
+        "Every platform playbook references graph reasoning paths.",
+        playbooks.every((playbook) => (playbook.reasoningPathIds ?? []).length > 0),
+        playbooks.length,
+        playbooks.filter((playbook) => (playbook.reasoningPathIds ?? []).length > 0).length
       )
     ];
 

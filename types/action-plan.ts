@@ -54,6 +54,7 @@ export type EngineeringActionTask = {
     playbookRecommendationId: HardwarePlaybookRecommendation["id"];
     title: string;
   } | null;
+  reasoningPathIds: string[];
   resolvesValidationIssueIds: string[];
   risk: EngineeringActionRisk;
   slotIds: BuildSlotId[];

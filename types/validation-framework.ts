@@ -7,6 +7,7 @@ import type {
 } from "@/types/marketplace-intelligence";
 import type { OptimizationInput } from "@/types/optimization";
 import type { PlatformKnowledgeId } from "@/types/platform-knowledge";
+import type { ReasoningGraphValidationResult } from "@/types/reasoning-graph";
 import type { PlaybookValidationResult } from "@/types/playbook";
 import type {
   BuildSlotId,
@@ -139,6 +140,7 @@ export type HardwareValidationSuiteResult = {
   actionPlanResults: ActionPlanValidationResult[];
   platformKnowledge: PlatformKnowledgeValidationResult[];
   playbookResults: PlaybookValidationResult[];
+  reasoningGraph: ReasoningGraphValidationResult;
   ruleCoverage: Record<ValidationCoverageArea, RuleCoverageResult>;
   scenarioResults: ValidationScenarioResult[];
   strategyResults: StrategyValidationResult[];
@@ -148,6 +150,7 @@ export type HardwareValidationSuiteResult = {
     passedScenarios: number;
     platformWarnings: number;
     playbookFailures: number;
+    reasoningGraphErrors: number;
     scenarios: number;
     strategyFailures: number;
   };

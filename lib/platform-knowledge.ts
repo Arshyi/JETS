@@ -7,6 +7,7 @@ import {
   getPlatformEncyclopediaById,
   getPlatformEncyclopediaSummary
 } from "@/lib/platform-encyclopedia";
+import { getReasoningGraphSummaryForPlatform } from "@/lib/reasoning-graph/engine";
 import type { ComponentInventoryItem } from "@/types/component-inventory";
 import type {
   BuildWorkspaceProject,
@@ -183,6 +184,7 @@ export function getPlatformKnowledgeInsightForProfile(
   const encyclopediaSummary = getPlatformEncyclopediaSummary(
     getPlatformEncyclopediaById(profile.id)
   );
+  const reasoningGraphSummary = getReasoningGraphSummaryForPlatform(profile.id);
 
   return {
     adapterCount: getRecommendedAdaptersForPlatform(profile.id).length,
@@ -198,6 +200,9 @@ export function getPlatformKnowledgeInsightForProfile(
     platformId: profile.id,
     platformName: profile.name,
     potentialScore: profile.potential.overall,
+    reasoningConstraintPathCount: reasoningGraphSummary.constraintPathCount,
+    reasoningEdgeCount: reasoningGraphSummary.edgeCount,
+    reasoningOpportunityPathCount: reasoningGraphSummary.opportunityPathCount,
     summary: profile.summary
   };
 }

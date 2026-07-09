@@ -43,6 +43,12 @@ The deeper Platform Encyclopedia model lives in:
 - `data/platform-encyclopedia.ts`
 - `lib/platform-encyclopedia.ts`
 
+The Hardware Reasoning Graph model lives in:
+
+- `types/reasoning-graph.ts`
+- `data/reasoning-graph.ts`
+- `lib/reasoning-graph/engine.ts`
+
 The UI layer lives in:
 
 - `components/platform-knowledge/platform-knowledge-panel.tsx`
@@ -86,6 +92,11 @@ Knowledge summaries. Platform Knowledge remains the fast summary of what a
 platform is. The Encyclopedia stores deeper engineering reference material such
 as memory topology, PCIe topology, storage guidance, power layout, cooling
 zones, firmware notes, reliability, workload suitability, and upgrade limits.
+
+Phase 6.0 adds the Hardware Reasoning Graph. Platform Knowledge now exposes
+graph edge and path counts for recognized platforms, while the graph owns
+relationships such as supports, blocks, improves, bottlenecks, better value,
+repair paths, and adapter paths.
 
 ## Separation Of Concerns
 
@@ -178,6 +189,7 @@ The Phase 5.3 hierarchy is:
 ```text
 Platform Knowledge: summary and platform potential
 Platform Encyclopedia: detailed engineering reference
+Hardware Reasoning Graph: relationships and multi-hop paths
 Hardware Playbooks: experienced-builder guidance
 Engineering Action Plans: project-specific task workflow
 ```
@@ -303,6 +315,9 @@ Hardware Playbook with required sections and evidence-linked recommendations.
 Phase 5.3 also checks that every supported platform profile has encyclopedia
 coverage for memory topology, power topology, storage guidance, upgrade paths,
 reliability data, and workload profiles.
+Phase 6.0 adds graph validation for orphan nodes, duplicate edges, broken
+references, circular `requires` dependencies, missing node types, missing edge
+types, and deterministic fixture paths.
 
 Incomplete platform evidence is reported as a warning, not hidden. This is
 intentional: Platform Potential answers how useful the hardware can be, while

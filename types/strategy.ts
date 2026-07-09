@@ -178,6 +178,7 @@ export type HardwareStrategyRecommendation = {
   overallScore: number;
   projectSeed: StrategyProjectSeed | null;
   rank: number;
+  reasoningPathIds: string[];
   risks: string[];
   shouldCreateProject: boolean;
   sourceAcquisitionIds: string[];

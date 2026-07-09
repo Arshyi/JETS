@@ -11,6 +11,7 @@ import type {
   EngineeringActionTaskType
 } from "@/types/action-plan";
 import { getEncyclopediaReferencesForSlots } from "@/lib/platform-encyclopedia";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import { platformKnowledgeIds } from "@/types/platform-knowledge";
 import type {
   HardwarePlaybook,
@@ -292,6 +293,14 @@ function createRecommendationTask(
       playbookRecommendationId: recommendation.id,
       title: recommendation.title
     },
+    reasoningPathIds:
+      recommendation.reasoningPathIds ??
+      (isPlatformKnowledgeId(playbook.platformId)
+        ? getReasoningGraphPathIdsForContext({
+            platformId: playbook.platformId,
+            slotIds: unique([...slotIds, ...recommendation.slotHints])
+          })
+        : []),
     resolvesValidationIssueIds: issues.map((issue) => issue.id),
     risk: rule.risk,
     slotIds: unique([...slotIds, ...recommendation.slotHints]),
@@ -460,6 +469,12 @@ function buildTasksFromValidationIssues(input: GenerateActionPlanInput) {
         priority:
           issue.severity === "blocking" ? "critical" : rule.priority,
         recommendation: null,
+        reasoningPathIds: isPlatformKnowledgeId(platformId)
+          ? getReasoningGraphPathIdsForContext({
+              platformId,
+              slotIds
+            })
+          : [],
         resolvesValidationIssueIds: [issue.id],
         risk: issue.severity === "blocking" ? "high" : rule.risk,
         slotIds,
@@ -503,6 +518,10 @@ function dedupeTasks(tasks: EngineeringActionTask[]) {
       encyclopediaEntryIds: unique([
         ...existing.encyclopediaEntryIds,
         ...task.encyclopediaEntryIds
+      ]),
+      reasoningPathIds: unique([
+        ...existing.reasoningPathIds,
+        ...task.reasoningPathIds
       ]),
       resolvesValidationIssueIds: unique([
         ...existing.resolvesValidationIssueIds,
@@ -724,7 +743,8 @@ export function validateActionPlanFixture(
     (task) =>
       task.evidenceRecordIds.length > 0 ||
       task.resolvesValidationIssueIds.length > 0 ||
-      task.encyclopediaEntryIds.length > 0
+      task.encyclopediaEntryIds.length > 0 ||
+      task.reasoningPathIds.length > 0
   );
   const tasksWithValidationImpact = plan.tasks.filter(
     (task) => task.resolvesValidationIssueIds.length > 0
@@ -753,7 +773,7 @@ export function validateActionPlanFixture(
       [...dependencyIds].filter((id) => taskIds.has(id)).length
     ),
     createAssertion(
-      "Tasks link back to evidence, playbooks, encyclopedia, or validation issues.",
+      "Tasks link back to evidence, playbooks, encyclopedia, graph paths, or validation issues.",
       tasksWithEvidence.length === plan.tasks.length,
       plan.tasks.length,
       tasksWithEvidence.length

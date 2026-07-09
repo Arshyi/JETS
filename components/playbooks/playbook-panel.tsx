@@ -69,6 +69,9 @@ function RecommendationCard({
         {recommendation.encyclopediaEntryIds?.length ? (
           <StatusPill>{recommendation.encyclopediaEntryIds.length} encyclopedia refs</StatusPill>
         ) : null}
+        {recommendation.reasoningPathIds?.length ? (
+          <StatusPill>{recommendation.reasoningPathIds.length} graph paths</StatusPill>
+        ) : null}
       </div>
       <h4 className="mt-3 text-base font-semibold">{recommendation.title}</h4>
       <p className="mt-2 text-sm leading-6 text-muted">{recommendation.summary}</p>
@@ -176,6 +179,9 @@ export function PlaybookPanel({
         ) : null}
         {primaryPlaybook.encyclopediaEntryIds?.length ? (
           <StatusPill>{primaryPlaybook.encyclopediaEntryIds.length} encyclopedia refs</StatusPill>
+        ) : null}
+        {primaryPlaybook.reasoningPathIds?.length ? (
+          <StatusPill>{primaryPlaybook.reasoningPathIds.length} graph paths</StatusPill>
         ) : null}
       </div>
 

@@ -43,6 +43,7 @@ pre-project decision view.
 
 - `types/optimization.ts`: goals, depths, suggestion contracts, metrics, and result types.
 - `lib/optimization-engine/pipeline.ts`: deterministic optimizer pipeline.
+- `lib/reasoning-graph/engine.ts`: graph path context for recognized platform projects.
 - `lib/supabase/optimization-actions.ts`: server action for persisted optimization runs.
 - `components/optimization/optimization-experience.tsx`: Optimize My Build UI.
 - `supabase/migrations/202607030012_v2_2_optimization_engine.sql`: optimization run and suggestion tables.
@@ -133,6 +134,7 @@ The optimizer reuses existing services:
 - Component Inventory provides valid slot candidates.
 - Workspace validation provides completion and warning context.
 - Decision-style scoring provides deterministic tradeoff metrics.
+- Hardware Reasoning Graph provides relationship paths that explain why a platform has opportunities or constraints.
 - Project audit records optimization runs.
 
 The UI does not duplicate scoring. It submits optimization inputs and renders persisted runs.

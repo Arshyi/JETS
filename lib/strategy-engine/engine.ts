@@ -5,6 +5,7 @@ import {
   defaultOwnedItems
 } from "@/lib/build-generator/config";
 import { getEncyclopediaReferencesForStrategy } from "@/lib/platform-encyclopedia";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import { getPlaybookStrategySignalsForAcquisition } from "@/lib/playbook-engine/engine";
 import { useCaseLabels } from "@/types/hardware";
 import { platformKnowledgeIds } from "@/types/platform-knowledge";
@@ -36,6 +37,7 @@ type StrategySignal = {
   encyclopediaEntryIds: string[];
   hiddenOpportunities: string[];
   reasons: string[];
+  reasoningPathIds: string[];
   risks: string[];
   tradeoffs: StrategyTradeoffMatrix;
 };
@@ -453,6 +455,12 @@ function addEncyclopediaReferences(
   ];
 }
 
+function addReasoningPathIds(signal: StrategySignal, pathIds: string[]) {
+  signal.reasoningPathIds = [
+    ...new Set([...signal.reasoningPathIds, ...pathIds])
+  ];
+}
+
 function applyBudgetSignals(
   definition: StrategyDefinition,
   input: StrategyInput,
@@ -663,6 +671,18 @@ function applyAcquisitionSignals(
           .slice(0, 2)
           .map((reference) => reference.sectionId.replaceAll("-", " "))
           .join(", ")}.`
+      );
+    }
+
+    const graphPathIds = getReasoningGraphPathIdsForContext({
+      platformId: acquisition.best.detectedPlatformId,
+      strategyType: definition.id
+    });
+
+    if (graphPathIds.length > 0) {
+      addReasoningPathIds(signal, graphPathIds);
+      signal.reasons.push(
+        `Reasoning graph contributes ${graphPathIds.length} path${graphPathIds.length === 1 ? "" : "s"} for this platform.`
       );
     }
   }
@@ -890,6 +910,7 @@ function scoreStrategy(
     encyclopediaEntryIds: [],
     hiddenOpportunities: [],
     reasons: [`${definition.title} starts from the ${definition.summary.toLowerCase()}`],
+    reasoningPathIds: [],
     risks: [...definition.risks],
     tradeoffs: cloneTradeoffs(definition.baseTradeoffs)
   };
@@ -899,6 +920,10 @@ function scoreStrategy(
   applyOwnedHardwareSignals(definition, input, signal);
   applyAcquisitionSignals(definition, input, signal);
   applyConstraintSignals(definition, input, signal);
+  addReasoningPathIds(
+    signal,
+    getReasoningGraphPathIdsForContext({ strategyType: definition.id })
+  );
 
   if (definition.id === "wait-for-better-value") {
     signal.hiddenOpportunities.push(
@@ -942,6 +967,7 @@ function scoreStrategy(
     id: `strategy-${definition.id}`,
     overallScore,
     projectSeed,
+    reasoningPathIds: signal.reasoningPathIds,
     risks: signal.risks,
     shouldCreateProject,
     sourceAcquisitionIds: acquisitionIds,

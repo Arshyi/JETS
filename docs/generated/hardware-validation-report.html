@@ -22,6 +22,7 @@
       <li>Action plan fixture failures: 0</li>
       <li>Playbook fixture failures: 0</li>
       <li>Strategy fixture failures: 0</li>
+      <li>Reasoning graph errors: 0</li>
       <li>Platform knowledge warnings: 3</li>
     </ul>
     <h2>Scenario Results</h2>
@@ -43,6 +44,11 @@
     <table>
       <thead><tr><th>Status</th><th>Platform</th><th>Playbooks</th><th>Issues</th></tr></thead>
       <tbody><tr><td>PASS</td><td>Lenovo ThinkStation P520</td><td>1</td><td>None</td></tr><tr><td>PASS</td><td>Lenovo ThinkStation P510</td><td>2</td><td>None</td></tr><tr><td>PASS</td><td>Dell Precision T5810</td><td>1</td><td>None</td></tr><tr><td>PASS</td><td>Dell Precision 5820</td><td>1</td><td>None</td></tr><tr><td>PASS</td><td>Dell OptiPlex 7060 SFF</td><td>1</td><td>None</td></tr><tr><td>PASS</td><td>HP Z440</td><td>1</td><td>None</td></tr><tr><td>PASS</td><td>HP Z840</td><td>1</td><td>None</td></tr><tr><td>PASS</td><td>Mac Pro 5,1</td><td>1</td><td>None</td></tr></tbody>
+    </table>
+    <h2>Reasoning Graph Validation</h2>
+    <table>
+      <thead><tr><th>Status</th><th>Nodes</th><th>Edges</th><th>Duplicate edges</th><th>Orphan nodes</th><th>Fixture paths</th><th>Issues</th></tr></thead>
+      <tbody><tr><td>PASS</td><td>152</td><td>344</td><td>0</td><td>0</td><td>4/4</td><td>None</td></tr></tbody>
     </table>
     <h2>Rule Coverage</h2>
     <section><h2>action-plan</h2><p>6/6 covered (100%).</p><p><strong>Uncovered:</strong> None</p></section><section><h2>marketplace</h2><p>6/6 covered (100%).</p><p><strong>Uncovered:</strong> None</p></section><section><h2>listing</h2><p>9/9 covered (100%).</p><p><strong>Uncovered:</strong> None</p></section><section><h2>evidence</h2><p>4/4 covered (100%).</p><p><strong>Uncovered:</strong> None</p></section><section><h2>platform</h2><p>22/33 covered (67%).</p><p><strong>Uncovered:</strong> platform-adapter:m2-to-pcie-adapter, platform-adapter:mini-pcie-adapter, platform-adapter:pcie-nvme-adapter, platform-adapter:pcie-usb-controller, platform-adapter:pcie-wifi-card, platform-adapter:sas-hba, platform-adapter:ten-gbe-nic, platform-adapter:usb-c-expansion-card, platform:hp-z840, platform:mac-pro-5-1, platform:precision-t5810</p></section><section><h2>playbook</h2><p>12/12 covered (100%).</p><p><strong>Uncovered:</strong> None</p></section><section><h2>solution</h2><p>9/17 covered (53%).</p><p><strong>Uncovered:</strong> solution:cad, solution:engineering, solution:gaming, solution:home-server, solution:programming, solution:rendering, solution:streaming, solution:virtualization</p></section><section><h2>strategy</h2><p>8/8 covered (100%).</p><p><strong>Uncovered:</strong> None</p></section><section><h2>optimization</h2><p>6/10 covered (60%).</p><p><strong>Uncovered:</strong> optimization:enthusiast-depth, optimization:maximize-reliability, optimization:maximize-upgradeability, optimization:standard-depth</p></section><section><h2>compatibility</h2><p>11/18 covered (61%).</p><p><strong>Uncovered:</strong> compatibility:bios-generation-risk, compatibility:case-airflow, compatibility:cpu-cooler-clearance, compatibility:platform-age, compatibility:ram-slots, compatibility:storage-interface, compatibility:thermal-risk</p></section><section><h2>builder</h2><p>3/11 covered (27%).</p><p><strong>Uncovered:</strong> builder:bios-and-platform-age, builder:component-category-fits-slot, builder:cooling-and-airflow, builder:display-availability, builder:pcie-generation-fit, builder:ram-platform-fit, builder:slot-headroom, builder:storage-interface-fit</p></section>

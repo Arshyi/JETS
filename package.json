@@ -7,7 +7,8 @@
     "build": "node --require ./scripts/node-readlink-compat.cjs ./node_modules/next/dist/bin/next build",
     "start": "node --require ./scripts/node-readlink-compat.cjs ./node_modules/next/dist/bin/next start",
     "lint": "eslint .",
-    "validate:hardware": "node scripts/validate-hardware-knowledge.cjs"
+    "validate:hardware": "node scripts/validate-hardware-knowledge.cjs",
+    "validate:graph": "node scripts/validate-reasoning-graph.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
