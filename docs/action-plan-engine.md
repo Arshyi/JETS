@@ -232,6 +232,19 @@ Core compatibility rules still generate the original issue set. Phase 5.2 adds a
 workflow-resolution layer on top; it does not mutate hardware slots or pretend a
 physical change happened without the user completing the task.
 
+## Reasoning Path Explanations
+
+Phase 6.1 surfaces graph-backed task explanations in the Action Plan UI.
+
+Each task can show a "Why JETS thinks this task" panel when the generated task
+has Hardware Reasoning Graph path IDs. The panel resolves the path centrally and
+shows nodes, relationships, confidence, evidence links, and the edge reasons
+that led to the task.
+
+Action Plans should continue to store task state and audit events. They should
+not invent their own reasoning model; they cite evidence, playbooks,
+encyclopedia references, validation warnings, and graph paths.
+
 ## Validation
 
 Run:

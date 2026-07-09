@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import { ReasoningPathPanel } from "@/components/reasoning/reasoning-path-panel";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
   acquisitionMarketplaceOptions,
@@ -26,6 +27,7 @@ import {
   getAcquisitionGoalOptions,
   getDecisionStatusFromReadiness
 } from "@/lib/acquisition/workflow";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import {
   archiveAcquisitionAction,
   compareSavedAcquisitionsAction,
@@ -197,6 +199,17 @@ export function AcquisitionWorkspace({ persistence }: AcquisitionWorkspaceProps)
   const analysis = useMemo(
     () => analyzeAcquisitionDraft(draft, corrections),
     [draft, corrections]
+  );
+  const acquisitionReasoningPathIds = useMemo(
+    () =>
+      analysis.detectedPlatformId
+        ? getReasoningGraphPathIdsForContext({
+            platformId: analysis.detectedPlatformId
+          })
+        : getReasoningGraphPathIdsForContext({
+            acquisitionId: "manual-capture"
+          }),
+    [analysis.detectedPlatformId]
   );
   const goalOptions = getAcquisitionGoalOptions();
   const compareRecords = records.filter((record) =>
@@ -854,6 +867,12 @@ export function AcquisitionWorkspace({ persistence }: AcquisitionWorkspaceProps)
                 </div>
               ))}
             </div>
+
+            <ReasoningPathPanel
+              className="mt-5"
+              maxPaths={2}
+              pathIds={acquisitionReasoningPathIds}
+            />
           </div>
         </div>
       </section>

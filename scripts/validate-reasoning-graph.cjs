@@ -28,6 +28,7 @@ console.log(`Edges: ${result.edgeCount}`);
 console.log(`Duplicate edges: ${result.duplicateEdgeCount}`);
 console.log(`Orphan nodes: ${result.orphanNodeCount}`);
 console.log(`Fixture paths: ${result.pathFixtureCount}/4`);
+console.log(`Display paths: ${result.displayPathCount}`);
 console.log(`Markdown report: ${path.relative(projectRoot, markdownPath)}`);
 console.log(`HTML report: ${path.relative(projectRoot, htmlPath)}`);
 

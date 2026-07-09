@@ -189,6 +189,10 @@ The validator checks:
 - duplicate edges
 - broken references
 - deterministic fixture paths
+- display paths with broken node references
+- display paths with broken edge references
+- circular display paths
+- missing node or relationship labels
 
 The command writes:
 
@@ -218,19 +222,22 @@ Future AI, OCR, scraping, user submissions, and marketplace APIs should become
 possible graph contributors only after evidence review. They should not become
 the graph itself.
 
-## Phase 6.1 Direction
+## Reasoning Path Explanations
 
-Phase 6.1 should make graph explanations user-visible in the places where they
-matter most:
+Phase 6.1 makes graph explanations user-visible in the places where they matter
+most:
 
 - Strategy cards
 - Optimization suggestions
 - Acquisition recommendations
 - Project validation warnings
 - Action Plan tasks
+- Platform Knowledge panels
 
 The product question should be:
 
 ```text
 What path did JETS find that I would not have found myself?
 ```
+
+See `docs/reasoning-path-explanations.md` for the display contract.

@@ -139,6 +139,19 @@ The optimizer reuses existing services:
 
 The UI does not duplicate scoring. It submits optimization inputs and renders persisted runs.
 
+## Reasoning Path Explanations
+
+Phase 6.1 adds graph-backed explanations to optimization suggestions.
+
+Persisted optimization suggestion rows currently store the deterministic
+suggestion facts but not per-suggestion graph path IDs. The UI therefore derives
+platform-level Hardware Reasoning Graph paths for the project and shows them in
+the reusable "Why JETS thinks this" panel. This keeps the explanation source
+centralized while avoiding a schema change in this milestone.
+
+Future persistence can store suggestion-specific path IDs from the in-memory
+optimizer output.
+
 ## Branch Application
 
 Selected suggestions can create an optimized branch. The branch:

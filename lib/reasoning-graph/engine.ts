@@ -18,6 +18,8 @@ import type {
   ReasoningGraphNodeType,
   ReasoningGraphOpportunity,
   ReasoningGraphPath,
+  ReasoningPathDisplayValidationResult,
+  ReasoningPathExplanation,
   ReasoningGraphReferenceContext,
   ReasoningGraphValidationIssue,
   ReasoningGraphValidationResult
@@ -53,6 +55,10 @@ function unique<T>(values: T[]) {
 
 function getNodeMap(graph: ReasoningGraph) {
   return new Map(graph.nodes.map((node) => [node.id, node]));
+}
+
+function getEdgeMap(graph: ReasoningGraph) {
+  return new Map(graph.edges.map((edge) => [edge.id, edge]));
 }
 
 function getOutgoingEdges(
@@ -92,6 +98,107 @@ function toReasoningPath(
     summary: formatPathSummary(pathEdges),
     title: `${firstNodeLabel} -> ${lastNodeLabel}`
   };
+}
+
+export function getReasoningPathById(
+  pathId: string,
+  graph: ReasoningGraph = reasoningGraph
+) {
+  if (!pathId.startsWith("path:")) {
+    return null;
+  }
+
+  const edgeIds = pathId.replace(/^path:/, "").split("|").filter(Boolean);
+  const edgeMap = getEdgeMap(graph);
+  const nodeIds: string[] = [];
+
+  for (const [index, edgeId] of edgeIds.entries()) {
+    const edge = edgeMap.get(edgeId);
+
+    if (!edge) {
+      return null;
+    }
+
+    if (index === 0) {
+      nodeIds.push(edge.from);
+    } else if (nodeIds[nodeIds.length - 1] !== edge.from) {
+      return null;
+    }
+
+    nodeIds.push(edge.to);
+  }
+
+  return edgeIds.length > 0 ? toReasoningPath(graph, nodeIds, edgeIds) : null;
+}
+
+export function getReasoningPathExplanation(
+  pathOrId: ReasoningGraphPath | string,
+  graph: ReasoningGraph = reasoningGraph
+): ReasoningPathExplanation | null {
+  const path =
+    typeof pathOrId === "string"
+      ? getReasoningPathById(pathOrId, graph)
+      : pathOrId;
+
+  if (!path) {
+    return null;
+  }
+
+  const nodeMap = getNodeMap(graph);
+  const edgeMap = getEdgeMap(graph);
+  const pathEdges = path.edgeIds
+    .map((edgeId) => edgeMap.get(edgeId))
+    .filter((edge): edge is ReasoningGraphEdge => Boolean(edge));
+
+  if (pathEdges.length === 0) {
+    return null;
+  }
+
+  const nodeLabels = path.nodeIds.map(
+    (nodeId) => nodeMap.get(nodeId)?.label ?? getReasoningGraphNodeLabel(nodeId)
+  );
+  const steps = pathEdges.map((edge) => ({
+    confidence: edge.confidence,
+    edgeId: edge.id,
+    evidenceIds: edge.evidenceIds ?? [],
+    fromNodeId: edge.from,
+    reason: edge.reason,
+    relationshipLabel: getReasoningGraphEdgeLabel(edge.type),
+    toNodeId: edge.to
+  }));
+  const relationshipLabels = steps.map((step) => step.relationshipLabel);
+  const evidenceIds = unique(steps.flatMap((step) => step.evidenceIds));
+  const confidence = Math.round(
+    steps.reduce((total, step) => total + step.confidence, 0) /
+      Math.max(1, steps.length)
+  );
+  const explanationReasons = unique(steps.map((step) => step.reason)).slice(0, 2);
+
+  return {
+    confidence,
+    edgeIds: path.edgeIds,
+    evidenceIds,
+    id: path.id,
+    nodeLabels,
+    plainEnglish: `JETS links ${nodeLabels[0]} to ${
+      nodeLabels[nodeLabels.length - 1]
+    } through ${unique(relationshipLabels).join(", ")}. ${explanationReasons.join(" ")}`,
+    relationshipLabels,
+    steps,
+    title: path.title
+  };
+}
+
+export function getReasoningPathExplanationsForIds(
+  pathIds: string[],
+  graph: ReasoningGraph = reasoningGraph
+) {
+  return unique(pathIds)
+    .map((pathId) => getReasoningPathExplanation(pathId, graph))
+    .filter(
+      (explanation): explanation is ReasoningPathExplanation =>
+        Boolean(explanation)
+    );
 }
 
 export function findReasoningPaths(
@@ -273,6 +380,15 @@ export function getReasoningGraphPathIdsForContext(
     }).map((path) => path.id);
   }
 
+  if (context.acquisitionId) {
+    return findReasoningPaths(`acquisition:${context.acquisitionId}`, {
+      edgeTypes: ["repair_path", "supports"],
+      limit: 3,
+      maxDepth: 4,
+      targetNodeType: "strategy"
+    }).map((path) => path.id);
+  }
+
   return [];
 }
 
@@ -347,6 +463,133 @@ function validateFixturePaths(graph: ReasoningGraph) {
   ].filter((path): path is ReasoningGraphPath => Boolean(path));
 }
 
+function collectDisplayValidationPaths(graph: ReasoningGraph) {
+  const paths = [...validateFixturePaths(graph)];
+
+  for (const node of graph.nodes) {
+    if (node.type === "platform") {
+      paths.push(
+        ...findReasoningPaths(node.id, {
+          edgeTypes: defaultTraversalEdgeTypes,
+          limit: 3,
+          maxDepth: 5,
+          targetNodeType: "opportunity"
+        }, graph),
+        ...findReasoningPaths(node.id, {
+          edgeTypes: constraintEdgeTypes,
+          limit: 3,
+          maxDepth: 4,
+          targetNodeType: "constraint"
+        }, graph)
+      );
+    }
+
+    if (node.type === "strategy" || node.type === "adapter") {
+      paths.push(
+        ...findReasoningPaths(node.id, {
+          edgeTypes: ["supports", "requires", "improves", "adapter_path"],
+          limit: 2,
+          maxDepth: 4,
+          targetNodeType: "project"
+        }, graph)
+      );
+    }
+
+    if (node.type === "acquisition") {
+      paths.push(
+        ...findReasoningPaths(node.id, {
+          edgeTypes: ["repair_path", "supports"],
+          limit: 2,
+          maxDepth: 4,
+          targetNodeType: "strategy"
+        }, graph)
+      );
+    }
+  }
+
+  return [...new Map(paths.map((path) => [path.id, path])).values()];
+}
+
+export function validateReasoningPathDisplay(
+  paths = collectDisplayValidationPaths(reasoningGraph),
+  graph: ReasoningGraph = reasoningGraph
+): ReasoningPathDisplayValidationResult {
+  const nodeMap = getNodeMap(graph);
+  const edgeMap = getEdgeMap(graph);
+  const issues: ReasoningGraphValidationIssue[] = [];
+
+  for (const path of paths) {
+    if (path.nodeIds.length < 2 || path.edgeIds.length === 0) {
+      issues.push({
+        id: `display-path-empty:${path.id}`,
+        message: `Reasoning display path ${path.id} does not contain enough nodes or edges.`,
+        severity: "error"
+      });
+    }
+
+    if (new Set(path.nodeIds).size !== path.nodeIds.length) {
+      issues.push({
+        id: `display-path-cycle:${path.id}`,
+        message: `Reasoning display path ${path.id} repeats a node.`,
+        severity: "error"
+      });
+    }
+
+    for (const [index, nodeId] of path.nodeIds.entries()) {
+      const node = nodeMap.get(nodeId);
+
+      if (!node) {
+        issues.push({
+          id: `display-path-broken-node:${path.id}:${nodeId}`,
+          message: `Reasoning display path ${path.id} references missing node ${nodeId}.`,
+          severity: "error"
+        });
+      } else if (!node.label.trim()) {
+        issues.push({
+          id: `display-path-missing-node-label:${path.id}:${index}`,
+          message: `Reasoning display path ${path.id} has a node without a display label.`,
+          severity: "error"
+        });
+      }
+    }
+
+    for (const [index, edgeId] of path.edgeIds.entries()) {
+      const edge = edgeMap.get(edgeId);
+
+      if (!edge) {
+        issues.push({
+          id: `display-path-broken-edge:${path.id}:${edgeId}`,
+          message: `Reasoning display path ${path.id} references missing edge ${edgeId}.`,
+          severity: "error"
+        });
+        continue;
+      }
+
+      if (path.nodeIds[index] !== edge.from || path.nodeIds[index + 1] !== edge.to) {
+        issues.push({
+          id: `display-path-broken-sequence:${path.id}:${edgeId}`,
+          message: `Reasoning display path ${path.id} has a broken node-to-edge sequence.`,
+          severity: "error"
+        });
+      }
+
+      if (!getReasoningGraphEdgeLabel(edge.type).trim() || !edge.reason.trim()) {
+        issues.push({
+          id: `display-path-missing-edge-label:${path.id}:${edgeId}`,
+          message: `Reasoning display path ${path.id} has an edge without display text.`,
+          severity: "error"
+        });
+      }
+    }
+  }
+
+  return {
+    issues,
+    passed: issues.every((issue) => issue.severity !== "error"),
+    pathCount: paths.length
+  };
+}
+
 export function validateReasoningGraph(
   graph: ReasoningGraph = reasoningGraph
 ): ReasoningGraphValidationResult {
@@ -354,7 +597,13 @@ export function validateReasoningGraph(
   const duplicateEdges = findDuplicateEdges(graph);
   const orphanNodes = findOrphanNodes(graph);
   const fixturePaths = validateFixturePaths(graph);
-  const issues: ReasoningGraphValidationIssue[] = [];
+  const displayPathValidation = validateReasoningPathDisplay(
+    collectDisplayValidationPaths(graph),
+    graph
+  );
+  const issues: ReasoningGraphValidationIssue[] = [
+    ...displayPathValidation.issues
+  ];
 
   for (const edge of graph.edges) {
     if (!nodeIds.has(edge.from) || !nodeIds.has(edge.to)) {
@@ -422,6 +671,7 @@ export function validateReasoningGraph(
   }
 
   return {
+    displayPathCount: displayPathValidation.pathCount,
     duplicateEdgeCount: duplicateEdges.length,
     edgeCount: graph.edges.length,
     issues,
@@ -466,6 +716,7 @@ Generated by \`npm run validate:graph\`.
 | Duplicate edges | ${result.duplicateEdgeCount} |
 | Orphan nodes | ${result.orphanNodeCount} |
 | Fixture paths | ${result.pathFixtureCount}/4 |
+| Display paths | ${result.displayPathCount} |
 
 ## Edge Coverage
 
@@ -516,6 +767,7 @@ export function renderReasoningGraphReportHtml(
         <tr><th>Duplicate edges</th><td>${result.duplicateEdgeCount}</td></tr>
         <tr><th>Orphan nodes</th><td>${result.orphanNodeCount}</td></tr>
         <tr><th>Fixture paths</th><td>${result.pathFixtureCount}/4</td></tr>
+        <tr><th>Display paths</th><td>${result.displayPathCount}</td></tr>
       </tbody>
     </table>
     <h2>Issues</h2>

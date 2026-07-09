@@ -1,10 +1,12 @@
 import { GitBranch, Lock, Sparkles, Unlock } from "lucide-react";
 import Link from "next/link";
 
+import { ReasoningPathPanel } from "@/components/reasoning/reasoning-path-panel";
 import { EmptyState } from "@/components/states/empty-state";
 import { ProjectWorkflowProgress } from "@/components/solution-builder/project-workflow-progress";
 import { StatusPill } from "@/components/ui/status-pill";
 import { formatAuditTimestamp } from "@/lib/decision-audit/format";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import { createOptimizedProjectBranchAction } from "@/lib/supabase/branch-actions";
 import { runBuildProjectOptimizationAction } from "@/lib/supabase/optimization-actions";
 import {
@@ -66,6 +68,11 @@ export function OptimizationExperience({
   const branchCount = detail.branches.filter((branch) => branch.id !== projectRow.id).length;
   const warningCount =
     model.evaluation.warningCount + model.evaluation.blockingCount;
+  const optimizationReasoningPathIds = model.platformInsight
+    ? getReasoningGraphPathIdsForContext({
+        platformId: model.platformInsight.platformId
+      })
+    : [];
 
   return (
     <main className="bg-background pb-16">
@@ -307,6 +314,12 @@ export function OptimizationExperience({
                               </div>
                             </div>
                           </div>
+
+                          <ReasoningPathPanel
+                            className="mt-4"
+                            maxPaths={1}
+                            pathIds={optimizationReasoningPathIds}
+                          />
                         </article>
                       ))}
                     </div>

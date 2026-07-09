@@ -86,6 +86,34 @@ export type ReasoningGraphPath = {
   title: string;
 };
 
+export type ReasoningPathExplanationStep = {
+  confidence: number;
+  edgeId: ReasoningGraphEdge["id"];
+  evidenceIds: Array<EvidenceRecord["id"]>;
+  fromNodeId: ReasoningGraphNode["id"];
+  reason: string;
+  relationshipLabel: string;
+  toNodeId: ReasoningGraphNode["id"];
+};
+
+export type ReasoningPathExplanation = {
+  confidence: number;
+  edgeIds: Array<ReasoningGraphEdge["id"]>;
+  evidenceIds: Array<EvidenceRecord["id"]>;
+  id: string;
+  nodeLabels: string[];
+  plainEnglish: string;
+  relationshipLabels: string[];
+  steps: ReasoningPathExplanationStep[];
+  title: string;
+};
+
+export type ReasoningPathDisplayValidationResult = {
+  issues: ReasoningGraphValidationIssue[];
+  passed: boolean;
+  pathCount: number;
+};
+
 export type ReasoningGraphOpportunity = {
   category:
     | "cheaper-equivalent"
@@ -116,6 +144,7 @@ export type ReasoningGraphValidationIssue = {
 };
 
 export type ReasoningGraphValidationResult = {
+  displayPathCount: number;
   duplicateEdgeCount: number;
   edgeCount: number;
   issues: ReasoningGraphValidationIssue[];
@@ -126,6 +155,7 @@ export type ReasoningGraphValidationResult = {
 };
 
 export type ReasoningGraphReferenceContext = {
+  acquisitionId?: string;
   adapterId?: PlatformAdapterId;
   platformId?: PlatformKnowledgeId | null;
   slotIds?: BuildSlotId[];

@@ -12,6 +12,7 @@ import {
   XCircle
 } from "lucide-react";
 
+import { ReasoningPathPanel } from "@/components/reasoning/reasoning-path-panel";
 import { StatusPill } from "@/components/ui/status-pill";
 import { canCompleteActionTask } from "@/lib/action-plan-engine/engine";
 import {
@@ -350,6 +351,13 @@ export function ActionPlanPanel({
                   Complete prerequisites before marking this task complete.
                 </div>
               ) : null}
+
+              <ReasoningPathPanel
+                className="mt-4"
+                maxPaths={1}
+                pathIds={task.reasoningPathIds}
+                title="Why JETS thinks this task"
+              />
 
               <div className="mt-4 flex flex-wrap gap-2">
                 {taskState.status !== "accepted" && taskState.status !== "completed" ? (

@@ -1,6 +1,7 @@
 import { ArrowRight, BarChart3, Compass, FolderPlus, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
+import { ReasoningPathPanel } from "@/components/reasoning/reasoning-path-panel";
 import { EmptyState } from "@/components/states/empty-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { ownedItemKeys } from "@/types/build-generator";
@@ -355,6 +356,11 @@ export function StrategyWorkspace({
                   ))}
                 </ul>
               </div>
+
+              <ReasoningPathPanel
+                className="mt-5"
+                pathIds={strategy.reasoningPathIds}
+              />
 
               <div className="mt-5">
                 <p className="text-sm font-semibold">Alternatives ranked lower</p>

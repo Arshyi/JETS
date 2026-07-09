@@ -430,6 +430,15 @@ Capture them here, then choose the right milestone later. This keeps the product
 - Add graph validation for orphan nodes, circular requires edges, duplicate edges, broken references, missing node types, missing edge types, and fixture paths.
 - Keep AI, live scraping, OCR, checkout, graph persistence, graph editing, and automatic marketplace graph writes deferred.
 
+### Phase 6.1 - Reasoning Path Explanations
+
+- Current.
+- Surface Hardware Reasoning Graph paths in the places where users make decisions.
+- Add reusable "Why JETS thinks this" panels for Strategy, Optimization, Acquisition, Builder warnings, Action Plans, and Platform Knowledge.
+- Show node labels, relationship labels, confidence, evidence links, and plain-English reasoning.
+- Extend graph validation to reject broken display paths, circular display paths, missing labels, and broken node-to-edge sequences.
+- Keep AI, scraping, OCR, marketplace APIs, checkout, browser automation, graph persistence, and graph editing deferred.
+
 ## Idea Parking Lot
 
 Ideas below are valuable, but they are not current milestone scope.
@@ -485,7 +494,6 @@ Ideas below are valuable, but they are not current milestone scope.
 - Platform encyclopedia authoring workflow
 - Platform topology diagrams from reviewed manuals
 - Encyclopedia fact moderation and promotion
-- Hardware reasoning graph path explanations
 - Graph relationship authoring and moderation
 - Graph-backed opportunity discovery for acquisitions
 

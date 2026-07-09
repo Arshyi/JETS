@@ -1,14 +1,17 @@
 import { Activity, Gauge, ShieldCheck, TriangleAlert } from "lucide-react";
 
+import { ReasoningPathPanel } from "@/components/reasoning/reasoning-path-panel";
 import { StatusPill } from "@/components/ui/status-pill";
 import type { BuildWorkspaceEvaluation } from "@/types/solution-builder";
 
 type BuildValidationSummaryProps = {
   evaluation: BuildWorkspaceEvaluation;
+  reasoningPathIds?: string[];
 };
 
 export function BuildValidationSummary({
-  evaluation
+  evaluation,
+  reasoningPathIds = []
 }: BuildValidationSummaryProps) {
   const priorityIssues = evaluation.issues
     .filter((issue) => issue.severity !== "info")
@@ -90,6 +93,13 @@ export function BuildValidationSummary({
           </ul>
         </div>
       ) : null}
+
+      <ReasoningPathPanel
+        className="mt-5"
+        maxPaths={2}
+        pathIds={reasoningPathIds}
+        title="Why JETS thinks these warnings matter"
+      />
     </aside>
   );
 }

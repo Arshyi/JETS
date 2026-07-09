@@ -262,6 +262,22 @@ Phase 6.0 adds graph validation so strategy cannot silently lose deterministic
 relationship paths that support repair, wait, adapter, workstation, and project
 creation decisions.
 
+## Reasoning Path Explanations
+
+Phase 6.1 surfaces strategy graph paths directly on strategy cards.
+
+Each top strategy can now show a "Why JETS thinks this" panel with:
+
+- the graph nodes that connect the platform, acquisition, strategy, project, or
+  opportunity
+- the relationship labels between those nodes
+- confidence
+- evidence links when graph edges cite reviewed evidence
+- a plain-English explanation
+
+Strategy still decides whether a hardware path is worth pursuing. The reasoning
+panel explains which graph path made that decision visible.
+
 ## Future AI Hooks
 
 Future AI could help with:

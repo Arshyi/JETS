@@ -26,6 +26,7 @@ import {
   getPlaybookProjectProgress,
   getPlaybooksForProject
 } from "@/lib/playbook-engine/engine";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import { analyzeBuildSolution } from "@/lib/solution-intelligence/engine";
 import type { BuildProjectDetailData } from "@/lib/solution-builder/projects";
 import type { BuildProjectSlotRow, Json } from "@/types/database";
@@ -101,6 +102,11 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
   const warningCount =
     displayedModel.evaluation.warningCount + displayedModel.evaluation.blockingCount;
   const branchCount = data.branches.filter((branch) => branch.id !== projectRow.id).length;
+  const reasoningPathIds = displayedModel.platformInsight
+    ? getReasoningGraphPathIdsForContext({
+        platformId: displayedModel.platformInsight.platformId
+      })
+    : [];
   const slotGroups = (["required", "optional", "solution"] as const).map(
     (requirement) => ({
       requirement,
@@ -192,7 +198,10 @@ export function ProjectDetail({ data }: ProjectDetailProps) {
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[340px_1fr] lg:px-8">
         <aside className="grid gap-6 lg:sticky lg:top-24 lg:self-start">
-          <BuildValidationSummary evaluation={displayedModel.evaluation} />
+          <BuildValidationSummary
+            evaluation={displayedModel.evaluation}
+            reasoningPathIds={reasoningPathIds}
+          />
           <ProjectBranchWorkspace
             branches={data.branches}
             currentProject={projectRow}

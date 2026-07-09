@@ -267,6 +267,19 @@ Handoff actions support:
 
 Acquisition feeds Solution Builder. It does not replace it.
 
+## Reasoning Path Explanations
+
+Phase 6.1 adds "Why JETS thinks this" panels to acquisition recommendation
+previews.
+
+When a platform is detected, the acquisition preview can show platform-level
+graph paths. When no platform is detected yet, it falls back to the manual
+acquisition graph path so the user can still see why JETS treats a captured
+listing as strategy input instead of an automatic project.
+
+This reinforces the Phase 4 rule: a reviewed acquisition can create a project,
+feed strategy, remain evidence only, or be rejected.
+
 ## Strategy Before Handoff
 
 Phase 4.3 adds a Strategy Engine between saved acquisition review and Builder

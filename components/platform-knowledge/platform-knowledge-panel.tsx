@@ -4,6 +4,7 @@ import { EvidencePanel } from "@/components/evidence/evidence-panel";
 import { AdapterIntelligenceCard } from "@/components/platform-knowledge/adapter-intelligence-card";
 import { PlatformEncyclopediaSummary } from "@/components/platform-knowledge/platform-encyclopedia-summary";
 import { UpgradeOpportunityCard } from "@/components/platform-knowledge/upgrade-opportunity-card";
+import { ReasoningPathPanel } from "@/components/reasoning/reasoning-path-panel";
 import { StatusPill } from "@/components/ui/status-pill";
 import {
   getCommunityDiscoveriesForPlatform,
@@ -15,6 +16,7 @@ import {
 } from "@/lib/evidence-engine";
 import { getPlatformEncyclopediaById } from "@/lib/platform-encyclopedia";
 import { getRecommendedAdaptersForPlatform } from "@/lib/platform-knowledge";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import type { PlatformKnowledgeProfile } from "@/types/platform-knowledge";
 
 type PlatformKnowledgePanelProps = {
@@ -56,6 +58,9 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
   const discoveries = getCommunityDiscoveriesForPlatform(profile.id);
   const knowledgeTimeline = getKnowledgeTimelineForPlatform(profile.id);
   const encyclopedia = getPlatformEncyclopediaById(profile.id);
+  const reasoningPathIds = getReasoningGraphPathIdsForContext({
+    platformId: profile.id
+  });
 
   return (
     <section className="rounded-lg border border-border bg-panel p-5">
@@ -104,6 +109,12 @@ export function PlatformKnowledgePanel({ profile }: PlatformKnowledgePanelProps)
           title="Why do we believe this platform profile?"
         />
       </div>
+
+      <ReasoningPathPanel
+        className="mt-6"
+        maxPaths={3}
+        pathIds={reasoningPathIds}
+      />
 
       {encyclopedia ? (
         <div className="mt-6">

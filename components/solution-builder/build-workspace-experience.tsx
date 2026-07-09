@@ -3,6 +3,7 @@ import { BuildValidationSummary } from "@/components/solution-builder/build-vali
 import { CompareAgainstJets } from "@/components/solution-builder/compare-against-jets";
 import { SolutionStrategyList } from "@/components/solution-builder/solution-strategy-list";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getReasoningGraphPathIdsForContext } from "@/lib/reasoning-graph/engine";
 import type { BuildSlotRequirement, BuildWorkspaceModel } from "@/types/solution-builder";
 
 type BuildWorkspaceExperienceProps = {
@@ -24,6 +25,11 @@ export function BuildWorkspaceExperience({ model }: BuildWorkspaceExperienceProp
       )
     })
   );
+  const reasoningPathIds = model.platformInsight
+    ? getReasoningGraphPathIdsForContext({
+        platformId: model.platformInsight.platformId
+      })
+    : [];
 
   return (
     <main className="bg-background pb-16">
@@ -52,7 +58,10 @@ export function BuildWorkspaceExperience({ model }: BuildWorkspaceExperienceProp
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[340px_1fr] lg:px-8">
         <div className="grid gap-6 lg:sticky lg:top-24 lg:self-start">
-          <BuildValidationSummary evaluation={model.evaluation} />
+          <BuildValidationSummary
+            evaluation={model.evaluation}
+            reasoningPathIds={reasoningPathIds}
+          />
         </div>
 
         <div className="grid gap-8">
