@@ -36,16 +36,21 @@ type FindReasoningPathsOptions = {
 const defaultTraversalEdgeTypes: ReasoningGraphEdgeType[] = [
   "adapter_path",
   "better_value",
+  "commonly_upgraded_with",
   "improves",
   "repair_path",
+  "shares_repair_path",
   "supports",
-  "upgrades"
+  "upgrades",
+  "works_better_with"
 ];
 
 const constraintEdgeTypes: ReasoningGraphEdgeType[] = [
   "blocks",
   "bottlenecks",
   "higher_power",
+  "power_conflict",
+  "thermal_conflict",
   "requires"
 ];
 

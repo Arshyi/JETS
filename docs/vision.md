@@ -420,7 +420,6 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Phase 6.0 - Hardware Reasoning Graph
 
-- Current.
 - Stop adding workflows and model the relationships JETS already implies.
 - Add a reusable graph model for platforms, CPUs, GPUs, RAM, storage, power supplies, adapters, PCIe cards, cooling, cases, strategies, playbooks, projects, acquisitions, action plans, evidence, opportunities, constraints, workloads, and components.
 - Support deterministic edges such as supports, blocks, improves, requires, replaces, bottlenecks, upgrades, same_socket, same_generation, better_value, repair_path, and adapter_path.
@@ -432,11 +431,21 @@ Capture them here, then choose the right milestone later. This keeps the product
 
 ### Phase 6.1 - Reasoning Path Explanations
 
-- Current.
 - Surface Hardware Reasoning Graph paths in the places where users make decisions.
 - Add reusable "Why JETS thinks this" panels for Strategy, Optimization, Acquisition, Builder warnings, Action Plans, and Platform Knowledge.
 - Show node labels, relationship labels, confidence, evidence links, and plain-English reasoning.
 - Extend graph validation to reject broken display paths, circular display paths, missing labels, and broken node-to-edge sequences.
+- Keep AI, scraping, OCR, marketplace APIs, checkout, browser automation, graph persistence, and graph editing deferred.
+
+### Phase 6.2 - Knowledge Expansion Framework
+
+- Current.
+- Make JETS deeper instead of wider.
+- Add a reusable Knowledge Expansion model for hundreds of engineering facts without changing UI architecture.
+- Expand supported workstation platforms with structured facts for firmware, BIOS revisions, power topology, thermals, memory training, PCIe bandwidth, lane sharing, boot behavior, noise, known bugs, replacement parts, known repairs, community discoveries, and electrical limits.
+- Add component-family knowledge for CPUs, GPUs, RAM, PSUs, storage, PCIe adapters, NICs, HBAs, and cooling.
+- Increase graph relationship density with works_better_with, usually_requires, commonly_upgraded_with, shares_failure_mode, shares_repair_path, thermal_conflict, and power_conflict.
+- Track knowledge-health metrics: supported workstation platforms, verified engineering facts, evidence-backed relationships, validated reasoning paths, upgrade paths, playbooks, graph nodes, graph edges, Knowledge Quality, and validation pass rate.
 - Keep AI, scraping, OCR, marketplace APIs, checkout, browser automation, graph persistence, and graph editing deferred.
 
 ## Idea Parking Lot

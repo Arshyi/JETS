@@ -14,6 +14,28 @@ Overall: PASS
 - Platform knowledge warnings: 3
 - Compatibility fixture failures: 0
 
+## Knowledge Metrics
+
+| Metric | Value |
+| --- | ---: |
+| Supported workstation platforms | 8 |
+| Platform facts | 280 |
+| Component facts | 11 |
+| Component knowledge entries | 9 |
+| Total facts | 291 |
+| Average facts per platform | 35 |
+| Platform relationships | 203 |
+| Average relationships per platform | 25 |
+| Evidence-backed facts | 280 |
+| Evidence coverage | 96% |
+| Verified facts | 191 |
+| Verification coverage | 66% |
+| Knowledge quality score | 83 |
+| Graph nodes | 152 |
+| Graph edges | 351 |
+
+Knowledge metric warnings: None
+
 ## Scenario Results
 
 | Status | Scenario | Platform | Readiness | Confidence |
@@ -63,7 +85,7 @@ Uncovered:
 
 ### platform
 
-Coverage: 22/33 (67%)
+Coverage: 26/37 (70%)
 
 Uncovered:
 - platform-adapter:m2-to-pcie-adapter
@@ -151,16 +173,16 @@ Uncovered:
 
 ## Platform Knowledge Validation
 
-| Status | Platform | Knowledge quality | Evidence records | Encyclopedia sections | Issues |
-| --- | --- | ---: | ---: | ---: | --- |
-| PASS | Lenovo ThinkStation P520 | 64 | 6 | 19 | None |
-| PASS | Lenovo ThinkStation P510 | 52 | 2 | 19 | None |
-| FAIL | Dell Precision T5810 | 34 | 1 | 19 | Knowledge quality score is low |
-| PASS | Dell Precision 5820 | 50 | 1 | 19 | None |
-| PASS | Dell OptiPlex 7060 SFF | 68 | 3 | 19 | None |
-| FAIL | HP Z440 | 35 | 2 | 19 | Knowledge quality score is low |
-| PASS | HP Z840 | 52 | 2 | 19 | None |
-| FAIL | Mac Pro 5,1 | 38 | 2 | 19 | Knowledge quality score is low |
+| Status | Platform | Quality | Facts | Relationships | Evidence coverage | Verification | Issues |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| PASS | Lenovo ThinkStation P520 | 64 | 38 | 35 | 100% | 66% | None |
+| PASS | Lenovo ThinkStation P510 | 52 | 33 | 25 | 100% | 70% | None |
+| FAIL | Dell Precision T5810 | 34 | 35 | 31 | 100% | 69% | Knowledge quality score is low |
+| PASS | Dell Precision 5820 | 50 | 33 | 30 | 100% | 73% | None |
+| PASS | Dell OptiPlex 7060 SFF | 68 | 37 | 30 | 100% | 65% | None |
+| FAIL | HP Z440 | 35 | 34 | 31 | 100% | 71% | Knowledge quality score is low |
+| PASS | HP Z840 | 52 | 34 | 32 | 100% | 68% | None |
+| FAIL | Mac Pro 5,1 | 38 | 36 | 19 | 100% | 67% | Knowledge quality score is low |
 
 ## Playbook Validation
 
@@ -190,7 +212,7 @@ Uncovered:
 
 | Status | Nodes | Edges | Duplicate edges | Orphan nodes | Fixture paths | Issues |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| PASS | 152 | 344 | 0 | 0 | 4/4 | None |
+| PASS | 152 | 351 | 0 | 0 | 4/4 | None |
 
 ## Compatibility Fixture Failures
 

@@ -228,6 +228,36 @@ The hardware validation suite now warns if a supported platform is missing:
 The suite also tracks platform encyclopedia coverage in the generated validation
 report.
 
+## Knowledge Expansion
+
+Phase 6.2 adds a Knowledge Expansion Framework on top of the encyclopedia.
+
+The encyclopedia now receives structured expansion facts for every supported
+platform across:
+
+- firmware
+- BIOS revisions
+- power topology
+- thermals
+- memory training
+- PCIe bandwidth
+- lane sharing
+- boot behavior
+- noise
+- known bugs
+- replacement parts
+- known repairs
+- community discoveries
+- electrical limitations
+
+These facts live as data and are folded into `PlatformEncyclopediaEntry.facts`.
+That keeps Platform Knowledge as the summary, Platform Encyclopedia as the
+engineering reference, and the Reasoning Graph as the relationship layer.
+
+Validation now reports fact density, relationship density, evidence coverage,
+verification coverage, Knowledge Quality, graph nodes, and graph edges. See
+`docs/knowledge-expansion.md`.
+
 ## Current Demo Platforms
 
 Phase 5.3 creates encyclopedia entries for the existing supported Platform

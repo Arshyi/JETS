@@ -1,6 +1,7 @@
 import { compatibilityValidationFixtures } from "@/data/compatibility/validation-fixtures";
 import { adapterIntelligenceProfiles, platformKnowledgeProfiles } from "@/data/platform-knowledge";
 import { platformEncyclopediaEntries } from "@/data/platform-encyclopedia";
+import { reasoningGraph } from "@/data/reasoning-graph";
 import { buildWorkspaceSlotDefinitions, starterEngineeringWorkspaceProject } from "@/data/solution-builder";
 import { strategyValidationFixtures } from "@/data/strategy-validation-fixtures";
 import { hardwareValidationScenarios } from "@/data/validation/hardware-scenarios";
@@ -11,6 +12,11 @@ import {
 } from "@/lib/action-plan-engine/engine";
 import { getKnowledgeQualityForPlatform, getEvidenceSummaryForPlatform } from "@/lib/evidence-engine";
 import { buildImporterFixtureResult } from "@/lib/importer-fixtures/engine";
+import {
+  getKnowledgeExpansionMetrics,
+  getKnowledgeExpansionValidationIssues,
+  knowledgeExpansionThresholds
+} from "@/lib/knowledge-expansion";
 import { buildListingIntelligenceRecord } from "@/lib/listing-intelligence/engine";
 import { normalizeMarketplaceListing } from "@/lib/marketplace-intelligence/normalize";
 import { optimizeBuildProject } from "@/lib/optimization-engine/pipeline";
@@ -256,7 +262,11 @@ function getRuleInventory(): Record<ValidationCoverageArea, string[]> {
       "platform-encyclopedia:storage-guidance",
       "platform-encyclopedia:upgrade-paths",
       "platform-encyclopedia:reliability",
-      "platform-encyclopedia:workload-profiles"
+      "platform-encyclopedia:workload-profiles",
+      "platform-knowledge:density",
+      "platform-knowledge:relationship-density",
+      "platform-knowledge:evidence-coverage",
+      "platform-knowledge:verification-coverage"
     ],
     playbook: [
       ...platformKnowledgeProfiles.map((profile) => `playbook:${profile.id}`),
@@ -477,9 +487,32 @@ function validatePlatformKnowledge(): PlatformKnowledgeValidationResult[] {
   return platformKnowledgeProfiles.map((profile) => {
     const evidence = getEvidenceSummaryForPlatform(profile.id);
     const quality = getKnowledgeQualityForPlatform(profile);
+    const encyclopediaEntry = platformEncyclopediaEntries.find(
+      (entry) => entry.platformId === profile.id
+    );
     const encyclopediaCoverage = validatePlatformEncyclopediaCoverage(
       profile.id,
       profile.name
+    );
+    const factCount = encyclopediaCoverage.factCount;
+    const evidenceBackedFactCount =
+      encyclopediaEntry?.facts.filter((fact) => fact.evidenceIds.length > 0).length ??
+      0;
+    const verifiedFactCount =
+      encyclopediaEntry?.facts.filter((fact) => fact.verification === "verified").length ??
+      0;
+    const relationshipCount = reasoningGraph.edges.filter(
+      (edge) =>
+        edge.from === `platform:${profile.id}` ||
+        edge.to === `platform:${profile.id}` ||
+        edge.from.startsWith(`pcie-slot:${profile.id}:`) ||
+        edge.to.startsWith(`pcie-slot:${profile.id}:`)
+    ).length;
+    const evidenceCoveragePercent = Math.round(
+      (evidenceBackedFactCount / Math.max(1, factCount)) * 100
+    );
+    const verificationPercent = Math.round(
+      (verifiedFactCount / Math.max(1, factCount)) * 100
     );
     const adapterCount = adapterIntelligenceProfiles.filter((adapter) =>
       adapter.recommendedPlatformIds.includes(profile.id)
@@ -496,18 +529,36 @@ function validatePlatformKnowledge(): PlatformKnowledgeValidationResult[] {
       profile.potential.overall <= 0 ? "Missing platform potential score" : null,
       evidence.evidenceCount === 0 ? "No linked evidence records" : null,
       quality.overall < 45 ? "Knowledge quality score is low" : null,
+      factCount < knowledgeExpansionThresholds.minimumFactsPerPlatform
+        ? `Knowledge density below ${knowledgeExpansionThresholds.minimumFactsPerPlatform} facts`
+        : null,
+      relationshipCount <
+      knowledgeExpansionThresholds.minimumRelationshipsPerPlatform
+        ? `Relationship density below ${knowledgeExpansionThresholds.minimumRelationshipsPerPlatform} relationships`
+        : null,
+      evidenceCoveragePercent <
+      knowledgeExpansionThresholds.minimumEvidenceCoveragePercent
+        ? `Evidence coverage below ${knowledgeExpansionThresholds.minimumEvidenceCoveragePercent}%`
+        : null,
+      verificationPercent < knowledgeExpansionThresholds.minimumVerificationPercent
+        ? `Verification coverage below ${knowledgeExpansionThresholds.minimumVerificationPercent}%`
+        : null,
       ...encyclopediaIssues
     ].filter((issue): issue is string => Boolean(issue));
 
     return {
       encyclopediaIssues,
       encyclopediaSectionCount: encyclopediaCoverage.sectionCount,
+      evidenceCoveragePercent,
       evidenceCount: evidence.evidenceCount,
+      factCount,
       issues,
       passed: issues.length === 0,
       platformId: profile.id,
       platformName: profile.name,
-      qualityScore: quality.overall
+      qualityScore: quality.overall,
+      relationshipCount,
+      verificationPercent
     };
   });
 }
@@ -582,6 +633,10 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
   const playbookResults = validateHardwarePlaybooks();
   const strategyResults = validateStrategies();
   const reasoningGraph = validateReasoningGraph();
+  const knowledgeMetrics = getKnowledgeExpansionMetrics();
+  const knowledgeMetricIssues = getKnowledgeExpansionValidationIssues(
+    knowledgeMetrics
+  );
   const coveredMarkers = createCoverageBuckets();
 
   for (const scenarioResult of scenarioResults) {
@@ -684,6 +739,14 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
         !result.encyclopediaIssues.includes("Missing encyclopedia workload profile")
       )
         ? ["platform-encyclopedia:workload-profiles"]
+        : []),
+      ...(knowledgeMetricIssues.length === 0
+        ? [
+            "platform-knowledge:density",
+            "platform-knowledge:relationship-density",
+            "platform-knowledge:evidence-coverage",
+            "platform-knowledge:verification-coverage"
+          ]
         : [])
     ],
     playbook: [
@@ -746,6 +809,7 @@ export function runHardwareValidationSuite(): HardwareValidationSuiteResult {
     compatibilityFixtureFailures,
     actionPlanResults,
     generatedAt: validationGeneratedAt,
+    knowledgeMetrics,
     overallPassRate: Math.round((passedScenarios / scenarioResults.length) * 100),
     passed,
     platformKnowledge,
@@ -798,7 +862,7 @@ export function renderValidationReportMarkdown(
   const platformRows = suite.platformKnowledge
     .map(
       (result) =>
-        `| ${statusLabel(result.passed)} | ${result.platformName} | ${result.qualityScore} | ${result.evidenceCount} | ${result.encyclopediaSectionCount} | ${result.issues.join("; ") || "None"} |`
+        `| ${statusLabel(result.passed)} | ${result.platformName} | ${result.qualityScore} | ${result.factCount} | ${result.relationshipCount} | ${result.evidenceCoveragePercent}% | ${result.verificationPercent}% | ${result.issues.join("; ") || "None"} |`
     )
     .join("\n");
   const playbookRows = suite.playbookResults
@@ -825,6 +889,9 @@ export function renderValidationReportMarkdown(
           .map((issue) => `${issue.severity.toUpperCase()}: ${issue.message}`)
           .join("; ")
       : "None";
+  const knowledgeMetricIssues = getKnowledgeExpansionValidationIssues(
+    suite.knowledgeMetrics
+  );
   const failureSections = suite.scenarioResults
     .filter((result) => !result.passed)
     .map(
@@ -848,6 +915,28 @@ Overall: ${statusLabel(suite.passed)}
 - Platform knowledge warnings: ${suite.summary.platformWarnings}
 - Compatibility fixture failures: ${suite.compatibilityFixtureFailures.length}
 
+## Knowledge Metrics
+
+| Metric | Value |
+| --- | ---: |
+| Supported workstation platforms | ${suite.knowledgeMetrics.supportedPlatformCount} |
+| Platform facts | ${suite.knowledgeMetrics.platformFactCount} |
+| Component facts | ${suite.knowledgeMetrics.componentFactCount} |
+| Component knowledge entries | ${suite.knowledgeMetrics.componentKnowledgeEntries} |
+| Total facts | ${suite.knowledgeMetrics.totalFactCount} |
+| Average facts per platform | ${suite.knowledgeMetrics.averageFactsPerPlatform} |
+| Platform relationships | ${suite.knowledgeMetrics.platformRelationshipCount} |
+| Average relationships per platform | ${suite.knowledgeMetrics.averageRelationshipsPerPlatform} |
+| Evidence-backed facts | ${suite.knowledgeMetrics.evidenceBackedFacts} |
+| Evidence coverage | ${suite.knowledgeMetrics.evidenceCoveragePercent}% |
+| Verified facts | ${suite.knowledgeMetrics.verifiedFactCount} |
+| Verification coverage | ${suite.knowledgeMetrics.verificationPercent}% |
+| Knowledge quality score | ${suite.knowledgeMetrics.knowledgeQualityScore} |
+| Graph nodes | ${suite.knowledgeMetrics.graphNodeCount} |
+| Graph edges | ${suite.knowledgeMetrics.graphEdgeCount} |
+
+Knowledge metric warnings: ${knowledgeMetricIssues.join("; ") || "None"}
+
 ## Scenario Results
 
 | Status | Scenario | Platform | Readiness | Confidence |
@@ -866,8 +955,8 @@ ${actionPlanRows}
 
 ## Platform Knowledge Validation
 
-| Status | Platform | Knowledge quality | Evidence records | Encyclopedia sections | Issues |
-| --- | --- | ---: | ---: | ---: | --- |
+| Status | Platform | Quality | Facts | Relationships | Evidence coverage | Verification | Issues |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
 ${platformRows}
 
 ## Playbook Validation
@@ -936,6 +1025,12 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
         `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.title)}</td><td>${result.taskCount}</td><td>${escapeHtml(result.assertions.filter((assertion) => !assertion.passed).map((assertion) => assertion.message).join(", ") || "None")}</td></tr>`
     )
     .join("");
+  const platformRows = suite.platformKnowledge
+    .map(
+      (result) =>
+        `<tr><td>${statusLabel(result.passed)}</td><td>${escapeHtml(result.platformName)}</td><td>${result.qualityScore}</td><td>${result.factCount}</td><td>${result.relationshipCount}</td><td>${result.evidenceCoveragePercent}%</td><td>${result.verificationPercent}%</td><td>${escapeHtml(result.issues.join(", ") || "None")}</td></tr>`
+    )
+    .join("");
   const reasoningGraphIssues =
     suite.reasoningGraph.issues.length > 0
       ? suite.reasoningGraph.issues
@@ -986,6 +1081,29 @@ export function renderValidationReportHtml(suite: HardwareValidationSuiteResult)
     <table>
       <thead><tr><th>Status</th><th>Fixture</th><th>Tasks</th><th>Issues</th></tr></thead>
       <tbody>${actionPlanRows}</tbody>
+    </table>
+    <h2>Knowledge Metrics</h2>
+    <table>
+      <tbody>
+        <tr><th>Supported workstation platforms</th><td>${suite.knowledgeMetrics.supportedPlatformCount}</td></tr>
+        <tr><th>Platform facts</th><td>${suite.knowledgeMetrics.platformFactCount}</td></tr>
+        <tr><th>Component facts</th><td>${suite.knowledgeMetrics.componentFactCount}</td></tr>
+        <tr><th>Component knowledge entries</th><td>${suite.knowledgeMetrics.componentKnowledgeEntries}</td></tr>
+        <tr><th>Total facts</th><td>${suite.knowledgeMetrics.totalFactCount}</td></tr>
+        <tr><th>Average facts per platform</th><td>${suite.knowledgeMetrics.averageFactsPerPlatform}</td></tr>
+        <tr><th>Platform relationships</th><td>${suite.knowledgeMetrics.platformRelationshipCount}</td></tr>
+        <tr><th>Average relationships per platform</th><td>${suite.knowledgeMetrics.averageRelationshipsPerPlatform}</td></tr>
+        <tr><th>Evidence coverage</th><td>${suite.knowledgeMetrics.evidenceCoveragePercent}%</td></tr>
+        <tr><th>Verification coverage</th><td>${suite.knowledgeMetrics.verificationPercent}%</td></tr>
+        <tr><th>Knowledge quality score</th><td>${suite.knowledgeMetrics.knowledgeQualityScore}</td></tr>
+        <tr><th>Graph nodes</th><td>${suite.knowledgeMetrics.graphNodeCount}</td></tr>
+        <tr><th>Graph edges</th><td>${suite.knowledgeMetrics.graphEdgeCount}</td></tr>
+      </tbody>
+    </table>
+    <h2>Platform Knowledge Validation</h2>
+    <table>
+      <thead><tr><th>Status</th><th>Platform</th><th>Quality</th><th>Facts</th><th>Relationships</th><th>Evidence coverage</th><th>Verification</th><th>Issues</th></tr></thead>
+      <tbody>${platformRows}</tbody>
     </table>
     <h2>Strategy Validation</h2>
     <table>

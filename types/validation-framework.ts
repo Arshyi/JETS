@@ -7,6 +7,7 @@ import type {
 } from "@/types/marketplace-intelligence";
 import type { OptimizationInput } from "@/types/optimization";
 import type { PlatformKnowledgeId } from "@/types/platform-knowledge";
+import type { KnowledgeExpansionMetrics } from "@/types/knowledge-expansion";
 import type { ReasoningGraphValidationResult } from "@/types/reasoning-graph";
 import type { PlaybookValidationResult } from "@/types/playbook";
 import type {
@@ -107,13 +108,17 @@ export type ValidationScenarioResult = {
 
 export type PlatformKnowledgeValidationResult = {
   encyclopediaIssues: string[];
+  evidenceCoveragePercent: number;
   encyclopediaSectionCount: number;
   evidenceCount: number;
+  factCount: number;
   issues: string[];
   passed: boolean;
   platformId: PlatformKnowledgeId;
   platformName: string;
   qualityScore: number;
+  relationshipCount: number;
+  verificationPercent: number;
 };
 
 export type StrategyValidationResult = {
@@ -139,6 +144,7 @@ export type HardwareValidationSuiteResult = {
   passed: boolean;
   actionPlanResults: ActionPlanValidationResult[];
   platformKnowledge: PlatformKnowledgeValidationResult[];
+  knowledgeMetrics: KnowledgeExpansionMetrics;
   playbookResults: PlaybookValidationResult[];
   reasoningGraph: ReasoningGraphValidationResult;
   ruleCoverage: Record<ValidationCoverageArea, RuleCoverageResult>;

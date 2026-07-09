@@ -44,7 +44,14 @@ export const reasoningGraphEdgeTypes = [
   "lower_noise",
   "better_value",
   "repair_path",
-  "adapter_path"
+  "adapter_path",
+  "works_better_with",
+  "usually_requires",
+  "commonly_upgraded_with",
+  "shares_failure_mode",
+  "shares_repair_path",
+  "thermal_conflict",
+  "power_conflict"
 ] as const;
 
 export type ReasoningGraphNodeType = (typeof reasoningGraphNodeTypes)[number];

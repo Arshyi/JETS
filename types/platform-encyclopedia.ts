@@ -219,6 +219,7 @@ export type PlatformEncyclopediaEntry = {
 };
 
 export type PlatformEncyclopediaCoverage = {
+  factCount: number;
   missing: string[];
   platformId: PlatformKnowledgeId;
   platformName: string;

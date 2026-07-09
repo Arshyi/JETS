@@ -151,6 +151,7 @@ export function validatePlatformEncyclopediaCoverage(
 
   if (!entry) {
     return {
+      factCount: 0,
       missing: ["Missing platform encyclopedia entry"],
       platformId,
       platformName,
@@ -176,6 +177,7 @@ export function validatePlatformEncyclopediaCoverage(
   if (entry.workloadProfiles.length === 0) missing.push("Workload profile");
 
   return {
+    factCount: entry.facts.length,
     missing,
     platformId,
     platformName,

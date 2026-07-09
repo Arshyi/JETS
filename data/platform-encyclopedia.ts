@@ -1,4 +1,6 @@
 import { platformKnowledgeProfiles } from "@/data/platform-knowledge";
+import { getKnowledgeExpansionFactsForPlatform } from "@/data/knowledge-expansion";
+import type { KnowledgeExpansionFact } from "@/types/knowledge-expansion";
 import type {
   PlatformCoolingTopology,
   PlatformEncyclopediaEntry,
@@ -288,6 +290,22 @@ function fact(
     summary,
     title,
     verification: options.verification ?? "verified"
+  };
+}
+
+function expansionFactToEncyclopediaFact(
+  expansionFact: KnowledgeExpansionFact
+): PlatformEncyclopediaFact {
+  return {
+    confidence: expansionFact.confidence,
+    details: expansionFact.details,
+    evidenceIds: expansionFact.evidenceIds,
+    id: expansionFact.id,
+    knowledgeQualityScore: expansionFact.knowledgeQualityScore,
+    sectionId: expansionFact.platformSectionId ?? "overview",
+    summary: expansionFact.summary,
+    title: expansionFact.title,
+    verification: expansionFact.verification
   };
 }
 
@@ -844,6 +862,9 @@ function createEntry(profile: PlatformKnowledgeProfile): PlatformEncyclopediaEnt
         }
       )
     );
+  const expansionFacts = getKnowledgeExpansionFactsForPlatform(profile.id).map(
+    expansionFactToEncyclopediaFact
+  );
   const facts = [
     overview,
     chipset,
@@ -863,7 +884,8 @@ function createEntry(profile: PlatformKnowledgeProfile): PlatformEncyclopediaEnt
     upgradeEncyclopedia.maxStorage,
     upgradeEncyclopedia.nvmeAdapterSupport,
     upgradeEncyclopedia.pcieBifurcation,
-    ...upgradeEncyclopedia.gpuLimitations
+    ...upgradeEncyclopedia.gpuLimitations,
+    ...expansionFacts
   ];
 
   return {

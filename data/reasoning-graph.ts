@@ -1,4 +1,5 @@
 import { evidenceRecords } from "@/data/evidence";
+import { knowledgeExpansionRelationshipHints } from "@/data/knowledge-expansion";
 import { mockComponentInventory } from "@/data/mock-components";
 import {
   adapterIntelligenceProfiles,
@@ -772,6 +773,16 @@ function createComponentEdges(): ReasoningGraphEdge[] {
   return edges;
 }
 
+function createKnowledgeExpansionEdges(): ReasoningGraphEdge[] {
+  return knowledgeExpansionRelationshipHints.map((hint) =>
+    edge(hint.fromId, hint.toId, hint.type, hint.reason, {
+      confidence: hint.confidence,
+      evidenceIds: hint.evidenceIds,
+      strength: hint.confidence / 100
+    })
+  );
+}
+
 function createPlaybookEdges(): ReasoningGraphEdge[] {
   return hardwarePlaybooks.flatMap((playbook) => [
     ...playbook.evidenceRecordIds.map((evidenceId) =>
@@ -860,6 +871,7 @@ export const reasoningGraph: ReasoningGraph = {
     ...createPlatformEdges(),
     ...createAdapterEdges(),
     ...createComponentEdges(),
+    ...createKnowledgeExpansionEdges(),
     ...createPlaybookEdges(),
     ...createWorkflowEdges()
   ]),
@@ -886,10 +898,13 @@ export function getOpportunityCategoryForPath(
   path: Pick<ReasoningGraphEdge, "type">[]
 ) {
   if (path.some((edgeItem) => edgeItem.type === "adapter_path")) return "use-adapter";
+  if (path.some((edgeItem) => edgeItem.type === "commonly_upgraded_with")) return "use-adapter";
   if (path.some((edgeItem) => edgeItem.type === "repair_path")) return "repair-instead";
+  if (path.some((edgeItem) => edgeItem.type === "shares_repair_path")) return "repair-instead";
   if (path.some((edgeItem) => edgeItem.type === "better_value")) return "wait";
   if (path.some((edgeItem) => edgeItem.type === "lower_noise")) return "reuse-owned";
   if (path.some((edgeItem) => edgeItem.type === "shares_platform")) return "buy-workstation";
+  if (path.some((edgeItem) => edgeItem.type === "works_better_with")) return "buy-workstation";
 
   return "cheaper-equivalent";
 }

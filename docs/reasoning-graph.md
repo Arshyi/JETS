@@ -194,6 +194,21 @@ The validator checks:
 - circular display paths
 - missing node or relationship labels
 
+Phase 6.2 adds relationship-density checks by expanding supported edge types to
+include:
+
+- `works_better_with`
+- `usually_requires`
+- `commonly_upgraded_with`
+- `shares_failure_mode`
+- `shares_repair_path`
+- `thermal_conflict`
+- `power_conflict`
+
+These edge types let JETS model practical workstation engineering knowledge:
+what tends to pair well, what usually needs supporting hardware, what shares
+repair/failure patterns, and which components conflict thermally or electrically.
+
 The command writes:
 
 - `docs/generated/reasoning-graph-report.md`

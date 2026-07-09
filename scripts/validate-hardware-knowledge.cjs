@@ -31,6 +31,12 @@ console.log(`Action plan fixture failures: ${suite.summary.actionPlanFailures}`)
 console.log(`Playbook fixture failures: ${suite.summary.playbookFailures}`);
 console.log(`Reasoning graph errors: ${suite.summary.reasoningGraphErrors}`);
 console.log(`Platform knowledge warnings: ${suite.summary.platformWarnings}`);
+console.log(`Supported platforms: ${suite.knowledgeMetrics.supportedPlatformCount}`);
+console.log(`Knowledge facts: ${suite.knowledgeMetrics.totalFactCount}`);
+console.log(`Component facts: ${suite.knowledgeMetrics.componentFactCount}`);
+console.log(`Graph nodes: ${suite.knowledgeMetrics.graphNodeCount}`);
+console.log(`Graph edges: ${suite.knowledgeMetrics.graphEdgeCount}`);
+console.log(`Evidence coverage: ${suite.knowledgeMetrics.evidenceCoveragePercent}%`);
 console.log(`Markdown report: ${path.relative(projectRoot, markdownPath)}`);
 console.log(`HTML report: ${path.relative(projectRoot, htmlPath)}`);
 
